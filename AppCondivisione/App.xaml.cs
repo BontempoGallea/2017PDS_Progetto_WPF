@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shell;
-using ApplicazioneCondivisione;
 using Microsoft.Win32;
 
 namespace AppCondivisione

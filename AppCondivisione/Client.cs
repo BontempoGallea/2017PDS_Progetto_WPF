@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.IO.Compression;
+using System.Text;
 using System.Windows;
-using AppCondivisione;
 
-namespace ApplicazioneCondivisione
+namespace AppCondivisione
 {
     class Client
     {

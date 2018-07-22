@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.IO.Compression;
-using System.Windows;
-using AppCondivisione;
+using System.Text;
+using System.Threading;
 using Microsoft.Win32;
 
-namespace ApplicazioneCondivisione
+namespace AppCondivisione
 {
     class Server
     {
