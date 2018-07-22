@@ -26,22 +26,22 @@ namespace AppCondivisione
         {
             InitializeComponent();
 
-            this.UserBox.ItemsSource = new UserData[]
+            this.UserBox.ItemsSource = new Person[]
             {
-                new UserData{Username="Username1", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username2", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username3", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username4", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username5", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username6", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username7", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username8", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username9", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username10", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username11", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username12", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username13", ImageData=this.LoadImage("img.jpg") },
-                new UserData{Username="Username14", ImageData=this.LoadImage("img.jpg") }
+                new Person{Username="Username1", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username2", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username3", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username4", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username5", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username6", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username7", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username8", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username9", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username10", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username11", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username12", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username13", ImageData=this.LoadImage("img.jpg") },
+                new Person{Username="Username14", ImageData=this.LoadImage("img.jpg") }
             };
         }
 
