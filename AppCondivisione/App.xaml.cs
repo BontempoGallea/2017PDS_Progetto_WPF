@@ -22,11 +22,13 @@ namespace AppCondivisione
         private Task client, server, pipeThread;
         public static RegistryKey key;
         public static bool exists = false; // Flag per vedere se ci sono altre istanze dello stesso progetto
-       
+        private TaskbarIcon icon;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            icon = new TaskbarIcon();
 
             // Controllo che non esista nessuna istanza dello stesso processo
             exists = Process
@@ -56,6 +58,12 @@ namespace AppCondivisione
                 key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
                 key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            icon.Remove();
         }
 
         public static void Listen()

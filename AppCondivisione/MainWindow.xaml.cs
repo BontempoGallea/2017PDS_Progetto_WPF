@@ -24,10 +24,8 @@ namespace AppCondivisione
 
         public MainWindow()
         {
-            this.Visibility = Visibility.Hidden;
+            this.WindowState = System.Windows.WindowState.Minimized;
             InitializeComponent();
-
-
 
             this.UserBox.ItemsSource = new Person[]
             {
@@ -55,7 +53,7 @@ namespace AppCondivisione
 
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Ciao");
+           MessageBox.Show("Ciao");
         }
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
