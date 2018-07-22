@@ -58,12 +58,12 @@ namespace AppCondivisione
         */
         public void EntryTalk()
         {
-            while (!Program.closeEverything)
+            while (!SharedVariables.CloseEverything)
             {
-                while (Program.luh.getAdmin() == null) { }
+                while (SharedVariables.Luh.getAdmin() == null) { }
                 // Mando pacchetti broadcast ogni 5s, SOLO SE sono ONLINE
-                if (String.Compare(Program.luh.getAdmin().getState(), "online", StringComparison.Ordinal) == 0)//da fare un lock
-                    BroadcastMessage(Program.luh.getAdmin().getString());
+                if (String.Compare(SharedVariables.Luh.getAdmin().getState(), "online", StringComparison.Ordinal) == 0)//da fare un lock
+                    BroadcastMessage(SharedVariables.Luh.getAdmin().getString());
                 Thread.Sleep(5000);
             }
         }
@@ -88,7 +88,7 @@ namespace AppCondivisione
         */
         public void EntryListen()
         {
-            while (!Program.closeEverything)
+            while (!SharedVariables.CloseEverything)
                 ReceiveBroadcastMessages();
         }
 
@@ -101,23 +101,23 @@ namespace AppCondivisione
             var ipEp = new IPEndPoint(IPAddress.Any, SenderPort); // Endpoint dal quale sto ricevendo dati, accetto qualsiasi indirizzo con la senderPort
             try
             {
-                while (!done && !Program.closeEverything)
+                while (!done && !SharedVariables.CloseEverything)
                 {
                     if (ClientUdp.Available <= 0) continue;
                     var bytes = ClientUdp.Receive(ref ipEp); // Buffer
                     var cred = Encoding.ASCII.GetString(bytes, 0, bytes.Length).Split(','); // Converto in stringhe
-                    if (Program.luh.isPresent(cred[1] + cred[0]) && String.Compare(cred[2], "offline", StringComparison.Ordinal) != 0)
+                    if (SharedVariables.Luh.isPresent(cred[1] + cred[0]) && String.Compare(cred[2], "offline", StringComparison.Ordinal) != 0)
                     {
                         // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
-                        Program.luh.resetTimer(cred[1] + cred[0]); // Se presente resetto il timer della persona
+                        SharedVariables.Luh.resetTimer(cred[1] + cred[0]); // Se presente resetto il timer della persona
                         done = true; // Ricezione completata
                     }
                     else // Se non è gia presente
                     {
                         Person p = new Person(cred[0], cred[1], cred[2], cred[3], cred[4]); //creo una nuova persona
-                        if (!p.isEqual(Program.luh.getAdmin()) && String.Compare(cred[2], "offline", StringComparison.Ordinal) != 0) //se non è uguale all'amministratore
+                        if (!p.isEqual(SharedVariables.Luh.getAdmin()) && String.Compare(cred[2], "offline", StringComparison.Ordinal) != 0) //se non è uguale all'amministratore
                         {
-                            Program.luh.addUser(p);//inserisco nella lista delle persone
+                            SharedVariables.Luh.addUser(p);//inserisco nella lista delle persone
                             done = true;//ricezione completata
                         }
                     }
@@ -134,8 +134,8 @@ namespace AppCondivisione
         */
         public void EntryTcp()
         {
-            while (Program.luh.getAdmin() == null) { }
-            while (Program.luh.getAdmin().isOnline() && !Program.closeEverything)
+            while (SharedVariables.Luh.getAdmin() == null) { }
+            while (SharedVariables.Luh.getAdmin().isOnline() && !SharedVariables.CloseEverything)
                 ReceiveFile();
         }
 
@@ -145,10 +145,10 @@ namespace AppCondivisione
 
             try
             {
-                var listener = new TcpListener(Program.luh.getAdmin().getIp(), Program.luh.getAdmin().getPort());// Imposto tcplistener con le credenziali della persona
+                var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(), SharedVariables.Luh.getAdmin().getPort());// Imposto tcplistener con le credenziali della persona
                 listener.Start(); // Inizio ascolto
                 Thread.Sleep(2000);
-                while (!Program.closeEverything)
+                while (!SharedVariables.CloseEverything)
                 {
                     if (!listener.Pending()) // Se non c'è nessuno che vuole inviarmi nulla, continuo col prossimo ciclo
                         continue;
@@ -186,12 +186,12 @@ namespace AppCondivisione
                 if (String.Compare(tipo, "cartella", StringComparison.Ordinal) == 0)
                 {
 
-                    autorizzo = !Program.automaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
+                    autorizzo = !SharedVariables.AutomaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
                     client.GetStream().Write(autorizzo, 0, autorizzo.Length);
                     SetName(nomeFile);
 
                     // datifile.Filter = " text |*.txt";
-                    if (!Program.automaticSave)
+                    if (!SharedVariables.AutomaticSave)
                         datifile.ShowDialog();
                     else
                         _numberAutoSaved++;
@@ -202,11 +202,11 @@ namespace AppCondivisione
                 }
                 else if (String.Compare(tipo, "file", StringComparison.Ordinal) == 0)
                 {
-                    autorizzo = !Program.automaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
+                    autorizzo = !SharedVariables.AutomaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
                     client.GetStream().Write(autorizzo, 0, autorizzo.Length);
                     SetName(nomeFile);
                     // datifile.Filter = " text |*.txt";
-                    if (!Program.automaticSave)
+                    if (!SharedVariables.AutomaticSave)
                         datifile.ShowDialog();
                     else
                         _numberAutoSaved++;
@@ -222,14 +222,14 @@ namespace AppCondivisione
             {
                 var vett2 = nomeFile.Split('.');
                 _numberAutoSaved = 0;
-                datifile.FileName = Program.pathSave + @"\" + nomeFile;
+                datifile.FileName = SharedVariables.PathSave + @"\" + nomeFile;
                 while (File.Exists(datifile.FileName))
                 {
                     _numberAutoSaved++;
-                    datifile.FileName = Program.pathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")" + "." + vett2[1];
+                    datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")" + "." + vett2[1];
                 }
             }
-            datifile.InitialDirectory = Program.pathSave;
+            datifile.InitialDirectory = SharedVariables.PathSave;
         }
 
         private static void SendFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)

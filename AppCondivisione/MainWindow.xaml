@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Name="Main"
         Title="Applicazione Condivisione" Height="400" Width="575">
+    
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

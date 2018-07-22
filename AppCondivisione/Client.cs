@@ -12,12 +12,12 @@ namespace AppCondivisione
         /*
          * Classe che gestirà le tasks del client
         */
-        public void EntryPoint(string user)
+        public static void EntryPoint(string user)
         {
             // Ottengo indirizzo ip e porta della persona a cui voglio inviare il file
             var cred = user.Split(',');
             var p = new Person();
-            Program.luh.getList().TryGetValue(cred[1] + cred[0], out p);
+            SharedVariables.Luh.getList().TryGetValue(cred[1] + cred[0], out p);
             if (p.isOnline())
                 SendFileTo(cred[2], cred[3]);
             else
@@ -34,7 +34,7 @@ namespace AppCondivisione
 
             try
             {
-                var fileName = Program.pathSend;
+                var fileName = SharedVariables.PathSend;
                 var ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
                 // Crea un TCP socket.
                 var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -43,7 +43,7 @@ namespace AppCondivisione
                 // Manda fileName all'host remoto
                 if (IsDir(fileName))
                 {
-                    var richiesta = String.Format(Program.luh.getAdmin().getName() + "," + fileName + ",cartella", Environment.NewLine); // Stringa per avvisare chi sono, se lui mi accetta io mando il file
+                    var richiesta = String.Format(SharedVariables.Luh.getAdmin().getName() + "," + fileName + ",cartella", Environment.NewLine); // Stringa per avvisare chi sono, se lui mi accetta io mando il file
                     SendHeader(richiesta, client);
                     if (String.Compare(ReceiveResponse(client), "ok", StringComparison.Ordinal) == 0)
                     {
@@ -54,12 +54,12 @@ namespace AppCondivisione
                         File.Delete(zipPath);
                         var ansbyte = new byte[1024];
                         client.Receive(ansbyte);
-                        SendHeader(Program.AnnullaBoolean ? "annulla" : "fine", client);
+                        SendHeader(SharedVariables.Annulla ? "annulla" : "fine", client);
                     }
                 }
                 else
                 {
-                    var richiesta = String.Format(Program.luh.getAdmin().getName() + "," + fileName + ",file", Environment.NewLine); // Stringa per avvisare chi sono, se lui mi accetta io mando il file
+                    var richiesta = String.Format(SharedVariables.Luh.getAdmin().getName() + "," + fileName + ",file", Environment.NewLine); // Stringa per avvisare chi sono, se lui mi accetta io mando il file
                     SendHeader(richiesta, client);
                     // Creo prebuffer e postbuffer per scrivere all'inizio e alla fine del file
                     if (String.Compare(ReceiveResponse(client), "ok", StringComparison.Ordinal) == 0)
@@ -67,7 +67,7 @@ namespace AppCondivisione
                         SendFileOnNet(client, "", "", fileName);
                         var ansbyte = new byte[1024];
                         client.Receive(ansbyte);
-                        SendHeader(Program.AnnullaBoolean ? "annulla" : "fine", client);
+                        SendHeader(SharedVariables.Annulla ? "annulla" : "fine", client);
                     }
                 }
                 client.Shutdown(SocketShutdown.Both);
