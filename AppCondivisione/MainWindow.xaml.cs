@@ -24,7 +24,10 @@ namespace AppCondivisione
 
         public MainWindow()
         {
+            this.Visibility = Visibility.Hidden;
             InitializeComponent();
+
+
 
             this.UserBox.ItemsSource = new Person[]
             {

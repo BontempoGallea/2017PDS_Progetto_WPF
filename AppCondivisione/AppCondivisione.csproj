@@ -61,6 +61,7 @@
     <Compile Include="ListUserHandler.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="SharedVariables.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,10 +102,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img.jpg" />
+    <Resource Include="TextTemplate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="TextTemplate.ico" />
+    <Resource Include="img.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
