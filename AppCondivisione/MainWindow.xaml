@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppCondivisione"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Name="Main"
         Title="Applicazione Condivisione" Height="400" Width="575">
@@ -17,6 +18,46 @@
             <RowDefinition Height="4*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+
+        <tb:TaskbarIcon 
+            IconSource="TextTemplate.ico" 
+            ToolTipText="Applicazione Condivisione">
+            <tb:TaskbarIcon.TrayPopup>
+                <Border
+                    Background="Gray"
+                    Width="200"
+                    Height="140"
+                    BorderThickness="3"
+                    CornerRadius="3">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock 
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Text="Impostazioni account" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" 
+                            Foreground="White"/>
+
+                        <Button
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Content="Stato: Offline" 
+                            Foreground="#FFFFFF"
+                            Background="Gray"
+                            Click="Button_Click"/>
+                    </Grid>
+                </Border>
+            </tb:TaskbarIcon.TrayPopup>
+        </tb:TaskbarIcon>
 
         <ScrollViewer
             Name="ProfilePicScrollViewer"

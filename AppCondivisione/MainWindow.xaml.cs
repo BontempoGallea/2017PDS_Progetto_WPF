@@ -80,5 +80,13 @@ namespace AppCondivisione
 
             isSelected = !isSelected;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = sender as Button;
+
+            b.Background = (b.Content.Equals("Stato: Online")) ? Brushes.Gray : Brushes.Blue;
+            b.Content = (b.Content.Equals("Stato: Online")) ? "Stato: Offline" : "Stato: Online";
+        }
     }
 }

@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Shell;
 using Microsoft.Win32;
 
 namespace AppCondivisione
@@ -22,13 +17,10 @@ namespace AppCondivisione
         private Task client, server, pipeThread;
         public static RegistryKey key;
         public static bool exists = false; // Flag per vedere se ci sono altre istanze dello stesso progetto
-        private TaskbarIcon icon;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            icon = new TaskbarIcon();
 
             // Controllo che non esista nessuna istanza dello stesso processo
             exists = Process
@@ -63,7 +55,6 @@ namespace AppCondivisione
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            icon.Remove();
         }
 
         public static void Listen()
