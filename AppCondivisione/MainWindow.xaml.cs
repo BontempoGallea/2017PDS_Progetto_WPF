@@ -88,5 +88,12 @@ namespace AppCondivisione
             b.Background = (b.Content.Equals("Stato: Online")) ? Brushes.Gray : Brushes.Blue;
             b.Content = (b.Content.Equals("Stato: Online")) ? "Stato: Offline" : "Stato: Online";
         }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings s= new Settings();
+            s.Show();
+
+        }
     }
 }

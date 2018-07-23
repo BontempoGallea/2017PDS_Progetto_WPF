@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Name="Main"
         Title="Applicazione Condivisione" Height="400" Width="575">
-    
+
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -39,13 +39,13 @@
                             <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock 
+                        <Button
                             Grid.Column="0"
                             Grid.Row="0"
-                            Text="Impostazioni account" 
-                            HorizontalAlignment="Center" 
-                            VerticalAlignment="Center" 
-                            Foreground="White"/>
+                            Content="Inpostazioni"
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Stretch" 
+                            Foreground="White" Click="Settings_Click"/>
 
                         <Button
                             Grid.Column="0"
@@ -126,7 +126,7 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            
+            <!--bottone che permetta di stoppare l'invio del file-->
             <Button 
                 Content="Annulla" 
                 HorizontalAlignment="Left"
@@ -140,6 +140,15 @@
                     </Style>
                 </Button.Resources>
             </Button>
+            <!--barra del caricamento...da rendere visibile solo quando si invia file -->
+            <ProgressBar Height="30" Margin="21,0,0,21.9" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="273">
+                <ProgressBar.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </ProgressBar.Resources>
+            </ProgressBar>
+
         </Grid>
     </Grid>
 </Window>
