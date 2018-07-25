@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace AppCondivisione
@@ -14,10 +17,12 @@ namespace AppCondivisione
     /// </summary>
     public partial class App : Application
     {
-        private Task client, server, pipeThread;
+        private Task taskclient, taskserver, pipeThread;
         public static RegistryKey key;
         public static bool exists = false; // Flag per vedere se ci sono altre istanze dello stesso progetto
-
+        private Server server;
+        private Client client;
+       // public Window BWindow;
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -36,20 +41,27 @@ namespace AppCondivisione
                 Console.WriteLine("Argomenti arrivati: " + e.Args[0]);
                 Send(e.Args[0]);
                 SharedVariables.CloseEverything = true;
+                System.Windows.Application.Current.Shutdown();
             }
 
-            if (!SharedVariables.CloseEverything)
-            {
+            if (SharedVariables.CloseEverything) return;
+            // Pipe thread per ascoltare
+            pipeThread = Task.Run(() => Listen());
 
+            // Codice per l'aggiunta dell'opzione al context menu di Windows
+            key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN");
+            key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
+            key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
+           
+         
 
-                // Pipe thread per ascoltare
-                pipeThread = Task.Run(() => Listen());
+           
+            // Creo la classe client che verrà fatta girare nel rispettivo thread
+            client = new Client();
 
-                // Codice per l'aggiunta dell'opzione al context menu di Windows
-                key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN");
-                key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
-                key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
-            }
+            // Creo la classe server che verrà fatta girare nel rispettivo thread
+            server = new Server();
+            taskserver = Task.Run((() => server.EntryPoint()));
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -79,13 +91,14 @@ namespace AppCondivisione
                 NamedPipeServerStream pipeServer = (NamedPipeServerStream)iar.AsyncState;
                 Console.WriteLine("[Server] Finito di ricevere la risposta, chiudo...");
                 pipeServer.EndWaitForConnection(iar);
-
                 byte[] buffer = new byte[255];
                 pipeServer.Read(buffer, 0, buffer.Length);
                 string result = Encoding.ASCII.GetString(buffer);
                 Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
+                {
                     SharedVariables.PathSend = result;
+                }
                 pipeServer.Close();
                 pipeServer = null;
                 if (!SharedVariables.CloseEverything)
