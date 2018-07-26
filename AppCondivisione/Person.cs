@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace AppCondivisione
 {
-    class Person
+    public class Person
     {
 
         private bool isOld;

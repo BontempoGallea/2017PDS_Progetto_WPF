@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -22,12 +23,24 @@ namespace AppCondivisione
     {
         private bool isSelected = false;
 
+        public MainWindow(Dictionary<string, Person>.ValueCollection values)
+        {
+            this.WindowState = System.Windows.WindowState.Minimized;
+            InitializeComponent();
+            SharedVariables.W = this;
+            this.UserBox.ItemsSource = values;
+        }
+
         public MainWindow()
         {
             this.WindowState = System.Windows.WindowState.Minimized;
             InitializeComponent();
+            SharedVariables.W = this;
+        }
 
-            this.UserBox.ItemsSource = new Person[]
+        public void update()
+        {
+            this.UserBox.ItemsSource = new[]
             {
                 new Person{Username="Username1", ImageData=this.LoadImage("img.jpg") },
                 new Person{Username="Username2", ImageData=this.LoadImage("img.jpg") },
@@ -44,8 +57,8 @@ namespace AppCondivisione
                 new Person{Username="Username13", ImageData=this.LoadImage("img.jpg") },
                 new Person{Username="Username14", ImageData=this.LoadImage("img.jpg") }
             };
-        }
 
+        }
         private BitmapImage LoadImage(string filename)
         {
             return new BitmapImage(new Uri("pack://application:,,,/" + filename));
@@ -60,6 +73,12 @@ namespace AppCondivisione
         {
             this.Close();
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
+        }
+        
 
         private void Image_Click(object sender, MouseButtonEventArgs e)
         {
@@ -94,6 +113,12 @@ namespace AppCondivisione
             Settings s= new Settings();
             s.Show();
 
+        }
+
+        private void Main_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+           // update();
+            Console.Write(e);
         }
     }
 }
