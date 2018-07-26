@@ -40,6 +40,9 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -63,9 +66,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientConnection.cs" />
     <Compile Include="ListUserHandler.cs" />
     <Compile Include="Person.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="FtpServer.cs" />
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="rfc959.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -20,8 +20,11 @@ namespace AppCondivisione
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-
+            server = Task.Run(() =>
+            {
+                FtpServer server = new FtpServer();
+                server.Start();
+            });
             // Controllo che non esista nessuna istanza dello stesso processo
             exists = Process
                     .GetProcessesByName(System.IO
@@ -50,6 +53,8 @@ namespace AppCondivisione
                 key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
                 key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
             }
+
+            base.OnStartup(e);
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -77,13 +82,13 @@ namespace AppCondivisione
             try
             {
                 NamedPipeServerStream pipeServer = (NamedPipeServerStream)iar.AsyncState;
-                Console.WriteLine("[Server] Finito di ricevere la risposta, chiudo...");
+                Console.WriteLine("[PipeServer] Finito di ricevere la risposta, chiudo...");
                 pipeServer.EndWaitForConnection(iar);
 
                 byte[] buffer = new byte[255];
                 pipeServer.Read(buffer, 0, buffer.Length);
                 string result = Encoding.ASCII.GetString(buffer);
-                Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
+                Console.WriteLine("[PipeServer]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
                     SharedVariables.PathSend = result;
                 pipeServer.Close();
@@ -92,7 +97,7 @@ namespace AppCondivisione
                 {
                     pipeServer = new NamedPipeServerStream("MyPipe", PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                     pipeServer.BeginWaitForConnection(new AsyncCallback(AsynWaitCallBack), pipeServer);
-                    Console.WriteLine("[Server]: Ho iniziato ad ascoltare...");
+                    Console.WriteLine("[PipeServer]: Ho iniziato ad ascoltare...");
                 }
             }
             catch (Exception e)
@@ -107,10 +112,10 @@ namespace AppCondivisione
             {
                 NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "MyPipe", PipeDirection.Out, PipeOptions.Asynchronous);
                 pipeClient.Connect(5000);
-                Console.WriteLine("[Client] Connesso!");
+                Console.WriteLine("[PipeClient] Connesso!");
                 byte[] buffer = Encoding.ASCII.GetBytes(path);
                 pipeClient.Write(buffer, 0, buffer.Length);
-                Console.WriteLine("[Client] Ho mandato questo: " + Encoding.ASCII.GetString(buffer));
+                Console.WriteLine("[PipeClient] Ho mandato questo: " + Encoding.ASCII.GetString(buffer));
             }
             catch (Exception e)
             {
@@ -122,7 +127,7 @@ namespace AppCondivisione
         {
             try
             {
-                Console.WriteLine("[Client] Non sono riuscito a connettermi...");
+                Console.WriteLine("[PipeClient] Non sono riuscito a connettermi...");
                 NamedPipeClientStream pipeClient = (NamedPipeClientStream)iar.AsyncState;
                 pipeClient.EndWrite(iar);
                 pipeClient.Flush();
