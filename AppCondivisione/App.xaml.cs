@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,6 +99,12 @@ namespace AppCondivisione
                 if (!(result.CompareTo(string.Empty) == 0))
                 {
                     SharedVariables.PathSend = result;
+                    SharedVariables.W.Dispatcher.Invoke(new Action(() =>
+                    {
+                        AppCondivisione.MainWindow m2 = new MainWindow(SharedVariables.Luh.getList().Values) {Visibility = Visibility.Visible};
+                        m2.Show();
+                    }));
+                   
                 }
                 pipeServer.Close();
                 pipeServer = null;
