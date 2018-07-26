@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Windows;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 
 namespace AppCondivisione
 {
@@ -18,7 +19,7 @@ namespace AppCondivisione
         private Dictionary<string, Person> selectedUsers = new Dictionary<string, Person>();
        // private MetroFramework.Controls.MetroTile btn; // Bottone per selezionare il tale utente
         //private List<MetroFramework.Controls.MetroTile> listBTN = new List<MetroFramework.Controls.MetroTile>();
-       // private List<MetroFramework.Controls.MetroTile> selectedList = new List<MetroFramework.Controls.MetroTile>();
+        private List<ListViewItem> selectedList = new List<ListViewItem>();
 
         // Persone di test
         //private Person test1;
@@ -169,8 +170,8 @@ namespace AppCondivisione
             /*
              * Funzione che gestisce gli eventi di quando si clicca il pulsante per la condivisione
             */
-
             /*
+            
             if (selectedList.Count > 0) // Se lista dei selezionati è > 0
             {
                 SendFile sd = new SendFile(); // Apro la finestra della barra di avanzamento
@@ -191,7 +192,7 @@ namespace AppCondivisione
             {
                 MessageBox.Show("Non ha selezionato nessun utente!");
             }
-            */
+           */
         }
 
         public void addUser(Person p)

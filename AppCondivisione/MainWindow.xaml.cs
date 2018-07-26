@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -66,6 +67,15 @@ namespace AppCondivisione
 
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
+           
+            foreach (Person item in this.UserBox.SelectedItems)
+            {
+              
+                    Thread clientThread = new Thread(() => App.ClientEntry(item.Username)) { Name = "clientThread" }; // Per ogni bottone selezionato creo un thread
+                    clientThread.Start();
+                    clientThread.Join();
+               
+            }
            MessageBox.Show("Ciao");
         }
 
@@ -120,5 +130,6 @@ namespace AppCondivisione
            // update();
             Console.Write(e);
         }
+
     }
 }

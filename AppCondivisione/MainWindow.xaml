@@ -84,6 +84,7 @@
                         <UniformGrid Columns="5" HorizontalAlignment="Stretch"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+              
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <WrapPanel 
