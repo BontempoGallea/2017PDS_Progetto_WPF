@@ -22,15 +22,18 @@ namespace AppCondivisione
         private string _Username;
         public string Username
         {
-            get { return this._Username; }
+            get { return this.name+" "+ surname; }
             set { this._Username = value; }
         }
 
-        private BitmapImage _ImageData;
+        private BitmapImage _imageData;
         public BitmapImage ImageData
         {
-            get { return this._ImageData; }
-            set { this._ImageData = value; }
+            get
+            {
+                return this._imageData;
+            }
+            set { this._imageData = value; }
         }
 
         public Person() { }
@@ -47,6 +50,8 @@ namespace AppCondivisione
             t.Elapsed += onTimeElapse;
             t.AutoReset = true;
             t.Start();
+            _imageData = new BitmapImage(new Uri("pack://application:,,,/img.jpg"));
+            _imageData.Freeze();
         }
 
         public void reset()
