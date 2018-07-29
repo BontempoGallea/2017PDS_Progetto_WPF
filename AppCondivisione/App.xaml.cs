@@ -22,8 +22,14 @@ namespace AppCondivisione
         public static RegistryKey key;
         public static bool exists = false; // Flag per vedere se ci sono altre istanze dello stesso progetto
         private Server server;
-        private Client client;
+        private static Client client;
        // public Window BWindow;
+
+        public static void ClientEntry(string name)
+       {
+           client.EntryPoint(name);
+       }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -35,7 +41,7 @@ namespace AppCondivisione
                                         .GetFileNameWithoutExtension(
                                             System.Reflection.Assembly.GetEntryAssembly().Location)
                                                                         ).Length > 1;
-
+            
             if (exists)
             {
                 MessageBox.Show("C'è già un altro processo che va");
@@ -94,7 +100,9 @@ namespace AppCondivisione
                 pipeServer.EndWaitForConnection(iar);
                 byte[] buffer = new byte[255];
                 pipeServer.Read(buffer, 0, buffer.Length);
-                string result = Encoding.ASCII.GetString(buffer);
+                string result = Encoding.ASCII.GetString(buffer).TrimEnd();
+                result = result.Replace("\0", String.Empty);
+              // result = "C:\\Users\\bitri\\Desktop\\ciao";
                 Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
                 {

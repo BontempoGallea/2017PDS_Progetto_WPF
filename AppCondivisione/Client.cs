@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -12,14 +13,14 @@ namespace AppCondivisione
         /*
          * Classe che gestirà le tasks del client
         */
-        public static void EntryPoint(string user)
+        public void EntryPoint(string user)
         {
             // Ottengo indirizzo ip e porta della persona a cui voglio inviare il file
-            var cred = user.Split(',');
+            var cred = user.Split(' ');
             var p = new Person();
             SharedVariables.Luh.getList().TryGetValue(cred[1] + cred[0], out p);
             if (p.isOnline())
-                SendFileTo(cred[2], cred[3]);
+                SendFileTo(p.getIp().ToString(), p.getPort().ToString());
             else
                 MessageBox.Show("La persona a cui vuoi inviare non è più online!");
         }
@@ -49,7 +50,7 @@ namespace AppCondivisione
                     {
                         
                         var zipPath = fileName + ".zip";
-                        //ZipFile.CreateFromDirectory(fileName, zipPath);
+                        ZipFile.CreateFromDirectory(fileName, zipPath);
                         SendFileOnNet(client, "", "", zipPath);
                         File.Delete(zipPath);
                         var ansbyte = new byte[1024];
@@ -101,7 +102,7 @@ namespace AppCondivisione
             var ansbyte = new byte[1024];
             client.ReceiveBufferSize = 1024;
             client.Receive(ansbyte);
-            return Encoding.ASCII.GetString(ansbyte);
+            return Encoding.ASCII.GetString(ansbyte).Replace("\0",String.Empty);
         }
 
         private static void SendHeader(string richiesta, Socket client)

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace AppCondivisione
@@ -146,7 +148,8 @@ namespace AppCondivisione
 
             try
             {
-                var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(), SharedVariables.Luh.getAdmin().getPort());// Imposto tcplistener con le credenziali della persona
+                var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(),
+                    SharedVariables.Luh.getAdmin().getPort()); // Imposto tcplistener con le credenziali della persona
                 listener.Start(); // Inizio ascolto
                 Thread.Sleep(2000);
                 while (!SharedVariables.CloseEverything)
@@ -156,17 +159,43 @@ namespace AppCondivisione
                     AcceptRemoteConnection(bufferfile, datifile, listener);
                 }
             }
-            catch (ArgumentNullException e) { }
-            catch (EncoderFallbackException e) { }
-            catch (ArgumentException e) { }
-            catch (SocketException e) { }
-            catch (ObjectDisposedException e) { }
-            catch (System.Security.SecurityException e) { }
-            catch (FileNotFoundException e) { }
-            catch (InvalidOperationException e) { }
-            catch (DirectoryNotFoundException e) { }
-            catch (PathTooLongException e) { }
-            catch (IOException e) { }
+            catch (ArgumentNullException e)
+            {
+                Console.Write(e);
+            }
+            catch (EncoderFallbackException e)
+            {
+                Console.Write(e);
+            }
+            catch (ArgumentException e)
+            {
+                Console.Write(e);
+            }
+            catch (SocketException e)
+            {
+            }
+            catch (ObjectDisposedException e)
+            {
+            }
+            catch (System.Security.SecurityException e)
+            {
+            }
+            catch (FileNotFoundException e)
+            {
+            }
+            catch (InvalidOperationException e)
+            {
+            }
+            catch (DirectoryNotFoundException e)
+            {
+            }
+            catch (PathTooLongException e)
+            {
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
             catch (UnauthorizedAccessException e) { }
         }
 
@@ -178,7 +207,7 @@ namespace AppCondivisione
                 var buf = new byte[1024];
 
                 client.GetStream().Read(buf, 0, 1024);//leggo in buf 1024 byte dallo stream del client
-                var vet = Encoding.ASCII.GetString(buf).Split(',');
+                var vet = Encoding.ASCII.GetString(buf).Replace("\0",String.Empty).Split(',');
                 var admin = vet[0];
                 var nomeFile = Path.GetFileName(vet[1]);
                 var tipo = vet[2];
@@ -197,8 +226,8 @@ namespace AppCondivisione
                     else
                         _numberAutoSaved++;
                     const string temp = "./temp.zip";
-                    SendFile(bufferfile, datifile, client, temp);
-                   // ZipFile.ExtractToDirectory(temp, datifile.FileName);
+                    ReceveFile(bufferfile, datifile, client, temp);
+                    ZipFile.ExtractToDirectory(temp, datifile.FileName);
                     File.Delete(temp);
                 }
                 else if (String.Compare(tipo, "file", StringComparison.Ordinal) == 0)
@@ -211,7 +240,7 @@ namespace AppCondivisione
                         datifile.ShowDialog();
                     else
                         _numberAutoSaved++;
-                    SendFile(bufferfile, datifile, client, datifile.FileName);
+                    ReceveFile(bufferfile, datifile, client, datifile.FileName);
                 }
                 client.Close();
             }
@@ -224,16 +253,24 @@ namespace AppCondivisione
                 var vett2 = nomeFile.Split('.');
                 _numberAutoSaved = 0;
                 datifile.FileName = SharedVariables.PathSave + @"\" + nomeFile;
-                while (File.Exists(datifile.FileName))
+                while (File.Exists(datifile.FileName) ||Directory.Exists(datifile.FileName))
                 {
                     _numberAutoSaved++;
-                    datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")" + "." + vett2[1];
+                    if (IsDir(datifile.FileName))
+                    {
+                        datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")";
+                    }
+                    else
+                    {
+                        datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")" +
+                                            "." + vett2[1];
+                    }
                 }
             }
             datifile.InitialDirectory = SharedVariables.PathSave;
         }
 
-        private static void SendFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)
+        private static void ReceveFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)
         {
             byte[] buf;
             using (var stream = client.GetStream()) // flusso di dati
@@ -259,6 +296,12 @@ namespace AppCondivisione
                     File.Delete(datifile.FileName);
                 }
             }
+        }
+
+
+        private static bool IsDir(string fileName)
+        {
+            return (File.GetAttributes(fileName) & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         private static byte[] ShowMessageBox(string nomeFile, string admin)
