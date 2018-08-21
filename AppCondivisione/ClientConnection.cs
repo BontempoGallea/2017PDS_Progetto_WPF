@@ -116,6 +116,8 @@ namespace AppCondivisione
 
         private bool _disposed = false;
 
+        private string TAG;
+
         private TcpListener _passiveListener;
 
         private TcpClient _controlClient; // Control connection = connessione con il client per lo scambio di comandi
@@ -133,7 +135,7 @@ namespace AppCondivisione
         private string _username;
         private string _root;
         private string _currentDirectory;
-        private bool isDirectoryFlag = false;
+        private bool _isDirectoryFlag = false;
         private IPEndPoint _dataEndpoint;
         private IPEndPoint _remoteEndPoint;
 
@@ -161,7 +163,7 @@ namespace AppCondivisione
 
             this._validCommands = new List<string>();
 
-            this._root = @"C:\temp";
+            this._root =SharedVariables.PathSave;
             this._currentDirectory = this._root;
         }
 
@@ -209,7 +211,7 @@ namespace AppCondivisione
 
                     if (response == null)
                     {
-                        Console.WriteLine("Comando ricevuto = " + cmd + " --- Arguments = " + arguments);
+                        //Console.WriteLine("[INIT] Comando ricevuto = " + cmd + " --- Arguments = " + arguments);
                         switch (cmd)
                         {
                             // Riceve l'identità dello user, necessaria per accedere al suo relativo file system
@@ -239,12 +241,13 @@ namespace AppCondivisione
                             case "PASV":
                                 response = this.Passive();
                                 break;
-
+                            case "RMD":
+                                response = RemoveDir(arguments);
+                                break;
                             // Logout
                             case "QUIT":
                                 response = "221 Server closing control connection";
                                 break;
-
 
                             // Salva quello che ti viene inviato e se esiste già sostituiscilo
                             case "STOR":
@@ -252,21 +255,21 @@ namespace AppCondivisione
                                 break;
 
                             case "STOU":
-                                Console.WriteLine("Switch ---> arguments = " + arguments);
                                 response = StoreUniqueReal();
                                 break;
 
                             case "CWD":
                                 response = ChangeWorkingDirectory(arguments);
-                                Console.WriteLine("Current Working Directory: " + _root);
                                 break;
 
+                            case "DELE":
+                                response = Delete(arguments);
+                                break;
                             // Reinizializza tutte le credenziali
                             case "REIN":
                                 _username = null;
                                 _passiveListener = null;
                                 _dataClient = null;
-
                                 response = "220 Service ready for new user";
                                 break;
 
@@ -287,9 +290,8 @@ namespace AppCondivisione
                             case "APPE":
                             case "LIST":
                             case "MKD":
-                            case "RMD":
+
                             case "RETR":
-                            case "DELE":
                             case "RNTO":
                             case "RNFR":
                             case "MODE":
@@ -327,6 +329,48 @@ namespace AppCondivisione
             Dispose();
         }
 
+        private string RemoveDir(string pathname)
+        {
+            pathname = NormalizeFilename(pathname);
+            if (pathname != null)
+            {
+                if (Directory.Exists(pathname))
+                {
+                    Directory.Delete(pathname, true);
+                }
+                else
+                {
+                    return "550 Directory Not Found";
+                }
+                return "250 requested directory action okay, completed";
+            }
+            else
+            {
+                return "550 Directory Not Found";
+            }
+        }
+
+        private string Delete(string pathname)
+        {
+            pathname = NormalizeFilename(pathname);
+            if (pathname != null)
+            {
+                if (File.Exists(pathname))
+                {
+                    File.Delete(pathname);
+                }
+                else
+                {
+                    return "550 File Not Found";
+                }
+                return "250 requested file action okay, completed";
+            }
+            else
+            {
+                return "550 File Not Found";
+            }
+        }
+
         private bool IsPathValid(string path)
         {
             return path.StartsWith(_root);
@@ -334,7 +378,7 @@ namespace AppCondivisione
 
         private string NormalizeFilename(string path)
         {
-            Console.WriteLine("Normalize --> " + path);
+            Console.WriteLine(TAG + "NORMALIZE --> " + path);
             if (path == null)
             {
                 path = string.Empty;
@@ -364,6 +408,20 @@ namespace AppCondivisione
         {
             _username = username;
 
+            TAG = "[FtpServer@" + _username + "] ";
+
+            string _userDirectory = NormalizeFilename(username);
+
+            Console.WriteLine(TAG + "NEW USER ---> " + _userDirectory);
+
+            if (!Directory.Exists(_userDirectory))
+            {
+                Directory.CreateDirectory(_userDirectory);
+            }
+
+            this._currentDirectory = _userDirectory;
+            this._root = this._currentDirectory;
+
             return "331 Username ok, need password";
         }
 
@@ -371,7 +429,7 @@ namespace AppCondivisione
         {
             this._currentDirectory = "/" + pathname;
 
-            this.isDirectoryFlag = true;
+            this._isDirectoryFlag = true;
 
             return "250 Changed to new directory";
         }
@@ -432,11 +490,11 @@ namespace AppCondivisione
 
         private string Store(string pathname, bool isDirectory)
         {
-            Console.WriteLine("Store --> " + pathname);
+            Console.WriteLine(TAG + "STORE --> " + pathname);
 
             pathname = NormalizeFilename(pathname);
 
-            Console.WriteLine("Store --> " + pathname);
+            Console.WriteLine(TAG + "STORE --> " + pathname);
 
             if (pathname != null)
             {
@@ -452,6 +510,10 @@ namespace AppCondivisione
         {
             string pathname = NormalizeFilename(_currentDirectory);
 
+            Console.WriteLine(TAG + "STORE UNIQUE REAL ---> " + pathname);
+
+
+
             var state = new DataConnectionOperation { Arguments = pathname, Operation = StoreOperation };
 
             SetupDataConnectionOperation(state);
@@ -461,27 +523,14 @@ namespace AppCondivisione
 
         private string StoreUnique(string pathname, bool isDirectory)
         {
-            int _numberAutoSaved = 0;
-            var pathnameTmp = pathname;
 
-            var vett2 = pathnameTmp.Split('.');
-            while (File.Exists(pathnameTmp) || Directory.Exists(pathnameTmp))
-            {
-                _numberAutoSaved++;
-                var extension = (isDirectory) ? "" : vett2[1];
-                pathnameTmp = vett2[0] + "(" + _numberAutoSaved + ")" + "." + extension;
-            }
 
-            var pathToBePassed = (isDirectory) ? pathname : pathnameTmp;
-            var state = new DataConnectionOperation { Arguments = pathToBePassed, Operation = StoreOperation };
+
+            var state = new DataConnectionOperation { Arguments = pathname, Operation = StoreOperation };
 
             SetupDataConnectionOperation(state);
 
-            if (isDirectory)
-            {
-                ZipFile.ExtractToDirectory(pathname, pathnameTmp);
-                File.Delete(pathname);
-            }
+
 
             return string.Format("150 Opening {0} mode data transfer for STOU", _dataConnectionType);
         }
@@ -502,12 +551,6 @@ namespace AppCondivisione
 
             return string.Format("257 \"{0}\" is current directory.", current); ;
         }
-
-
-
-
-
-
 
         #endregion
 
@@ -563,16 +606,29 @@ namespace AppCondivisione
         private string StoreOperation(NetworkStream dataStream, string pathname)
         {
             long bytes = 0;
+            int _numberAutoSaved = 0;
+            string folder = pathname.Split('.')[0];
+            string fileName = pathname;
 
-            using (FileStream fs = new FileStream(pathname, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
+            var vett2 = pathname.Split('.');
+            while (File.Exists(fileName) || Directory.Exists(folder.Split('.')[0]))
+            {
+                _numberAutoSaved++;
+                var extension = (this._isDirectoryFlag) ? "" : "." + vett2[1];
+                folder = vett2[0] + "(" + _numberAutoSaved + ")" + extension;
+                if (!_isDirectoryFlag) { fileName = vett2[0] + "(" + _numberAutoSaved + ")" + extension; }
+            }
+
+            Console.WriteLine(TAG + "STORE OPERATION ASYNC ---> " + pathname + "   " + folder);
+
+            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
             {
                 bytes = CopyStream(dataStream, fs);
             }
 
-            if (isDirectoryFlag)
+            if (_isDirectoryFlag)
             {
-                var folder = NormalizeFilename(_currentDirectory).Split('.');
-                ZipFile.ExtractToDirectory(pathname, folder[0]);
+                ZipFile.ExtractToDirectory(pathname, folder);
                 File.Delete(pathname);
             }
 

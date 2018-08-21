@@ -12,9 +12,11 @@ namespace AppCondivisione
     class FtpClient
     {
         private WebClient _client;
+        private NetworkCredential _credentials;
 
-        public FtpClient()
+        public FtpClient(string username, string password)
         {
+            this._credentials = new NetworkCredential { UserName = username, Password = password };
             this._client = new WebClient
             {
                 Proxy = null,
@@ -36,6 +38,10 @@ namespace AppCondivisione
             FileInfo fileInf = new FileInfo(finalPath);
 
             this.UploadFile(fileInf, address, method);
+            if (this.IsDir(pathname))
+            {
+                File.Delete(finalPath);
+            }
         }
 
         private string MakeZip(string pathname)
@@ -69,7 +75,7 @@ namespace AppCondivisione
             reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri(uri));
 
             // Credenziali
-            reqFTP.Credentials = new NetworkCredential("admin", "password");
+            reqFTP.Credentials = this._credentials;
 
             // Per default c'è il keepalive, che fa sì che la connessione di controllo non venga chiusa dopo l'esecuzione
             reqFTP.KeepAlive = false;
@@ -121,5 +127,47 @@ namespace AppCondivisione
         {
             return (File.GetAttributes(fileName) & FileAttributes.Directory) == FileAttributes.Directory;
         }
+
+        public void Remove(string pathname, string address)
+        {
+            string finalPath = pathname;
+            string method = WebRequestMethods.Ftp.DeleteFile;
+
+            if (this.IsDir(pathname))
+            {
+                method = WebRequestMethods.Ftp.RemoveDirectory;
+
+            }
+
+            FileInfo fileInf = new FileInfo(finalPath);
+
+            this.RemoveFile(fileInf, address, method);
+        }
+
+        public void RemoveFile(FileInfo fileInf, string address, string method)
+        {
+            Console.WriteLine(fileInf);
+            string uri = "ftp://" + address + "/" + fileInf.Name;
+            FtpWebRequest reqFTP;
+
+            // Creo una richiesta FTP a partire dall'uri che ho appena creato
+            reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri(uri));
+
+            // Credenziali
+            reqFTP.Credentials = this._credentials;
+
+            // Per default c'è il keepalive, che fa sì che la connessione di controllo non venga chiusa dopo l'esecuzione
+            reqFTP.KeepAlive = false;
+
+            // Specifico il comando, in questo caso UPLOAD
+            reqFTP.Method = method;
+
+            // Trasferiamo in binario perché usiamo FTP
+            reqFTP.UseBinary = true;
+
+            FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+            response.Close();
+        }
     }
+
 }

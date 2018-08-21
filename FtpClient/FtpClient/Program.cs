@@ -10,9 +10,10 @@ namespace FtpClient
     {
         static void Main(string[] args)
         {
-            FtpClient client = new FtpClient();
+            FtpClient client = new FtpClient("admin", "password");
 
             client.Upload(@"C: \Users\bitri\Documents\Documenti\reti2\euge", "127.0.0.1");
+            //client.Remove(@"C: \Users\bitri\Documents\Documenti\reti2\euge", "127.0.0.1");
         }
     }
 }
