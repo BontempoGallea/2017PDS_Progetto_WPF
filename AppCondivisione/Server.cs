@@ -30,7 +30,6 @@ namespace AppCondivisione
                 _branchUdp = new Thread(EntryUdp);
                 _branchUdp.Start();
                 _branchTcp = new Thread(EntryTcp);
-                _branchTcp.SetApartmentState(ApartmentState.STA);
                 _branchTcp.Start();
             }
             catch (ArgumentException e) { }
@@ -148,17 +147,28 @@ namespace AppCondivisione
 
             try
             {
-                var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(),
+                //
+                FtpServer server = new FtpServer(SharedVariables.Luh.getAdmin().getIp(), SharedVariables.Luh.getAdmin().getPort());
+
+                server.Start();
+
+                while (!SharedVariables.CloseEverything)
+                {}
+
+                server.Stop();
+                //
+               /* var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(),
                     SharedVariables.Luh.getAdmin().getPort()); // Imposto tcplistener con le credenziali della persona
                 listener.Start(); // Inizio ascolto
-                Thread.Sleep(2000);
                 while (!SharedVariables.CloseEverything)
                 {
                     if (!listener.Pending()) // Se non c'è nessuno che vuole inviarmi nulla, continuo col prossimo ciclo
                         continue;
+                    /* TODO: cambiare qua per inserire ftpserver
                     AcceptRemoteConnection(bufferfile, datifile, listener);
                 }
-            }
+                */
+                }
             catch (ArgumentNullException e)
             {
                 Console.Write(e);
@@ -226,7 +236,7 @@ namespace AppCondivisione
                     else
                         _numberAutoSaved++;
                     const string temp = "./temp.zip";
-                    ReceveFile(bufferfile, datifile, client, temp);
+                    ReceiveFile(bufferfile, datifile, client, temp);
                     ZipFile.ExtractToDirectory(temp, datifile.FileName);
                     File.Delete(temp);
                 }
@@ -240,7 +250,7 @@ namespace AppCondivisione
                         datifile.ShowDialog();
                     else
                         _numberAutoSaved++;
-                    ReceveFile(bufferfile, datifile, client, datifile.FileName);
+                    ReceiveFile(bufferfile, datifile, client, datifile.FileName);
                 }
                 client.Close();
             }
@@ -270,7 +280,7 @@ namespace AppCondivisione
             datifile.InitialDirectory = SharedVariables.PathSave;
         }
 
-        private static void ReceveFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)
+        private static void ReceiveFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)
         {
             byte[] buf;
             using (var stream = client.GetStream()) // flusso di dati
