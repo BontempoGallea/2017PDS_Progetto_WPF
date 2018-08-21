@@ -64,6 +64,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Client.cs" />
+    <Compile Include="ClientConnection.cs" />
+    <Compile Include="FtpClient.cs" />
+    <Compile Include="FtpServer.cs" />
     <Compile Include="ListUserHandler.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Server.cs" />
