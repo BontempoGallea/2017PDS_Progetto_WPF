@@ -37,7 +37,7 @@ namespace AppCondivisione
                 //string name = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName; // Nome dell'utente che ha effettuato l'accesso
                 string name = "gianpaolo bontempo";
                 string[] st = name.Split(' ');
-                admin = new Person("n1", st[1], "online", getLocalIPAddress(), "21"); //imposto admin
+                admin = new Person("Eugenio", "Gallea", "online", getLocalIPAddress(), "21"); //imposto admin
             }
             catch (Exception e) { }
             // Persone aggiunte per test
@@ -230,7 +230,7 @@ namespace AppCondivisione
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                if (ip.AddressFamily == AddressFamily.InterNetwork && !ip.ToString().StartsWith("10."))
                 {
                     return ip.ToString();
                 }

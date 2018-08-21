@@ -64,19 +64,19 @@ namespace AppCondivisione
                 while (SharedVariables.Luh.getAdmin() == null) { }
                 // Mando pacchetti broadcast ogni 5s, SOLO SE sono ONLINE
                 if (String.Compare(SharedVariables.Luh.getAdmin().getState(), "online", StringComparison.Ordinal) == 0)//da fare un lock
-                    BroadcastMessage("pds,"+SharedVariables.Luh.getAdmin().getString());
+                    BroadcastMessage("pds," + SharedVariables.Luh.getAdmin().getString());
                 Thread.Sleep(5000);
             }
         }
 
         static void BroadcastMessage(string message)
         {
-            IPEndPoint ipEp = new IPEndPoint(IPAddress.Broadcast, SenderPort);
+            IPEndPoint ipEp = new IPEndPoint(IPAddress.Parse("192.168.1.255"), SenderPort);
 
             try
             {
                 ClientUdp.Send(Encoding.ASCII.GetBytes(message), Encoding.ASCII.GetBytes(message).Length, ipEp);
-                Console.WriteLine("Multicast data sent.....");
+                Console.WriteLine("Multicast data sent. Message: << " + message + " >>");
             }
             catch (Exception e)
             {
