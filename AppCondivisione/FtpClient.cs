@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace AppCondivisione
 {
@@ -104,13 +106,26 @@ namespace AppCondivisione
 
                 // Leggo 2KB alla votla
                 contentLen = fs.Read(buff, 0, buffLength);
-
+                
                 // Ciclo fino a che non ho finito
                 while (contentLen != 0)
                 {
                     // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                     strm.Write(buff, 0, contentLen);
                     contentLen = fs.Read(buff, 0, buffLength);
+                    SharedVariables.totsent += contentLen;
+
+                    if (SharedVariables.W != null)
+                    {
+                        var total = reqFTP.ContentLength * SharedVariables.W.UserBox.SelectedItems.Count;
+                        // SharedVariables.W.ProgressBar.Value = totsent / reqFTP.ContentLength;ù
+
+                        SharedVariables.W.UpdateProgressBar((int)((SharedVariables.totsent*100) / total));
+                        Thread.Sleep(1000);
+                        //SharedVariables.percent = SharedVariables.totsent / total * 100;
+                       
+                    }
+                    SharedVariables.W.UpdateProgressBar(100);
                 }
 
                 // Chiudo tutto

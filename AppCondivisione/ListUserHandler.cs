@@ -35,9 +35,7 @@ namespace AppCondivisione
                 users = new Dictionary<string, Person>(); //creo una dictionary di persone
                 lastRefresh = -1;
                 //string name = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName; // Nome dell'utente che ha effettuato l'accesso
-                string name = "gianpaolo bontempo";
-                string[] st = name.Split(' ');
-                admin = new Person("gian", st[1], "online", getLocalIPAddress(), "21"); //imposto admin
+                admin = new Person(getLocalIPAddress().Replace(".","-"), "", "online", getLocalIPAddress(), "21"); //imposto admin
             }
             catch (Exception e) { }
             // Persone aggiunte per test
@@ -47,39 +45,7 @@ namespace AppCondivisione
             //addUser(test2);
         }
 
-        internal void clean()
-        {
-            // Funzione che controlla di togliere i bottoni delle persone non piu sulla rete
-            // o semplicemnte non online
-
-            Dictionary<string, Person>.ValueCollection values = users.Values;
-            try
-            {
-                foreach (Person p in values) // Per ogni persona
-                {
-                    var isNew = p.isNew(); // True se non ha ancora un metrotile sul flowlayout
-                    var old = p.IsOld(); // True se la persona è deprecato
-
-                    if (old)
-                    {
-                        if (!isNew)
-                        {
-                            //Program.ac.flowLayoutPanel1.Controls.Remove(p.getButton());
-                        }
-                    }
-
-                    if ((p.getState().CompareTo("offline") == 0) && (!isNew))
-                    {
-                        //Program.ac.flowLayoutPanel1.Controls.Remove(p.getButton());
-                        users.Remove(p.getSurname() + p.getName());
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
+        
 
         public Dictionary<String, Person> getList() { return users; } // Ritorna la lista di persone
 
@@ -89,50 +55,6 @@ namespace AppCondivisione
              * Funzione per ritornare lo stato dell'admin
             */
             return this.admin.getState();
-        }
-
-        public void refreshButtonClick()
-        {
-            /*
-             * Funzione che gestisce gli eventi quando si clicca il refresh button
-            */
-            int l = users.Keys.Count; // Lunghezza attuale della lista, dopo il click
-            if (l > lastRefresh)
-            {
-                // Entro qui se la lunghezza è aumentata, che vuol dire che sono stati aggiunti altri
-                // utenti
-                try
-                {
-                    Dictionary<string, Person>.ValueCollection values = users.Values;
-                    foreach (Person p in values)
-                    {
-                        if (p.isNew())
-                        {
-                            p.setOld();//la persona adesso ha un bottone
-                            /*
-                            btn = new MetroFramework.Controls.MetroTile();//inizializzo il bottone
-                            btn.Size = new Size(70, 70);//dimensione bottone
-                            btn.Name = p.getName() + "," + p.getSurname() + "," + p.getIp() + "," + p.getPort();//bottone del bottone
-                            btn.Style = MetroFramework.MetroColorStyle.Green;//bottone verde per indicare persona online
-                            btn.Click += new EventHandler(changeState2_Click);
-                            btn.Text = p.getName() + "\n" + p.getSurname();
-                            btn.TileImage = Image.FromFile("C:\\ProgramData\\Microsoft\\User Account Pictures\\user-32.png");
-                            btn.TileImageAlign = ContentAlignment.TopCenter;
-                            btn.UseTileImage = true;
-                            listBTN.Add(btn);
-                            p.addButton(btn);
-                            Program.ac.flowLayoutPanel1.Controls.Add(btn);
-                            */
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-
-                lastRefresh = l; // Aggiorno la lunghezza della lista all'ultimo refresh
-            }
         }
 
         internal void resetTimer(string v)

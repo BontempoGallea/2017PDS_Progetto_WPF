@@ -14,6 +14,8 @@ namespace AppCondivisione
         private static ListUserHandler _luh = new ListUserHandler();
         private static bool _automaticSave = true; // True = non popparmi la finestra di accetazione quando mi arriva un file  
         public static bool _annullaBoolean = false;
+        public static long percent = 0;
+        public static long totsent = 0;
         public static MainWindow W;
         public static bool CloseEverything
         {

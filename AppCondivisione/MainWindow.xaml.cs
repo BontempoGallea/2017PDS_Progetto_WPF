@@ -73,7 +73,7 @@ namespace AppCondivisione
         }
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
-            
+            SharedVariables.totsent = 0;
             foreach (Person item in this.UserBox.SelectedItems)
             {
                 //TODO: modificare qui per il clientftp
@@ -177,6 +177,16 @@ namespace AppCondivisione
         {
            // update();
             Console.Write(e);
+        }
+
+        public void UpdateProgressBar(int value)
+        {
+            if (CheckAccess())
+                this.ProgressBar.Value = value;
+            else
+            {
+                Dispatcher.Invoke(() => { this.ProgressBar.Value = value; });
+            }
         }
 
     }

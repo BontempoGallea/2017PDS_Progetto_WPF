@@ -17,7 +17,6 @@ namespace AppCondivisione
         private string state;
         private IPAddress ip;
         private int port;
-        private bool imNew;
         private System.Timers.Timer t;
         private string _Username;
         public string Username
@@ -44,7 +43,6 @@ namespace AppCondivisione
             this.name = n;
             this.surname = c;
             this.state = s;
-            this.imNew = true;
             this.ip = IPAddress.Parse(ip);
             this.port = int.Parse(port);
             t.Elapsed += onTimeElapse;
@@ -99,12 +97,6 @@ namespace AppCondivisione
             this.state = s;
         }
 
-        public bool isNew()
-        {
-            // L'utente è una nuova aggiunta?
-            return imNew;
-        }
-
         public bool IsOld()
         {
             return isOld;
@@ -112,7 +104,7 @@ namespace AppCondivisione
         public void setOld()
         {
             // L'utente non è più una nuova aggiunta
-            imNew = false;
+            isOld = true;
         }
 
         public IPAddress getIp()
