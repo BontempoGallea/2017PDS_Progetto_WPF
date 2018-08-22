@@ -242,7 +242,7 @@ namespace AppCondivisione
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                if (ip.AddressFamily == AddressFamily.InterNetwork && !ip.ToString().StartsWith("10."))
                 {
                     return ip.ToString();
                 }

@@ -71,12 +71,12 @@ namespace AppCondivisione
 
         static void BroadcastMessage(string message)
         {
-            IPEndPoint ipEp = new IPEndPoint(IPAddress.Broadcast, SenderPort);
+            IPEndPoint ipEp = new IPEndPoint(IPAddress.Parse("192.168.1.255"), SenderPort);
 
             try
             {
                 ClientUdp.Send(Encoding.ASCII.GetBytes(message), Encoding.ASCII.GetBytes(message).Length, ipEp);
-                Console.WriteLine("Multicast data sent.....");
+                Console.WriteLine("Multicast data sent. Message: << " + message + " >>");
             }
             catch (Exception e)
             {
