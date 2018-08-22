@@ -18,17 +18,10 @@ namespace AppCondivisione
     /// </summary>
     public partial class App : Application
     {
-        private Task taskclient, taskserver, pipeThread;
+        private Task taskserver, pipeThread;
         public static RegistryKey key;
         public static bool exists = false; // Flag per vedere se ci sono altre istanze dello stesso progetto
         private Server server;
-        private static Client client;
-       // public Window BWindow;
-
-        public static void ClientEntry(string name)
-       {
-           client.EntryPoint(name);
-       }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -59,12 +52,6 @@ namespace AppCondivisione
             key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN");
             key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
             key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
-           
-         
-
-           
-            // Creo la classe client che verrà fatta girare nel rispettivo thread
-            client = new Client();
 
             // Creo la classe server che verrà fatta girare nel rispettivo thread
             server = new Server();
@@ -109,7 +96,7 @@ namespace AppCondivisione
                     SharedVariables.PathSend = result;
                     SharedVariables.W.Dispatcher.Invoke(new Action(() =>
                     {
-                        AppCondivisione.MainWindow m2 = new MainWindow(SharedVariables.Luh.getList().Values) {Visibility = Visibility.Visible};
+                        AppCondivisione.MainWindow m2 = new MainWindow(SharedVariables.Luh.Users.Values) {Visibility = Visibility.Visible};
                         m2.Show();
                     }));
                    

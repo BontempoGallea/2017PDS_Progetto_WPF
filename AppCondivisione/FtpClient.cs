@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using System.ComponentModel;
 
 namespace AppCondivisione
 {
@@ -13,8 +14,9 @@ namespace AppCondivisione
     {
         private WebClient _client;
         private NetworkCredential _credentials;
+        private BackgroundWorker _worker;
 
-        public FtpClient(string username, string password)
+        public FtpClient(string username, string password, BackgroundWorker backgroundWorker)
         {
             this._credentials = new NetworkCredential { UserName = username, Password = password };
             this._client = new WebClient
@@ -22,6 +24,7 @@ namespace AppCondivisione
                 Proxy = null,
                 Credentials = new NetworkCredential("username", "password")
             };
+            this._worker = backgroundWorker;
         }
 
         public void Upload(string pathname, string address)
@@ -104,6 +107,7 @@ namespace AppCondivisione
 
                 // Leggo 2KB alla votla
                 contentLen = fs.Read(buff, 0, buffLength);
+                var uploaded = 0;
 
                 // Ciclo fino a che non ho finito
                 while (contentLen != 0)
@@ -111,6 +115,9 @@ namespace AppCondivisione
                     // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                     strm.Write(buff, 0, contentLen);
                     contentLen = fs.Read(buff, 0, buffLength);
+                    uploaded += contentLen;
+
+                    this._worker.ReportProgress((int) (uploaded/fileInf.Length));
                 }
 
                 // Chiudo tutto

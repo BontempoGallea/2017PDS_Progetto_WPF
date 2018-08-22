@@ -6,48 +6,49 @@ using System.Threading.Tasks;
 
 namespace AppCondivisione
 {
-    class SharedVariables
+    static class SharedVariables
     {
-        private static Boolean _closeEverything = false; // Questo è il flag al quale i thread fanno riferimento per sapere se devono chiudere tutto o no
-        private static string _pathSend = "C:\\Users\\host1\\Documents\\catia.zip"; // Path del file / della cartella da inviare
-        private static string _pathSave = @"C:\Users\" + Environment.UserName + @"\Downloads"; // Path di default per il salvataggio dei files in arrivo
-        private static ListUserHandler _luh = new ListUserHandler();
-        private static bool _automaticSave = true; // True = non popparmi la finestra di accetazione quando mi arriva un file  
-        public static bool _annullaBoolean = false;
+        private static Boolean _CloseEverything = false; // Questo è il flag al quale i thread fanno riferimento per sapere se devono chiudere tutto o no
+        private static string _PathSend = "C:\\Users\\host1\\Documents\\catia.zip"; // Path del file / della cartella da inviare
+        private static string _PathSave = @"C:\Users\" + Environment.UserName + @"\Downloads"; // Path di default per il salvataggio dei files in arrivo
+        private static ListUserHandler _Luh = new ListUserHandler();
+        private static bool _AutomaticSave = true; // True = non popparmi la finestra di accetazione quando mi arriva un file  
+        public static bool _AnnullaBoolean = false;
         public static MainWindow W;
+
         public static bool CloseEverything
         {
-            get { return _closeEverything; }
-            set { _closeEverything = value; }
+            get { return _CloseEverything; }
+            set { _CloseEverything = value; }
         }
 
         public static string PathSend
         {
-            get { return _pathSend; }
-            set { lock (_pathSend) { _pathSend = value; } }
+            get { return _PathSend; }
+            set { lock (_PathSend) { _PathSend = value; } }
         }
 
         public static string PathSave
         {
-            get { return _pathSave; }
-            set { lock(_pathSave) { _pathSave = value; } }
+            get { return _PathSave; }
+            set { lock(_PathSave) { _PathSave = value; } }
         }
 
         public static ListUserHandler Luh
         {
-            get { return _luh; }
+            get { return _Luh; }
         }
 
         public static bool AutomaticSave
         {
-            get { return _automaticSave; }
-            set { _automaticSave = value; }
+            get { return _AutomaticSave; }
+            set { _AutomaticSave = value; }
         }
 
         public static bool Annulla
         {
-            get { return _annullaBoolean; }
-            set { _annullaBoolean = value; }
+            get { return _AnnullaBoolean; }
+            set { _AnnullaBoolean = value; }
         }
     }
 }

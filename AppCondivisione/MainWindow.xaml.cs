@@ -39,27 +39,6 @@ namespace AppCondivisione
             SharedVariables.W = this;
         }
 
-        public void update()
-        {
-            this.UserBox.ItemsSource = new[]
-            {
-                new Person{Username="Username1", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username2", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username3", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username4", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username5", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username6", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username7", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username8", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username9", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username10", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username11", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username12", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username13", ImageData=this.LoadImage("img.jpg") },
-                new Person{Username="Username14", ImageData=this.LoadImage("img.jpg") }
-            };
-
-        }
         private BitmapImage LoadImage(string filename)
         {
             return new BitmapImage(new Uri("pack://application:,,,/" + filename));
@@ -69,49 +48,40 @@ namespace AppCondivisione
         {
             
             foreach (Person item in this.UserBox.SelectedItems)
-            {
-                //TODO: modificare qui per il clientftp
-
-                //Thread clientThread = new Thread(() => App.ClientEntry(item.Username)) { Name = "clientThread" }; // Per ogni bottone selezionato creo un thread
-                //    clientThread.Start();
-                //   clientThread.Join();
-               
+            {  
                 var cred =  item.Username.Split(' ');
                 var p = new Person();
-                SharedVariables.Luh.getList().TryGetValue(cred[1] + cred[0], out p);
-                if (p.isOnline())
+                SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
+                Console.WriteLine("Stato di " +p.Name + " = " + p.State);
+                if (p.IsOnline())
                 {
-                    FtpClient client = new FtpClient(cred[1] + cred[0],"");
-                    client.Upload(SharedVariables.PathSend, p.getIp().ToString());
+                    ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, p);
+                    pbw.Show();
                 }
                 else
+                {
                     MessageBox.Show("La persona a cui vuoi inviare non è più online!");
-            }
-           MessageBox.Show("Ciao");
+                }
+            } 
         }
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
         {
             foreach (Person item in this.UserBox.SelectedItems)
             {
-                //TODO: modificare qui per il clientftp
-
-                //Thread clientThread = new Thread(() => App.ClientEntry(item.Username)) { Name = "clientThread" }; // Per ogni bottone selezionato creo un thread
-                //    clientThread.Start();
-                //   clientThread.Join();
-
                 var cred = item.Username.Split(' ');
                 var p = new Person();
-                SharedVariables.Luh.getList().TryGetValue(cred[1] + cred[0], out p);
-                if (p.isOnline())
+                SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
+                if (p.IsOnline())
                 {
-                    FtpClient client = new FtpClient(cred[1] + cred[0], "");
-                    client.Remove(SharedVariables.PathSend, p.getIp().ToString());
+                    FtpClient client = new FtpClient(cred[1] + cred[0], "", null);
+                    client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
                 }
                 else
+                {
                     MessageBox.Show("La persona a cui vuoi inviare non è più online!");
+                }
             }
-            MessageBox.Show("Ciao");
             this.Close();
         }
 
@@ -158,8 +128,7 @@ namespace AppCondivisione
 
         private void Main_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-           // update();
-            Console.Write(e);
+           Console.Write(e);
         }
 
     }

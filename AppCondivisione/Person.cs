@@ -10,20 +10,65 @@ namespace AppCondivisione
 {
     public class Person
     {
+        private string _Name;
+        private string _Surname;
+        private bool _State;
+        private string _Username;
+
+
+        private IPAddress ip;
+        private int _Port;
 
         private bool isOld;
-        private string name;
-        private string surname;
-        private string state;
-        private IPAddress ip;
-        private int port;
         private bool imNew;
         private System.Timers.Timer t;
-        private string _Username;
+
+        public Person() { }
+
+        public Person(string n, string c, bool s, string ip, int port)
+        {
+            t = new System.Timers.Timer(5000);
+            this._Name = n;
+            this._Surname = c;
+            this._State = s;
+            this.imNew = true;
+            this.ip = IPAddress.Parse(ip);
+            this._Port = port;
+            t.Elapsed += OnTimeElapse;
+            t.AutoReset = true;
+            t.Start();
+            _imageData = new BitmapImage(new Uri("pack://application:,,,/img.jpg"));
+            _imageData.Freeze();
+        }
+
         public string Username
         {
-            get { return this.name+" "+ surname; }
+            get { return this._Name+" "+ this._Surname; }
             set { this._Username = value; }
+        }
+
+        public string Name
+        {
+            get { return this._Name; }
+            set { this._Name = value; }
+        }
+
+        public string Surname
+        {
+            get { return this._Surname; }
+            set { this._Surname = value; }
+        }
+
+        public bool State
+        {
+            get { return this._State; }
+            set { this._State = value; }
+        }
+
+        public int Port
+        {
+            get { return this._Port; }
+            set { this._Port = value; }
         }
 
         private BitmapImage _imageData;
@@ -36,125 +81,63 @@ namespace AppCondivisione
             set { this._imageData = value; }
         }
 
-        public Person() { }
-
-        public Person(string n, string c, string s, string ip, string port)
+        public IPAddress GetIp()
         {
-            t = new System.Timers.Timer(5000);
-            this.name = n;
-            this.surname = c;
-            this.state = s;
-            this.imNew = true;
-            this.ip = IPAddress.Parse(ip);
-            this.port = int.Parse(port);
-            t.Elapsed += onTimeElapse;
-            t.AutoReset = true;
-            t.Start();
-            _imageData = new BitmapImage(new Uri("pack://application:,,,/img.jpg"));
-            _imageData.Freeze();
+            return ip;
         }
 
-        public void reset()
+        public string GetString()
+        {
+            return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port;
+        }
+
+        private string GetStateAsString()
+        {
+            return (this._State) ? "online" : "offline";
+        }
+
+        public bool IsEqual(Person p)
+        {
+            return (p.Surname.CompareTo(this._Surname) == 0)
+                   && (p.Name.CompareTo(this._Name) == 0)
+                   && (p.GetIp().ToString().CompareTo(ip.ToString()) == 0)
+                   && (p.Port == this._Port);
+        }
+
+        public bool IsOnline()
+        {
+            return this._State;
+        }
+
+        public void Reset()
         {
             t.Stop();
             isOld = false;
             t.Start();
         }
 
-        private void onTimeElapse(object sender, System.Timers.ElapsedEventArgs e)
+        private void OnTimeElapse(object sender, System.Timers.ElapsedEventArgs e)
         {
             isOld = true;
             t.Stop();
             t.Start();
             //throw new Exception();
         }
-        public string getName()
-        {
-            return name;
-        }
 
-        public void setName(string n)
-        {
-            this.name = n;
-        }
-
-        public string getSurname()
-        {
-            return this.surname;
-        }
-
-        public void setSurname(string c)
-        {
-            this.surname = c;
-        }
-
-        public string getState()
-        {
-            return this.state;
-        }
-
-        public void setState(string s)
-        {
-            this.state = s;
-        }
-
-        public bool isNew()
+        public bool IsNew()
         {
             // L'utente è una nuova aggiunta?
             return imNew;
         }
 
-        public bool old()
+        public bool Old()
         {
             return isOld;
         }
-        public void setOld()
+        public void SetOld()
         {
             // L'utente non è più una nuova aggiunta
             imNew = false;
         }
-
-        public IPAddress getIp()
-        {
-            return ip;
-        }
-
-        public int getPort()
-        {
-            return port;
-        }
-
-        public bool isOnline()
-        {
-            if (state.Equals("online"))
-                return true;
-            else
-                return false;
-        }
-
-        public string getString()
-        {
-            return name + "," + surname + "," + state + "," + ip.ToString() + "," + port;
-        }
-
-        public bool isEqual(Person p)
-        {
-            return (p.getSurname().CompareTo(surname) == 0)
-                   && (p.getName().CompareTo(name) == 0)
-                   && (p.getIp().ToString().CompareTo(ip.ToString()) == 0)
-                   && (p.getPort() == port);
-        }
-/*
-        internal void addButton(MetroTile btn)
-        {
-            a = btn;
-        }
-
-        internal MetroTile getButton()
-        {
-            return a;
-            throw new NotImplementedException();
-        }
-        */
     }
 }
