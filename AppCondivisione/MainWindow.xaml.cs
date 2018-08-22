@@ -64,7 +64,13 @@ namespace AppCondivisione
         {
             return new BitmapImage(new Uri("pack://application:,,,/" + filename));
         }
-
+        public void RemovePerson(Person p)
+        {
+            if (this.UserBox.Items.Contains(p))
+            {
+                this.UserBox.Items.Remove(p);
+            }
+        }
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
             
@@ -144,9 +150,20 @@ namespace AppCondivisione
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button b = sender as Button;
-
-            b.Background = (b.Content.Equals("Stato: Online")) ? Brushes.Gray : Brushes.Blue;
-            b.Content = (b.Content.Equals("Stato: Online")) ? "Stato: Offline" : "Stato: Online";
+            if (b.Content.Equals("Stato: Online"))
+            {
+                b.Background = Brushes.Gray;
+                b.Content = "Stato: Offline";
+                SharedVariables.Luh.changeAdminState("offline");
+            }
+            else
+            {
+                b.Background = Brushes.Blue;
+                b.Content = "Stato: Online";
+                SharedVariables.Luh.changeAdminState("online");
+            }
+            
+            
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)

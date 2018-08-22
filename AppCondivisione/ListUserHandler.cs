@@ -37,7 +37,7 @@ namespace AppCondivisione
                 //string name = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName; // Nome dell'utente che ha effettuato l'accesso
                 string name = "gianpaolo bontempo";
                 string[] st = name.Split(' ');
-                admin = new Person("n1", st[1], "online", getLocalIPAddress(), "21"); //imposto admin
+                admin = new Person("gian", st[1], "online", getLocalIPAddress(), "21"); //imposto admin
             }
             catch (Exception e) { }
             // Persone aggiunte per test
@@ -58,7 +58,7 @@ namespace AppCondivisione
                 foreach (Person p in values) // Per ogni persona
                 {
                     var isNew = p.isNew(); // True se non ha ancora un metrotile sul flowlayout
-                    var old = p.old(); // True se la persona è deprecato
+                    var old = p.IsOld(); // True se la persona è deprecato
 
                     if (old)
                     {
@@ -205,6 +205,18 @@ namespace AppCondivisione
             if (!users.ContainsKey(p.getSurname() + p.getName()))
             {
                 users.Add(p.getSurname() + p.getName(), p);
+            }
+        }
+        public void RemoveUser(Person p)
+        {
+            /*
+             * Funzione per aggiungere un utente alla lista degli user.
+             * Prima di aggiungere, controllo se la tale persona non fosse già stata inserita nella
+             * collection degli users.
+            */
+            if (users.ContainsKey(p.getSurname() + p.getName()))
+            {
+                users.Remove(p.getSurname() + p.getName());
             }
         }
 

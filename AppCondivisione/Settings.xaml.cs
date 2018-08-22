@@ -79,6 +79,8 @@ namespace AppCondivisione
 
         private void SalvaModifiche_OnClick(object sender, RoutedEventArgs e)
         {
+            SharedVariables.Luh.getAdmin().setName(this.NameBox.Text);
+            SharedVariables.Luh.getAdmin().setSurname(this.SurnameBox.Text);
             SharedVariables.AutomaticSave = automatic;
             SharedVariables.PathSave = this.DestinationPath.Text;
             this.Close();

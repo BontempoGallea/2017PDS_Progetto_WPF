@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Pipes;
@@ -109,7 +110,15 @@ namespace AppCondivisione
                     SharedVariables.PathSend = result;
                     SharedVariables.W.Dispatcher.Invoke(new Action(() =>
                     {
-                        AppCondivisione.MainWindow m2 = new MainWindow(SharedVariables.Luh.getList().Values) {Visibility = Visibility.Visible};
+                        Dictionary<string, Person> values = new Dictionary<string, Person>();
+                       foreach (Person p in SharedVariables.Luh.getList().Values)
+                        {
+                            if (!p.IsOld())
+                            {
+                                values.Add(p.getSurname() + p.getName(), p);
+                            }
+                        }
+                        AppCondivisione.MainWindow m2 = new MainWindow(values.Values) {Visibility = Visibility.Visible};
                         m2.Show();
                     }));
                    

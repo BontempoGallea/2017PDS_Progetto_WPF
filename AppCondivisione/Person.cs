@@ -40,7 +40,7 @@ namespace AppCondivisione
 
         public Person(string n, string c, string s, string ip, string port)
         {
-            t = new System.Timers.Timer(5000);
+            t = new System.Timers.Timer(100000);
             this.name = n;
             this.surname = c;
             this.state = s;
@@ -62,9 +62,10 @@ namespace AppCondivisione
         }
 
         private void onTimeElapse(object sender, System.Timers.ElapsedEventArgs e)
-        {
+        {   t.Stop();
             isOld = true;
-            t.Stop();
+
+            SharedVariables.Luh.RemoveUser(this);
             t.Start();
             //throw new Exception();
         }
@@ -104,7 +105,7 @@ namespace AppCondivisione
             return imNew;
         }
 
-        public bool old()
+        public bool IsOld()
         {
             return isOld;
         }
