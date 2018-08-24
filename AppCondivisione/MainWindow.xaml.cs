@@ -52,7 +52,7 @@ namespace AppCondivisione
         }
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
-            SharedVariables.totsent = 0;
+            SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
             foreach (Person item in this.UserBox.SelectedItems)
             {  
                 var cred =  item.Username.Split(' ');
@@ -124,13 +124,13 @@ namespace AppCondivisione
             {
                 b.Background = Brushes.Gray;
                 b.Content = "Stato: Offline";
-                SharedVariables.Luh.changeAdminState("offline");
+                SharedVariables.Luh.Admin.State=false;
             }
             else
             {
                 b.Background = Brushes.Blue;
                 b.Content = "Stato: Online";
-                SharedVariables.Luh.changeAdminState("online");
+                SharedVariables.Luh.Admin.State = true;
             }
             
             

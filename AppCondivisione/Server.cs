@@ -62,7 +62,7 @@ namespace AppCondivisione
             {
                 if(SharedVariables.Luh.Admin == null)
                 {
-                    SharedVariables.Luh.Admin = new Person("Eugenio", "Gallea", true, ListUserHandler.GetLocalIPAddress(), 21);
+                    SharedVariables.Luh.Admin = new Person(ListUserHandler.GetLocalIPAddress().Replace(".","-"), "", true, ListUserHandler.GetLocalIPAddress(), 21);
                 }
 
                 Console.WriteLine(SharedVariables.Luh.Admin.ToString());
@@ -116,14 +116,14 @@ namespace AppCondivisione
                     var bytes = ClientUdp.Receive(ref ipEp); // Buffer
                     var cred = Encoding.ASCII.GetString(bytes, 0, bytes.Length).Split(','); // Converto in stringhe
                     if(!cred[0].Equals("pds")) continue;
-                    if (SharedVariables.Luh.isPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
+                    if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                     {
 
                         // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
-                        SharedVariables.Luh.resetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
+                        SharedVariables.Luh.ResetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
                         done = true; // Ricezione completata
                     }
-                    else if(!SharedVariables.Luh.isPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
+                    else if(!SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                     {
                         Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5])); //creo una nuova persona
                         //TODO: da rimettere...tolto solo per debug
@@ -132,8 +132,8 @@ namespace AppCondivisione
                         SharedVariables.Luh.AddUser(p);//inserisco nella lista delle persone
                         done = true;//ricezione completata
                     }
-                    else if (SharedVariables.Luh.isPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
-                        SharedVariables.Luh.getList().Remove(cred[2] + cred[1]);
+                    else if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
+                        SharedVariables.Luh.Users.Remove(cred[2] + cred[1]);
                     }
                 }
             }

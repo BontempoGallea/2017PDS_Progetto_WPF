@@ -20,7 +20,7 @@ namespace AppCondivisione
         private int _Port;
 
         private bool isOld;
-        private bool imNew;
+        
         private System.Timers.Timer t;
 
         public Person() { }
@@ -31,7 +31,6 @@ namespace AppCondivisione
             this._Name = n;
             this._Surname = c;
             this._State = s;
-            this.imNew = true;
             this.ip = IPAddress.Parse(ip);
             this._Port = port;
             t.Elapsed += OnTimeElapse;
@@ -124,20 +123,14 @@ namespace AppCondivisione
             //throw new Exception();
         }
 
-        public bool IsNew()
-        {
-            // L'utente è una nuova aggiunta?
-            return imNew;
-        }
-
-        public bool Old()
+        public bool IsOld()
         {
             return isOld;
         }
         public void SetOld()
         {
             // L'utente non è più una nuova aggiunta
-            imNew = false;
+            isOld = true;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using System.ComponentModel;
+using System.Threading;
 
 namespace AppCondivisione
 {
@@ -91,7 +92,7 @@ namespace AppCondivisione
 
             // Dimensione del file che carichiamo
             reqFTP.ContentLength = fileInf.Length;
-
+            SharedVariables.fileDimension= fileInf.Length;
             // Ho messo 4KB a caso
             int buffLength = 4096;
             byte[] buff = new byte[buffLength];
@@ -107,18 +108,20 @@ namespace AppCondivisione
 
                 // Leggo 2KB alla votla
                 contentLen = fs.Read(buff, 0, buffLength);
-                var uploaded = 0;
+                
 
                 // Ciclo fino a che non ho finito
-                while (contentLen != 0)
+                while (contentLen != 0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
                 {
                     // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                     strm.Write(buff, 0, contentLen);
                     contentLen = fs.Read(buff, 0, buffLength);
-                    uploaded += contentLen;
-
-                    this._worker.ReportProgress((int) (uploaded/fileInf.Length));
+                    SharedVariables.Uploaded += contentLen;
+                    this._worker.
+                    this._worker.ReportProgress((int) (SharedVariables.Uploaded / fileInf.Length));
+                    Thread.Sleep(10);
                 }
+                SharedVariables.Uploaded += contentLen;
 
                 // Chiudo tutto
                 strm.Close();
@@ -171,9 +174,13 @@ namespace AppCondivisione
 
             // Trasferiamo in binario perché usiamo FTP
             reqFTP.UseBinary = true;
-
-            FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
-            response.Close();
+            try{
+                FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+                response.Close();
+            }catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 

@@ -15,7 +15,6 @@ namespace AppCondivisione
         */
         private Person _Admin; // Utente sul quale sta girando l'applicazione
         private Dictionary<string, Person> _Users; // Lista degli utenti attivi dai quali ho ricevuto l'online
-        private int _LastRefresh; // Lunghezza della lista, l'ultima volta che ho fatto refresh
         private Dictionary<string, Person> _SelectedUsers = new Dictionary<string, Person>();
         private List<ListViewItem> _SelectedList = new List<ListViewItem>();
 
@@ -27,8 +26,7 @@ namespace AppCondivisione
             try
             {
                 _Users = new Dictionary<string, Person>(); //creo una dictionary di persone
-                _LastRefresh = -1;
-                _Admin = new Person("Eugenio", "Gallea", true, GetLocalIPAddress(), 21); //imposto admin
+                _Admin = new Person(GetLocalIPAddress().Replace(".","-"), "", true, GetLocalIPAddress(), 21); //imposto admin
             }
             catch (Exception e) { }
         }
@@ -42,40 +40,6 @@ namespace AppCondivisione
         public Dictionary<string, Person> Users
         {
             get { return this._Users; }
-        }
-
-        internal void Clean()
-        {
-            // Funzione che controlla di togliere i bottoni delle persone non piu sulla rete
-            // o semplicemnte non online
-
-            Dictionary<string, Person>.ValueCollection values = _Users.Values;
-            try
-            {
-                foreach (Person p in values) // Per ogni persona
-                {
-                    var isNew = p.IsNew(); // True se non ha ancora un metrotile sul flowlayout
-                    var old = p.Old(); // True se la persona è deprecato
-
-                    if (old)
-                    {
-                        if (!isNew)
-                        {
-                            //Program.ac.flowLayoutPanel1.Controls.Remove(p.getButton());
-                        }
-                    }
-
-                    if ((!p.State) && (!isNew))
-                    {
-                        //Program.ac.flowLayoutPanel1.Controls.Remove(p.getButton());
-                        _Users.Remove(p.Surname + p.Name);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
         }
 
         internal void ResetTimer(string v)
@@ -108,9 +72,9 @@ namespace AppCondivisione
              * Prima di aggiungere, controllo se la tale persona non fosse già stata inserita nella
              * collection degli users.
             */
-            if (users.ContainsKey(p.getSurname() + p.getName()))
+            if (_Users.ContainsKey(p.Surname + p.Name))
             {
-                users.Remove(p.getSurname() + p.getName());
+                _Users.Remove(p.Surname + p.Name);
             }
         }
 

@@ -38,13 +38,26 @@ namespace AppCondivisione
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             FtpClient client = new FtpClient(this._user.Username, "", (sender as BackgroundWorker));
-            client.Upload(SharedVariables.PathSend, this._user.GetIp().ToString());
 
-            for (int i = 0; i <= 100; i++)
+            client.Upload(SharedVariables.PathSend, this._user.GetIp().ToString());
+            var i = 0;
+            while (i != 100)
             {
+                if (SharedVariables.fileDimension == 0)
+                {
+                    i = 0;
+                }
+                else
+                {
+                    SharedVariables.TottoSend= SharedVariables.fileDimension * SharedVariables.numberOfDestination;
+                }
                 (sender as BackgroundWorker).ReportProgress(i);
-                Thread.Sleep(100); // Sleep perché altrimenti va velocissimo
+                //Thread.Sleep(100); // Sleep perché altrimenti va velocissimo
+                i =(int)( (SharedVariables.Uploaded * 100) / SharedVariables.TottoSend);
             }
+            SharedVariables.TottoSend = 0;
+            SharedVariables.fileDimension = 0;
+            SharedVariables.numberOfDestination = 0;
         }
 
         void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
