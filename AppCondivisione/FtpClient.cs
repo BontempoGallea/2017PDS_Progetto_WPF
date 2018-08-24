@@ -92,7 +92,7 @@ namespace AppCondivisione
 
             // Dimensione del file che carichiamo
             reqFTP.ContentLength = fileInf.Length;
-            SharedVariables.fileDimension= fileInf.Length;
+            
             // Ho messo 4KB a caso
             int buffLength = 4096;
             byte[] buff = new byte[buffLength];
@@ -106,23 +106,15 @@ namespace AppCondivisione
                 // Stream lato server
                 Stream strm = reqFTP.GetRequestStream();
 
-                // Leggo 2KB alla votla
-                contentLen = fs.Read(buff, 0, buffLength);
-                
-
+                // Leggo 4KB alla votla
                 // Ciclo fino a che non ho finito
-                while (contentLen != 0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
+                while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
                 {
                     // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                     strm.Write(buff, 0, contentLen);
-                    contentLen = fs.Read(buff, 0, buffLength);
                     SharedVariables.Uploaded += contentLen;
-                    this._worker.
-                    this._worker.ReportProgress((int) (SharedVariables.Uploaded / fileInf.Length));
-                    Thread.Sleep(10);
+                    this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)));
                 }
-                SharedVariables.Uploaded += contentLen;
-
                 // Chiudo tutto
                 strm.Close();
                 fs.Close();
@@ -148,9 +140,7 @@ namespace AppCondivisione
                 method = WebRequestMethods.Ftp.RemoveDirectory;
 
             }
-
             FileInfo fileInf = new FileInfo(finalPath);
-
             this.RemoveFile(fileInf, address, method);
         }
 

@@ -53,22 +53,8 @@ namespace AppCondivisione
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
             SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
-            foreach (Person item in this.UserBox.SelectedItems)
-            {  
-                var cred =  item.Username.Split(' ');
-                var p = new Person();
-                SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
-                Console.WriteLine("Stato di " +p.Name + " = " + p.State);
-                if (p.IsOnline())
-                {
-                    ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, p);
-                    pbw.Show();
-                }
-                else
-                {
-                    MessageBox.Show("La persona a cui vuoi inviare non è più online!");
-                }
-            } 
+            ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, this.UserBox.SelectedItems);
+            pbw.Show();
         }
 
         private void Annulla_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
@@ -13,6 +14,8 @@ namespace AppCondivisione
     {
         private string _file;
         private Person _user;
+       
+        private IList selectedItems;
 
         public ProgressBarWindow(string filepath, Person user)
         {
@@ -24,6 +27,17 @@ namespace AppCondivisione
             this.Title = "Inviando " + this._file + " a " + this._user.Username;
         }
 
+        public ProgressBarWindow(string filepath, IList selectedItems)
+        {
+            
+            InitializeComponent();
+
+            this._file = System.IO.Path.GetFileName(filepath);
+            this.selectedItems = selectedItems;
+            this.Title = "Inviando " + this._file;
+
+        }
+
         // Callback che ho detto di chiamare quando il contenuto della finestra ha completato il rendering. E' specificato nello XAML
         private void Window_ContentRendered(object sender, EventArgs e)
         {
@@ -31,33 +45,20 @@ namespace AppCondivisione
             worker.WorkerReportsProgress = true;
             worker.DoWork += Worker_DoWork; // Callback per il worker thread
             worker.ProgressChanged += Worker_ProgressChanged; // Callback che userà il worker per riferire il progresso all'UI thread
-
             worker.RunWorkerAsync(); // Lancio come async e in background di modo che possa lo stesso interferire con l'interfaccia grafica senza bloccarla (questo vuol dire che potrò usare il tasto annulla)
         }
 
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            FtpClient client = new FtpClient(this._user.Username, "", (sender as BackgroundWorker));
-
-            client.Upload(SharedVariables.PathSend, this._user.GetIp().ToString());
-            var i = 0;
-            while (i != 100)
+            SharedVariables.numberOfDestination = this.selectedItems.Count;
+            SharedVariables.Uploaded = 0;
+            foreach (Person user in this.selectedItems)
             {
-                if (SharedVariables.fileDimension == 0)
-                {
-                    i = 0;
-                }
-                else
-                {
-                    SharedVariables.TottoSend= SharedVariables.fileDimension * SharedVariables.numberOfDestination;
-                }
-                (sender as BackgroundWorker).ReportProgress(i);
-                //Thread.Sleep(100); // Sleep perché altrimenti va velocissimo
-                i =(int)( (SharedVariables.Uploaded * 100) / SharedVariables.TottoSend);
+                FtpClient client = new FtpClient(user.Username, "", (sender as BackgroundWorker));
+                client.Upload(SharedVariables.PathSend,user.GetIp().ToString());
+                var i = 0;
             }
-            SharedVariables.TottoSend = 0;
-            SharedVariables.fileDimension = 0;
-            SharedVariables.numberOfDestination = 0;
+           
         }
 
         void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
