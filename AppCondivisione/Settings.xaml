@@ -23,14 +23,66 @@
             <RowDefinition Height="100*"/>
 
         </Grid.RowDefinitions>
-        <TextBlock Margin="52,0,0,9.6" TextWrapping="Wrap" Text="Credenziali" VerticalAlignment="Bottom" Height="13" HorizontalAlignment="Left" Width="95"/>
-        <TextBlock HorizontalAlignment="Left" Margin="51,19.6,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Cognome" VerticalAlignment="Top" Height="23" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="52,0,0,10.2" Grid.Row="3" TextWrapping="Wrap" Text="Dove salvare?" VerticalAlignment="Bottom" Height="23" Width="120"/>
-        <TextBlock Margin="30,0,88,69.2" Grid.Row="5" TextWrapping="Wrap" Text="Salvataggio automatico dei file?" VerticalAlignment="Bottom" Height="30"/>
-        <TextBox Name="NameBox" HorizontalAlignment="Right" Height="23" Margin="0,18.4,289.2,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="52,19.4,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="120"><Run Text="Nome"/><LineBreak/><Run/></TextBlock>
-        <TextBox
-            Name="SurnameBox" HorizontalAlignment="Right" Height="23" Margin="0,18.6,289.2,0" Grid.Row="2" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+        
+        <TextBlock 
+            Margin="52,0,0,9.6" 
+            TextWrapping="Wrap" 
+            Text="Credenziali" 
+            VerticalAlignment="Bottom" 
+            Height="13" Width="95"
+            HorizontalAlignment="Left" />
+        <TextBlock 
+            HorizontalAlignment="Left" 
+            Margin="51,19.6,0,0" 
+            Grid.Row="2" 
+            TextWrapping="Wrap" 
+            Text="Cognome" 
+            VerticalAlignment="Top" 
+            Height="23" Width="120"/>
+        <TextBlock 
+            HorizontalAlignment="Left" 
+            Margin="52,0,0,10.2" 
+            Grid.Row="3" 
+            TextWrapping="Wrap" 
+            Text="Dove salvare?" 
+            VerticalAlignment="Bottom" 
+            Height="23" Width="120"/>
+        <TextBlock 
+            Margin="30,0,88,69.2" 
+            Grid.Row="5" 
+            TextWrapping="Wrap" 
+            Text="Salvataggio automatico dei file?" 
+            VerticalAlignment="Bottom" 
+            Height="30"/>
+        <TextBox 
+            HorizontalAlignment="Right" 
+            Height="23" Width="120" 
+            Margin="0,18.4,289.2,0" 
+            Grid.Row="1" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            Grid.Column="1" 
+            Text="{Binding Path=Name}"/>
+        <TextBlock 
+            HorizontalAlignment="Left" 
+            Margin="52,19.4,0,0" 
+            Grid.Row="1" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            Height="23" Width="120">
+            <Run Text="Nome"/><LineBreak/>
+            <Run/>
+        </TextBlock>
+        <TextBox 
+            HorizontalAlignment="Right" 
+            Height="23" 
+            Margin="0,18.6,289.2,0" 
+            Grid.Row="2" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            Width="120" 
+            Grid.Column="1" 
+            Text="{Binding Path=Surname}"/>
         <Button 
             Content="Seleziona" 
             Margin="185,0,0,11.2" 
@@ -40,16 +92,35 @@
             Grid.Column="1" 
             HorizontalAlignment="Left" 
             Width="75"
-            Click="browseButton_Click">
+            Click="BrowseButton_Click">
             <Button.Resources>
             <Style TargetType="{x:Type Border}">
                 <Setter Property="CornerRadius" Value="10"/>
             </Style>
         </Button.Resources>
            </Button>
-        <TextBlock Name="DestinationPath" Margin="0,0,67,18.2" Grid.Row="4" TextWrapping="Wrap" Text="Path" VerticalAlignment="Bottom" Height="13" Width="202"/>
-        <RadioButton Name="Si" Content="Si" Margin="30,0,231,48.2" Grid.Row="5" VerticalAlignment="Bottom" Checked="RadioButton_Checked" Height="16"/>
-        <RadioButton Name="No" Content="No" Margin="30,62.8,231,28.2" Grid.Row="5" Checked="RadioButton_Checked"/>
+        <TextBlock 
+            Name="DestinationPath" 
+            Margin="0,0,67,18.2" 
+            Grid.Row="4" 
+            TextWrapping="Wrap" 
+            Text="{Binding Path=SavePath}" 
+            VerticalAlignment="Bottom" 
+            Height="13" Width="202"/>
+        <RadioButton 
+            Name="Si" Content="Si" 
+            Margin="30,0,231,48.2" 
+            Grid.Row="5" 
+            VerticalAlignment="Bottom" 
+            IsChecked="{Binding Path=AutomaticSave}"
+            Checked="RadioButton_Checked" 
+            Height="16"/>
+        <RadioButton 
+            Name="No" Content="No" 
+            Margin="30,62.8,231,28.2" 
+            Grid.Row="5" 
+            IsChecked="{Binding Path=NotAutomaticSave}"
+            Checked="RadioButton_Checked"/>
         <Ellipse Name="Ellipse" Height="72" Width="76" Grid.Column="1" Margin="0,10,170.2,0" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Ellipse.Fill>
                 <ImageBrush ImageSource="/img.jpg"/>

@@ -12,17 +12,14 @@ namespace AppCondivisione
 {
     class Server
     {
-        /*
-         * Classe che gestirà le tasks del client
-        */
         private const int SenderPort = 16000;
         private static readonly UdpClient ClientUdp = new UdpClient(SenderPort);
         private static Thread _branchUdp;
         private static Thread _branchTcp;
         private static Thread _talkUdp;
         private static Thread _listenerUdp;
-        private int _numberAutoSaved;
         private static SaveFileDialog datifile = new SaveFileDialog();
+
         public void EntryPoint()
         {
             try
@@ -40,6 +37,7 @@ namespace AppCondivisione
 
         public void EntryUdp()
         {
+            Console.WriteLine("Branch UDP entrato!");
             try
             {
                 _talkUdp = new Thread(EntryTalk);
@@ -59,19 +57,29 @@ namespace AppCondivisione
         */
         public void EntryTalk()
         {
+            Console.WriteLine("Mando un messsaggio UDP!");
             while (!SharedVariables.CloseEverything)
             {
-                while (SharedVariables.Luh.getAdmin() == null) { }
+                if(SharedVariables.Luh.Admin == null)
+                {
+                    SharedVariables.Luh.Admin = new Person("Eugenio", "Gallea", true, ListUserHandler.GetLocalIPAddress(), 21);
+                }
+
+                Console.WriteLine(SharedVariables.Luh.Admin.ToString());
+
                 // Mando pacchetti broadcast ogni 5s, SOLO SE sono ONLINE
-                //if (String.Compare(SharedVariables.Luh.getAdmin().getState(), "online", StringComparison.Ordinal) == 0)//da fare un lock
-                    BroadcastMessage("pds,"+SharedVariables.Luh.getAdmin().getString());
+                if (SharedVariables.Luh.Admin.State)
+                {
+                    BroadcastMessage("pds," + SharedVariables.Luh.Admin.GetString());
+                }
                 Thread.Sleep(5000);
             }
+            Console.WriteLine("Chiudo il branch UDP per il messaggio");
         }
 
         static void BroadcastMessage(string message)
         {
-            IPEndPoint ipEp = new IPEndPoint(IPAddress.Parse("192.168.1.255"), SenderPort);
+            IPEndPoint ipEp = new IPEndPoint(IPAddress.Broadcast, SenderPort);
 
             try
             {
@@ -117,11 +125,11 @@ namespace AppCondivisione
                     }
                     else if(!SharedVariables.Luh.isPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                     {
-                        Person p = new Person(cred[1], cred[2], cred[3], cred[4], cred[5]); //creo una nuova persona
+                        Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5])); //creo una nuova persona
                         //TODO: da rimettere...tolto solo per debug
                         //if (p.isEqual(SharedVariables.Luh.getAdmin()) ||
                         //    String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;
-                        SharedVariables.Luh.addUser(p);//inserisco nella lista delle persone
+                        SharedVariables.Luh.AddUser(p);//inserisco nella lista delle persone
                         done = true;//ricezione completata
                     }
                     else if (SharedVariables.Luh.isPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
@@ -140,197 +148,11 @@ namespace AppCondivisione
         */
         public void EntryTcp()
         {
-            while (SharedVariables.Luh.getAdmin() == null) { }
-            while (SharedVariables.Luh.getAdmin().isOnline() && !SharedVariables.CloseEverything)
-                ReceiveFile();
+            while (SharedVariables.Luh.Admin == null) { }
+            FtpServer server = new FtpServer(SharedVariables.Luh.Admin.GetIp(), SharedVariables.Luh.Admin.Port);
+            server.Start();
+            while (SharedVariables.Luh.Admin.IsOnline() && !SharedVariables.CloseEverything) ;
+            server.Stop();
         }
-
-        public void ReceiveFile()
-        {
-            var bufferfile = new byte[1024];
-
-            try
-            {
-                //
-                FtpServer server = new FtpServer(SharedVariables.Luh.getAdmin().getIp(), SharedVariables.Luh.getAdmin().getPort());
-
-                server.Start();
-
-                while (!SharedVariables.CloseEverything)
-                {}
-
-                server.Stop();
-                //
-               /* var listener = new TcpListener(SharedVariables.Luh.getAdmin().getIp(),
-                    SharedVariables.Luh.getAdmin().getPort()); // Imposto tcplistener con le credenziali della persona
-                listener.Start(); // Inizio ascolto
-                while (!SharedVariables.CloseEverything)
-                {
-                    if (!listener.Pending()) // Se non c'è nessuno che vuole inviarmi nulla, continuo col prossimo ciclo
-                        continue;
-                    /* TODO: cambiare qua per inserire ftpserver
-                    AcceptRemoteConnection(bufferfile, datifile, listener);
-                }
-                */
-                }
-            catch (ArgumentNullException e)
-            {
-                Console.Write(e);
-            }
-            catch (EncoderFallbackException e)
-            {
-                Console.Write(e);
-            }
-            catch (ArgumentException e)
-            {
-                Console.Write(e);
-            }
-            catch (SocketException e)
-            {
-            }
-            catch (ObjectDisposedException e)
-            {
-            }
-            catch (System.Security.SecurityException e)
-            {
-            }
-            catch (FileNotFoundException e)
-            {
-            }
-            catch (InvalidOperationException e)
-            {
-            }
-            catch (DirectoryNotFoundException e)
-            {
-            }
-            catch (PathTooLongException e)
-            {
-            }
-            catch (IOException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            catch (UnauthorizedAccessException e) { }
-        }
-
-        private void AcceptRemoteConnection(byte[] bufferfile, SaveFileDialog datifile, TcpListener listener)
-        {
-            using (var client = listener.AcceptTcpClient()) //accetto tcpclient
-            { // Bloccante
-              //ricevo pacchetto di informazione
-                var buf = new byte[1024];
-
-                client.GetStream().Read(buf, 0, 1024);//leggo in buf 1024 byte dallo stream del client
-                var vet = Encoding.ASCII.GetString(buf).Replace("\0",String.Empty).Split(',');
-                var admin = vet[0];
-                var nomeFile = Path.GetFileName(vet[1]);
-                var tipo = vet[2];
-                //
-                byte[] autorizzo;
-                if (String.Compare(tipo, "cartella", StringComparison.Ordinal) == 0)
-                {
-
-                    autorizzo = !SharedVariables.AutomaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
-                    client.GetStream().Write(autorizzo, 0, autorizzo.Length);
-                    SetName(nomeFile);
-
-                    // datifile.Filter = " text |*.txt";
-                    if (!SharedVariables.AutomaticSave)
-                        datifile.ShowDialog();
-                    else
-                        _numberAutoSaved++;
-                    const string temp = "./temp.zip";
-                    ReceiveFile(bufferfile, datifile, client, temp);
-                    ZipFile.ExtractToDirectory(temp, datifile.FileName);
-                    File.Delete(temp);
-                }
-                else if (String.Compare(tipo, "file", StringComparison.Ordinal) == 0)
-                {
-                    autorizzo = !SharedVariables.AutomaticSave ? ShowMessageBox(nomeFile, admin) : Encoding.ASCII.GetBytes("ok");
-                    client.GetStream().Write(autorizzo, 0, autorizzo.Length);
-                    SetName(nomeFile);
-                    // datifile.Filter = " text |*.txt";
-                    if (!SharedVariables.AutomaticSave)
-                        datifile.ShowDialog();
-                    else
-                        _numberAutoSaved++;
-                    ReceiveFile(bufferfile, datifile, client, datifile.FileName);
-                }
-                client.Close();
-            }
-        }
-
-        private void SetName(string nomeFile)
-        {
-            if (nomeFile != null)
-            {
-                var vett2 = nomeFile.Split('.');
-                _numberAutoSaved = 0;
-                datifile.FileName = SharedVariables.PathSave + @"\" + nomeFile;
-                while (File.Exists(datifile.FileName) ||Directory.Exists(datifile.FileName))
-                {
-                    _numberAutoSaved++;
-                    if (IsDir(datifile.FileName))
-                    {
-                        datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")";
-                    }
-                    else
-                    {
-                        datifile.FileName = SharedVariables.PathSave + @"\" + vett2[0] + "(" + _numberAutoSaved + ")" +
-                                            "." + vett2[1];
-                    }
-                }
-            }
-            datifile.InitialDirectory = SharedVariables.PathSave;
-        }
-
-        private static void ReceiveFile(byte[] bufferfile, SaveFileDialog datifile, TcpClient client, string temp)
-        {
-            byte[] buf;
-            using (var stream = client.GetStream()) // flusso di dati
-            using (var output = File.Create(temp)) // file di output
-            {
-                // Leggo il file a pezzi da 1KB
-
-                int bytesRead;
-                while ((bytesRead = stream.Read(bufferfile, 0, 1024)) > 0)
-                {
-                    output.Write(bufferfile, 0, bytesRead);
-                    if (bytesRead < 1024)
-                        break;
-                }
-
-                buf = Encoding.ASCII.GetBytes("fine?");
-                client.GetStream().Write(buf, 0, 2);
-                buf = new byte[1024];
-                client.GetStream().Read(buf, 0, 1024);
-                var risposta = Encoding.ASCII.GetString(buf);
-                if (String.Compare(risposta, "annulla", StringComparison.Ordinal) == 0)
-                {
-                    File.Delete(datifile.FileName);
-                }
-            }
-        }
-
-
-        private static bool IsDir(string fileName)
-        {
-            return (File.GetAttributes(fileName) & FileAttributes.Directory) == FileAttributes.Directory;
-        }
-
-        private static byte[] ShowMessageBox(string nomeFile, string admin)
-        {
-            /*
-            switch (MessageBox.Show(admin + @"sta tentando di inviarti il file", nomeFile, MessageBoxButtons.YesNo))
-            {
-                case DialogResult.No:
-                    return Encoding.ASCII.GetBytes("no");
-                case DialogResult.Yes:
-                    return Encoding.ASCII.GetBytes("ok");
-            }
-            */
-            throw new Exception();
-        }
-        
     }
 }

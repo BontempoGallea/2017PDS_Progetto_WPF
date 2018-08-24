@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using RadioButton = System.Windows.Controls.RadioButton;
 
 namespace AppCondivisione
@@ -22,19 +12,25 @@ namespace AppCondivisione
     /// </summary>
     public partial class Settings : Window
     {
-        private bool automatic;
+        private bool Automatic;
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string SavePath { get; set; }
+        public bool AutomaticSave { get; set; }
+        public bool NotAutomaticSave { get; set; }
+
         public Settings()
         {
             InitializeComponent();
+
+            this.Name = SharedVariables.Luh.Admin.Name;
+            this.Surname = SharedVariables.Luh.Admin.Surname;
+
             this.SalvaModifiche.IsEnabled = false;
-            if (SharedVariables.PathSave != null)
-                this.DestinationPath.Text = SharedVariables.PathSave;
-            if (SharedVariables.AutomaticSave == true)
-                this.Si.IsChecked = true;
-            else
-            {
-                this.No.IsChecked = true;
-            }
+            this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
+
+            this.AutomaticSave = SharedVariables.AutomaticSave;
+            this.NotAutomaticSave = !this.AutomaticSave;
         }
 
         private BitmapImage LoadImage(string filename)
@@ -47,7 +43,7 @@ namespace AppCondivisione
 
         }
 
-        private void browseButton_Click(object sender, EventArgs e)
+        private void BrowseButton_Click(object sender, EventArgs e)
         {
            
             
@@ -68,7 +64,7 @@ namespace AppCondivisione
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var b1=  sender as RadioButton;
-            automatic = b1.Content.Equals("Si");
+            Automatic = b1.Content.Equals("Si");
             this.SalvaModifiche.IsEnabled = true;
         }
 
@@ -79,10 +75,14 @@ namespace AppCondivisione
 
         private void SalvaModifiche_OnClick(object sender, RoutedEventArgs e)
         {
-            SharedVariables.Luh.getAdmin().setName(this.NameBox.Text);
-            SharedVariables.Luh.getAdmin().setSurname(this.SurnameBox.Text);
-            SharedVariables.AutomaticSave = automatic;
+            SharedVariables.AutomaticSave = Automatic;
             SharedVariables.PathSave = this.DestinationPath.Text;
+            SharedVariables.Luh.Admin = new Person
+            {
+                Name = this.Name,
+                Surname = this.Surname
+            };
+
             this.Close();
             
         }
