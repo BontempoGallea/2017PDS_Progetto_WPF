@@ -13,7 +13,7 @@ namespace AppCondivisione
     public partial class Settings : Window
     {
         private bool Automatic;
-        public string Name { get; set; }
+        public string Name2 { get; set; }
         public string Surname { get; set; }
         public string SavePath { get; set; }
         public bool AutomaticSave { get; set; }
@@ -22,8 +22,8 @@ namespace AppCondivisione
         public Settings()
         {
             InitializeComponent();
-
-            this.Name = SharedVariables.Luh.Admin.Name;
+            this.DataContext = this;
+            this.Name2 = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
 
             this.SalvaModifiche.IsEnabled = false;
@@ -31,6 +31,7 @@ namespace AppCondivisione
 
             this.AutomaticSave = SharedVariables.AutomaticSave;
             this.NotAutomaticSave = !this.AutomaticSave;
+           
         }
 
         private BitmapImage LoadImage(string filename)
@@ -77,11 +78,9 @@ namespace AppCondivisione
         {
             SharedVariables.AutomaticSave = Automatic;
             SharedVariables.PathSave = this.DestinationPath.Text;
-            SharedVariables.Luh.Admin = new Person
-            {
-                Name = this.Name,
-                Surname = this.Surname
-            };
+            SharedVariables.Luh.Admin.Name = this.Name2;
+            SharedVariables.Luh.Admin.Surname = this.Surname;
+           
 
             this.Close();
             

@@ -54,6 +54,10 @@ namespace AppCondivisione
             key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\Classes\\*\\Shell\\Condividi in LAN\\command");
             key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
 
+            //stessa cosa per directory
+            key = Registry.CurrentUser.CreateSubKey(@"Computer\\HKEY_CLASSES_ROOT\\Directory\shell\\Condividi in lan");
+            key = Registry.CurrentUser.CreateSubKey(@"Computer\\HKEY_CLASSES_ROOT\\Directory\\shell\\Condividi in lan\\command");
+            key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
             // Creo la classe server che verrà fatta girare nel rispettivo thread
             server = new Server();
             taskserver = Task.Run((() => server.EntryPoint()));
@@ -94,10 +98,18 @@ namespace AppCondivisione
                 Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
                 {
+                    Dictionary<string, Person> values= new Dictionary<string, Person>();
                     SharedVariables.PathSend = result;
                     SharedVariables.W.Dispatcher.Invoke(new Action(() =>
                     {
-                        AppCondivisione.MainWindow m2 = new MainWindow(SharedVariables.Luh.Users.Values) {Visibility = Visibility.Visible};
+
+                        foreach (Person e in SharedVariables.Luh.Users.Values) {
+                            if(e.IsOnline() &&  !e.IsOld())
+                            {
+                                values.Add(e.Name,e);
+                            }
+                        }
+                        AppCondivisione.MainWindow m2 = new MainWindow(values.Values) {Visibility = Visibility.Visible};
                         m2.Show();
                     }));
                    
