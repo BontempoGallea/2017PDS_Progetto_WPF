@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace AppCondivisione
 {
@@ -14,7 +15,7 @@ namespace AppCondivisione
         private string _Surname;
         private bool _State;
         private string _Username;
-
+        public int keyimage;
 
         private IPAddress ip;
         private int _Port;
@@ -25,7 +26,7 @@ namespace AppCondivisione
 
         public Person() { }
 
-        public Person(string n, string c, bool s, string ip, int port)
+        public Person(string n, string c, bool s, string ip, int port,int key)
         {
             t = new System.Timers.Timer(5000);
             this._Name = n;
@@ -36,7 +37,8 @@ namespace AppCondivisione
             t.Elapsed += OnTimeElapse;
             t.AutoReset = true;
             t.Start();
-            _imageData = new BitmapImage(new Uri("pack://application:,,,/img.jpg"));
+            keyimage = key;
+            _imageData = new BitmapImage(new Uri(SharedVariables.immages[key]));
             _imageData.Freeze();
         }
 
@@ -87,7 +89,7 @@ namespace AppCondivisione
 
         public string GetString()
         {
-            return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port;
+            return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port+","+keyimage;
         }
 
         private string GetStateAsString()
@@ -131,6 +133,13 @@ namespace AppCondivisione
         {
             // L'utente non è più una nuova aggiunta
             isOld = true;
+        }
+
+        internal void setImage(int v)
+        {
+            keyimage = v;
+            _imageData = new BitmapImage(new Uri(SharedVariables.immages[keyimage]));
+            _imageData.Freeze();
         }
     }
 }

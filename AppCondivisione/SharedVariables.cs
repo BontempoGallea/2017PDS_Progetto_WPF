@@ -19,6 +19,14 @@ namespace AppCondivisione
         public static MainWindow W;
         internal static long fileDimension=0;
         internal static long numberOfDestination=0;
+        public static Dictionary<string, int> keyimmages = new Dictionary<string, int> {
+            { "Albero", 1 }, { "Ragno",6},{"Computer",2},{"Mare",5},{"Diavolo",3},{"Donna",4},{"Uomo",7},{"anonymous",0} };
+            
+        public static Dictionary<int, string> immages = new Dictionary<int, string> {
+            { 0, "pack://application:,,,/immagini/anonymous.jpg" }, { 1, "pack://application:,,,/immagini/albero.jpg" } 
+            ,{ 2, "pack://application:,,,/immagini/computer.png" } ,{ 3, "pack://application:,,,/immagini/diavolo.jpg" }, { 4, "pack://application:,,,/immagini/donna.png" } 
+            ,{ 5, "pack://application:,,,/immagini/mare.jpg" }, { 6, "pack://application:,,,/immagini/ragno.png" }, { 7, "pack://application:,,,/immagini/uomo.jpg" } };
+
 
         public static bool CloseEverything
         {

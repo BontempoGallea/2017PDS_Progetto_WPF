@@ -62,7 +62,7 @@ namespace AppCondivisione
             {
                 if(SharedVariables.Luh.Admin == null)
                 {
-                    SharedVariables.Luh.Admin = new Person(ListUserHandler.GetLocalIPAddress().Replace(".","-"), "", true, ListUserHandler.GetLocalIPAddress(), 21);
+                    SharedVariables.Luh.Admin = new Person(ListUserHandler.GetLocalIPAddress().Replace(".","-"), "", true, ListUserHandler.GetLocalIPAddress(), 21,0);
                 }
 
                 Console.WriteLine(SharedVariables.Luh.Admin.ToString());
@@ -121,11 +121,12 @@ namespace AppCondivisione
 
                         // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
                         SharedVariables.Luh.ResetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
+                        SharedVariables.Luh.Users[cred[2] + cred[1]].setImage(int.Parse(cred[6]));
                         done = true; // Ricezione completata
                     }
                     else if(!SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                     {
-                        Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5])); //creo una nuova persona
+                        Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5]),int.Parse(cred[6])); //creo una nuova persona
                         //TODO: da rimettere...tolto solo per debug
                         //if (p.isEqual(SharedVariables.Luh.getAdmin()) ||
                         //    String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;

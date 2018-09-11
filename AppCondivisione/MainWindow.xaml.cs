@@ -27,9 +27,15 @@ namespace AppCondivisione
         public MainWindow(Dictionary<string, Person>.ValueCollection values)
         {
             this.WindowState = System.Windows.WindowState.Minimized;
+            //values=UpdateUsers(values);
             InitializeComponent();
             SharedVariables.W = this;
             this.UserBox.ItemsSource = values;
+        }
+
+        private Dictionary<string, Person>.ValueCollection UpdateUsers(Dictionary<string, Person>.ValueCollection values)
+        {
+            throw new NotImplementedException();
         }
 
         public MainWindow()

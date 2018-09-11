@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using RadioButton = System.Windows.Controls.RadioButton;
 
@@ -18,14 +19,15 @@ namespace AppCondivisione
         public string SavePath { get; set; }
         public bool AutomaticSave { get; set; }
         public bool NotAutomaticSave { get; set; }
-
+        public string ImagePath { get; set; }
+        public int imagekey { get; set; }
         public Settings()
         {
             InitializeComponent();
             this.DataContext = this;
             this.Name2 = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
-
+            this.ImagePath = SharedVariables.immages[SharedVariables.Luh.Admin.keyimage];
             this.SalvaModifiche.IsEnabled = false;
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
 
@@ -80,7 +82,7 @@ namespace AppCondivisione
             SharedVariables.PathSave = this.DestinationPath.Text;
             SharedVariables.Luh.Admin.Name = this.Name2;
             SharedVariables.Luh.Admin.Surname = this.Surname;
-           
+            SharedVariables.Luh.Admin.keyimage = this.imagekey;
 
             this.Close();
             
@@ -89,6 +91,20 @@ namespace AppCondivisione
         private void Annulla_OnClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void ChangeImage(object sender, RoutedEventArgs e)
+        {
+            var b1 = sender as RadioButton;
+            string key = b1.Content.ToString();
+            var index = SharedVariables.keyimmages[key];
+            this.ImagePath = SharedVariables.immages[index];
+            this.imagekey = index;
+
+            ImageBrush imgBrush = new ImageBrush();
+          
+            imgBrush.ImageSource =new BitmapImage(new Uri(this.ImagePath));
+            this.Ellipse.Fill = imgBrush;
         }
     }
 }

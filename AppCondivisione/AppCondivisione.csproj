@@ -128,7 +128,26 @@
     <Resource Include="TextTemplate.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img.jpg" />
+    <Resource Include="immagini\albero.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\ragno.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\computer.png" />
+    <Resource Include="immagini\diavolo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\uomo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\mare.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\donna.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\anonymous.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
