@@ -38,7 +38,7 @@ namespace AppCondivisione
             t.AutoReset = true;
             t.Start();
             keyimage = key;
-            _imageData = new BitmapImage(new Uri(SharedVariables.immages[key]));
+            _imageData = new BitmapImage(new Uri(SharedVariables.images[key]));
             _imageData.Freeze();
         }
 
@@ -138,7 +138,7 @@ namespace AppCondivisione
         internal void setImage(int v)
         {
             keyimage = v;
-            _imageData = new BitmapImage(new Uri(SharedVariables.immages[keyimage]));
+            _imageData = new BitmapImage(new Uri(SharedVariables.images[keyimage]));
             _imageData.Freeze();
         }
     }

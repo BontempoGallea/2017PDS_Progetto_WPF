@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -14,26 +16,25 @@ namespace AppCondivisione
     public partial class Settings : Window
     {
         private bool Automatic;
-        public string Name2 { get; set; }
+        public string NewName { get; set; }
         public string Surname { get; set; }
         public string SavePath { get; set; }
         public bool AutomaticSave { get; set; }
         public bool NotAutomaticSave { get; set; }
         public string ImagePath { get; set; }
         public int imagekey { get; set; }
+
         public Settings()
         {
             InitializeComponent();
             this.DataContext = this;
-            this.Name2 = SharedVariables.Luh.Admin.Name;
+            this.NewName = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
-            this.ImagePath = SharedVariables.immages[SharedVariables.Luh.Admin.keyimage];
+            this.ImagePath = SharedVariables.images[SharedVariables.Luh.Admin.keyimage];
             this.SalvaModifiche.IsEnabled = false;
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
-
             this.AutomaticSave = SharedVariables.AutomaticSave;
             this.NotAutomaticSave = !this.AutomaticSave;
-           
         }
 
         private BitmapImage LoadImage(string filename)
@@ -48,8 +49,6 @@ namespace AppCondivisione
 
         private void BrowseButton_Click(object sender, EventArgs e)
         {
-           
-            
             // Creo un thread che andrà ad aprire un form per selezionare la cartella scelta dall'utente
 
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
@@ -80,9 +79,27 @@ namespace AppCondivisione
         {
             SharedVariables.AutomaticSave = Automatic;
             SharedVariables.PathSave = this.DestinationPath.Text;
-            SharedVariables.Luh.Admin.Name = this.Name2;
+            Console.WriteLine("[SETTINGS] Name: " + this.NewName);
+            SharedVariables.Luh.Admin.Name = this.NewName;
             SharedVariables.Luh.Admin.Surname = this.Surname;
             SharedVariables.Luh.Admin.keyimage = this.imagekey;
+
+            JsonSerializer jsonSerializer = new JsonSerializer();
+
+            using (StreamWriter file = File.CreateText(System.Windows.Forms.Application.StartupPath + @"/Credentials.json"))
+            {
+                Credentials credentials = new Credentials()
+                {
+                    Name = SharedVariables.Luh.Admin.Name,
+                    Surname = SharedVariables.Luh.Admin.Surname,
+                    State = SharedVariables.Luh.Admin.State,
+                    Username = SharedVariables.Luh.Admin.Surname,
+                    ImageKey = SharedVariables.Luh.Admin.keyimage,
+                    IpAddress = SharedVariables.Luh.Admin.GetIp().ToString(),
+                    Port = SharedVariables.Luh.Admin.Port
+                };
+                jsonSerializer.Serialize(file, credentials);
+            }
 
             this.Close();
             
@@ -98,7 +115,7 @@ namespace AppCondivisione
             var b1 = sender as RadioButton;
             string key = b1.Content.ToString();
             var index = SharedVariables.keyimmages[key];
-            this.ImagePath = SharedVariables.immages[index];
+            this.ImagePath = SharedVariables.images[index];
             this.imagekey = index;
 
             ImageBrush imgBrush = new ImageBrush();

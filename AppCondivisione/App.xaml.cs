@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Pipes;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using Microsoft.Win32;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace AppCondivisione
 {
@@ -38,14 +36,17 @@ namespace AppCondivisione
             
             if (exists)
             {
-                MessageBox.Show("C'è già un altro processo che va");
-                Console.WriteLine("Argomenti arrivati: " + e.Args[0]);
+                Console.WriteLine("[APP] Argomenti arrivati: " + e.Args[0]);
                 Send(e.Args[0]);
                 SharedVariables.CloseEverything = true;
                 System.Windows.Application.Current.Shutdown();
             }
 
             if (SharedVariables.CloseEverything) return;
+
+            // Carico le credenziali dell'admin
+            this.LoadAdminCredentials();
+
             // Pipe thread per ascoltare
             pipeThread = Task.Run(() => Listen());
 
@@ -67,6 +68,26 @@ namespace AppCondivisione
             // Creo la classe server che verrà fatta girare nel rispettivo thread
             server = new Server();
             taskserver = Task.Run((() => server.EntryPoint()));
+        }
+
+        private void LoadAdminCredentials()
+        {
+            try
+            {
+                using (StreamReader file = File.OpenText(System.Windows.Forms.Application.StartupPath + @"/Credentials.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    Credentials admin = (Credentials)serializer.Deserialize(file, typeof(Credentials));
+                    SharedVariables.Luh.Admin = new Person(admin.Name, admin.Surname, admin.State, admin.IpAddress, admin.Port, admin.ImageKey);
+                    
+                    Console.WriteLine("[APP] Admin: " + SharedVariables.Luh.Admin.Name);
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("[APP] File non ancora stato creato!");
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -100,7 +121,7 @@ namespace AppCondivisione
                 pipeServer.Read(buffer, 0, buffer.Length);
                 string result = Encoding.ASCII.GetString(buffer).TrimEnd();
                 result = result.Replace("\0", String.Empty);
-              // result = "C:\\Users\\bitri\\Desktop\\ciao";
+                //result = "C:\\Users\\bitri\\Desktop\\ciao";
                 Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
                 {
@@ -115,7 +136,7 @@ namespace AppCondivisione
                                 values.Add(e.Name,e);
                             }
                         }
-                        AppCondivisione.MainWindow m2 = new MainWindow(values.Values) {Visibility = Visibility.Visible};
+                        AppCondivisione.MainWindow m2 = new MainWindow(values.Values, WindowState.Normal) {Visibility = Visibility.Visible};
                         m2.Show();
                     }));
                    
