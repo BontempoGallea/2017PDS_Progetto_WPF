@@ -134,7 +134,7 @@ namespace AppCondivisione
 
         private string _username;
         private string _root;
-        private string _currentDirectory;
+        private string _currentDirectory= SharedVariables.PathSave;
         private bool _isDirectoryFlag = false;
         private IPEndPoint _dataEndpoint;
         private IPEndPoint _remoteEndPoint;
@@ -321,8 +321,8 @@ namespace AppCondivisione
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                Console.WriteLine(ex.Message);
+                throw ;
             }
 
             Dispose();
@@ -377,6 +377,7 @@ namespace AppCondivisione
 
         private string NormalizeFilename(string path)
         {
+            Console.WriteLine(SharedVariables.PathSave);
             Console.WriteLine(TAG + "NORMALIZE --> " + path);
             if (path == null)
             {

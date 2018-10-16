@@ -80,7 +80,8 @@ namespace AppCondivisione
                     Credentials admin = (Credentials)serializer.Deserialize(file, typeof(Credentials));
                     SharedVariables.Luh.Admin = new Person(admin.Name, admin.Surname, admin.State, ListUserHandler.GetLocalIPAddress(), admin.Port, admin.ImageKey);
                     SharedVariables.AutomaticSave = admin.AutoSave;
-                    SharedVariables.PathSave = admin.PathSave;
+                    
+                    SharedVariables.PathSave = (admin.PathSave == null)? SharedVariables.PathSave: admin.PathSave;
                     Console.WriteLine("[APP] Admin: " + SharedVariables.Luh.Admin.Name);
                 }
             }
