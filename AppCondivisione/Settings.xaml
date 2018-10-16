@@ -62,7 +62,7 @@
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             Grid.Column="1" 
-            Text="{Binding Path=Name2}"/>
+            Text="{Binding Path=NewName}"/>
         <TextBlock 
             HorizontalAlignment="Left" 
             Margin="52,19.4,0,0" 
