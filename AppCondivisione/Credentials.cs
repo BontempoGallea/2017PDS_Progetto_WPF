@@ -14,7 +14,8 @@ namespace AppCondivisione
         public bool State { get; set; }
         public int ImageKey { get; set; }
         public int Port { get; set; }
-
+        public bool AutoSave { get; set; }
+        public string PathSave { get; set;}
         public Credentials() { }
     }
 }
