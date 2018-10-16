@@ -13,7 +13,6 @@ namespace AppCondivisione
         public string Username { get; set; }
         public bool State { get; set; }
         public int ImageKey { get; set; }
-        public string IpAddress { get; set; }
         public int Port { get; set; }
 
         public Credentials() { }

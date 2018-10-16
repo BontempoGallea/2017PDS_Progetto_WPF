@@ -88,7 +88,13 @@ namespace AppCondivisione
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    return ip.ToString();
+                    Console.WriteLine(ip.ToString() + " " + ip.ToString().StartsWith("10"));
+
+                    if(ip.ToString().StartsWith("10") == false)
+                    {
+                        Console.WriteLine("Returning: " + ip.ToString());
+                        return ip.ToString();
+                    }
                 }
             }
             throw new Exception("indirizzo non trovato");

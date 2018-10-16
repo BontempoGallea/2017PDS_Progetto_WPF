@@ -24,6 +24,7 @@ namespace AppCondivisione
 
         public FtpServer(IPAddress ipAddress, int port)
         {
+            Console.WriteLine("[FTPSERVER@" + ipAddress.ToString() + "] Port: " + port);
             _localEndPoint = new IPEndPoint(ipAddress, port);
         }
 

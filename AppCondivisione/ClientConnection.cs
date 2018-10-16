@@ -224,7 +224,6 @@ namespace AppCondivisione
                                 response = this.Password(arguments);
                                 break;
 
-
                             // Printa su quale directory sto attualmente lavorando
                             case "PWD":
                                 response = PrintWorkingDirectory();
@@ -401,7 +400,6 @@ namespace AppCondivisione
         }
 
         #region FTP Commands
-
 
 
         private string User(string username)

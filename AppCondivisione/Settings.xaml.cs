@@ -95,7 +95,6 @@ namespace AppCondivisione
                     State = SharedVariables.Luh.Admin.State,
                     Username = SharedVariables.Luh.Admin.Surname,
                     ImageKey = SharedVariables.Luh.Admin.keyimage,
-                    IpAddress = SharedVariables.Luh.Admin.GetIp().ToString(),
                     Port = SharedVariables.Luh.Admin.Port
                 };
                 jsonSerializer.Serialize(file, credentials);

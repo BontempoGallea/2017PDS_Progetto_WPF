@@ -24,7 +24,7 @@ namespace AppCondivisione
             this._client = new WebClient
             {
                 Proxy = null,
-                Credentials = new NetworkCredential("username", "password")
+                Credentials = this._credentials
             };
             this._worker = backgroundWorker;
         }
@@ -81,18 +81,7 @@ namespace AppCondivisione
 
             // Credenziali
             reqFTP.Credentials = this._credentials;
-            if (!SharedVariables.AutomaticSave)
-            {
-                MessageBoxResult result = MessageBox.Show(this._credentials.UserName+" vuole inviarti "+fileInf.Name+". Accetti?",
-                                              "Confirmation",
-                                              MessageBoxButton.YesNo,
-                                              MessageBoxImage.Question);
-                if (result == MessageBoxResult.No)
-                {
-                    return;
-
-                }
-            }
+            
             // Per default c'è il keepalive, che fa sì che la connessione di controllo non venga chiusa dopo l'esecuzione
             reqFTP.KeepAlive = false;
 
@@ -133,6 +122,7 @@ namespace AppCondivisione
             }
             catch (Exception ex)
             {
+                Console.WriteLine("[FTP CLIENT @ " + this._credentials.UserName + "] " + ex.Message);
                 Console.WriteLine("Qualcosa è andato storto");
             }
         }

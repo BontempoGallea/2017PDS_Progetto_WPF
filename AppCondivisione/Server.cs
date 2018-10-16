@@ -128,10 +128,10 @@ namespace AppCondivisione
                     {
                         Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5]),int.Parse(cred[6])); //creo una nuova persona
                         //TODO: da rimettere...tolto solo per debug
-                        //if (p.isEqual(SharedVariables.Luh.getAdmin()) ||
-                        //    String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;
+                        /*if (p.IsEqual(SharedVariables.Luh.Admin) ||
+                            String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;*/
                         SharedVariables.Luh.AddUser(p);//inserisco nella lista delle persone
-                        done = true;//ricezione completata
+                        done = true; //ricezione completata
                     }
                     else if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
                         SharedVariables.Luh.Users.Remove(cred[2] + cred[1]);
@@ -150,7 +150,7 @@ namespace AppCondivisione
         public void EntryTcp()
         {
             while (SharedVariables.Luh.Admin == null) { }
-            FtpServer server = new FtpServer(SharedVariables.Luh.Admin.GetIp(), SharedVariables.Luh.Admin.Port);
+            FtpServer server = new FtpServer(SharedVariables.Luh.Admin.GetIp().MapToIPv4(), SharedVariables.Luh.Admin.Port);
             server.Start();
             while (SharedVariables.Luh.Admin.IsOnline() && !SharedVariables.CloseEverything) ;
             server.Stop();
