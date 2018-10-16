@@ -625,9 +625,18 @@ namespace AppCondivisione
                 bytes = CopyStream(dataStream, fs);
             }
 
-            if (_isDirectoryFlag)
+            if (_isDirectoryFlag && File.Exists(fileName))
             {
-                ZipFile.ExtractToDirectory(pathname, folder);
+                try{
+                    ZipFile.ExtractToDirectory(pathname, folder);
+                    
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    dataStream.Close();
+                    
+                }
                 File.Delete(pathname);
             }
 

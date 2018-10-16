@@ -74,6 +74,7 @@ namespace AppCondivisione
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
         {
+            SharedVariables.Annulla = true;
             foreach (Person item in this.UserBox.SelectedItems)
             {
                 var cred = item.Username.Split(' ');
