@@ -55,9 +55,15 @@ namespace AppCondivisione
             key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
 
             //stessa cosa per directory
-            key = Registry.CurrentUser.CreateSubKey(@"Computer\\HKEY_CLASSES_ROOT\\Directory\shell\\Condividi in lan");
-            key = Registry.CurrentUser.CreateSubKey(@"Computer\\HKEY_CLASSES_ROOT\\Directory\\shell\\Condividi in lan\\command");
+            key = Registry.ClassesRoot.CreateSubKey(@"Directory\shell\\Condividi in LAN");
+            key = Registry.ClassesRoot.CreateSubKey(@"Directory\\shell\\Condividi in LAN\\command");
             key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
+
+            //stessa cosa per directory
+            key = Registry.ClassesRoot.CreateSubKey(@"*\shell\\Condividi in LAN");
+            key = Registry.ClassesRoot.CreateSubKey(@"*\\shell\\Condividi in LAN\\command");
+            key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
+
             // Creo la classe server che verrà fatta girare nel rispettivo thread
             server = new Server();
             taskserver = Task.Run((() => server.EntryPoint()));
