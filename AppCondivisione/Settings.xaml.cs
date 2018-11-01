@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Windows;
+
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -35,6 +36,17 @@ namespace AppCondivisione
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
             this.AutomaticSave = SharedVariables.AutomaticSave;
             this.NotAutomaticSave = !this.AutomaticSave;
+            foreach (String k in SharedVariables.keyimmages.Keys)
+            {
+                int value;
+                SharedVariables.keyimmages.TryGetValue(k,out value);
+                if ( value == SharedVariables.Luh.Admin.keyimage)
+                {
+                    var o = (System.Windows.Controls.RadioButton)this.FindName(k);
+                    o.IsChecked = true;
+                }
+            }
+
         }
 
         private BitmapImage LoadImage(string filename)

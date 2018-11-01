@@ -20,7 +20,7 @@ namespace AppCondivisione
         internal static long fileDimension=0;
         internal static long numberOfDestination=0;
         public static Dictionary<string, int> keyimmages = new Dictionary<string, int> {
-            { "Albero", 1 }, { "Ragno",6},{"Computer",2},{"Mare",5},{"Diavolo",3},{"Donna",4},{"Uomo",7},{"anonymous",0} };
+            { "Albero", 1 }, { "Ragno",6},{"Computer",2},{"Mare",5},{"Diavolo",3},{"Donna",4},{"Uomo",7},{"Anonimo",0} };
             
         public static Dictionary<int, string> images = new Dictionary<int, string> {
             { 0, "pack://application:,,,/immagini/anonymous.jpg" }, { 1, "pack://application:,,,/immagini/albero.jpg" } 

@@ -9,31 +9,31 @@
     <Grid Margin="0,0,0.2,-0.2" Height="423" VerticalAlignment="Bottom">
         <Grid.ColumnDefinitions >
 
-            <ColumnDefinition Width="64*"/>
-            <ColumnDefinition Width="95*"/>
+            <ColumnDefinition Width="164*"/>
+            <ColumnDefinition Width="631*"/>
 
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
 
-            <RowDefinition Height="100*"/>
+            <RowDefinition Height="106*"/>
+            <RowDefinition Height="53*"/>
+            <RowDefinition Height="53*"/>
+            <RowDefinition Height="53*"/>
             <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="100*"/>
+            <RowDefinition Height="108*"/>
 
         </Grid.RowDefinitions>
 
         <TextBlock 
-            Margin="52,0,0,9.6" 
+            Margin="10,0,0,10" 
             TextWrapping="Wrap" 
             Text="Credenziali" 
             VerticalAlignment="Bottom" 
-            Height="13" Width="95"
-            HorizontalAlignment="Left" />
+            Height="29" Width="140"
+            HorizontalAlignment="Left" FontSize="24" />
         <TextBlock 
             HorizontalAlignment="Left" 
-            Margin="51,19.6,0,0" 
+            Margin="30,18.8,0,0" 
             Grid.Row="2" 
             TextWrapping="Wrap" 
             Text="Cognome" 
@@ -41,31 +41,31 @@
             Height="23" Width="120"/>
         <TextBlock 
             HorizontalAlignment="Left" 
-            Margin="52,0,0,10.2" 
+            Margin="30,0,0,11.2" 
             Grid.Row="3" 
             TextWrapping="Wrap" 
             Text="Dove salvare?" 
             VerticalAlignment="Bottom" 
             Height="23" Width="120"/>
         <TextBlock 
-            Margin="30,0,88,69.2" 
-            Grid.Row="5" 
+            Margin="30,0,14,9.2" 
+            Grid.Row="4" 
             TextWrapping="Wrap" 
             Text="Salvataggio automatico dei file?" 
             VerticalAlignment="Bottom" 
             Height="30"/>
         <TextBox 
             HorizontalAlignment="Right" 
-            Height="23" Width="120" 
-            Margin="0,18.4,289.2,0" 
+            Height="25" Width="120" 
+            Margin="0,19,501.2,0" 
             Grid.Row="1" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             Grid.Column="1" 
-            Text="{Binding Path=NewName}"/>
+            Text="{Binding Path=NewName}" Background="White"/>
         <TextBlock 
             HorizontalAlignment="Left" 
-            Margin="52,19.4,0,0" 
+            Margin="30,19,0,0" 
             Grid.Row="1" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
@@ -75,18 +75,18 @@
         </TextBlock>
         <TextBox 
             HorizontalAlignment="Right" 
-            Height="23" 
-            Margin="0,18.6,289.2,0" 
+            Height="25" 
+            Margin="0,18.8,501.2,0" 
             Grid.Row="2" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             Width="120" 
             Grid.Column="1" 
-            Text="{Binding Path=Surname}"/>
+            Text="{Binding Path=Surname}" Background="White"/>
         <Button 
             Content="Seleziona" 
-            Margin="185,0,0,11.2" 
-            Grid.Row="4" 
+            Margin="380,0,0,16.2" 
+            Grid.Row="3" 
             VerticalAlignment="Bottom" 
             Height="20" 
             Grid.Column="1" 
@@ -100,28 +100,35 @@
             </Button.Resources>
         </Button>
         <TextBlock 
+            
             Name="DestinationPath" 
-            Margin="0,0,67,18.2" 
-            Grid.Row="4" 
+            Margin="10,0,335.2,10.2" 
+            Grid.Row="3" 
             TextWrapping="Wrap" 
             Text="{Binding Path=SavePath}" 
             VerticalAlignment="Bottom" 
-            Height="13" Width="202"/>
+            Height="28" Grid.Column="1" Foreground="#FF6D2626" Background="#FFDDDDDD">
+            <TextBlock.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </TextBlock.Resources>
+        </TextBlock>
         <RadioButton 
             Name="Si" Content="Si" 
-            Margin="30,0,231,48.2" 
-            Grid.Row="5" 
+            Margin="10,0,587.2,10.2" 
+            Grid.Row="4" 
             VerticalAlignment="Bottom" 
             IsChecked="{Binding Path=AutomaticSave}"
             Checked="RadioButton_Checked" 
-            Height="16"/>
+            Height="16" Grid.Column="1"/>
         <RadioButton 
             Name="No" Content="No" 
-            Margin="30,62.8,231,28.2" 
-            Grid.Row="5" 
+            Margin="91,23.8,501.2,0" 
+            Grid.Row="4" 
             IsChecked="{Binding Path=NotAutomaticSave}"
-            Checked="RadioButton_Checked"/>
-        <Ellipse Name="Ellipse" Height="72" Width="76" Grid.Column="1" Margin="0,10,333.2,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+            Checked="RadioButton_Checked" Grid.Column="1" Height="16" VerticalAlignment="Top"/>
+        <Ellipse Name="Ellipse" Margin="105,5,406.2,5" Grid.Column="1">
             <Ellipse.Fill>
                 <ImageBrush  ImageSource="{Binding Path=ImagePath}"/>
             </Ellipse.Fill>
@@ -131,10 +138,7 @@
             Name="SalvaModifiche"
             Content="Salva"
             Click="SalvaModifiche_OnClick"
-            Grid.Column="1"
-            Grid.Row="5"
-            VerticalAlignment="Top" 
-           Height="30" Margin="282,27.8,85.2,0">
+            Grid.Row="5" Margin="271,43.8,35.2,35.2" Grid.Column="1">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
@@ -145,31 +149,25 @@
         <Button 
             Content="Annulla" 
             Click="Annulla_OnClick"
-            HorizontalAlignment="Right"
-            Grid.Column="1"
-            Grid.Row="5"
-            VerticalAlignment="Center" 
-            Width="94"
-            Height="30" Margin="0,27.8,277.2,48.2">
+            Grid.Row="5" Margin="30,43.8,406.2,35.2" Width="Auto" Grid.ColumnSpan="2">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <ListBox Grid.Column="1" Height="72" Margin="185,10,0,0" VerticalAlignment="Top" Width="235" HorizontalAlignment="Right">
-            <RadioButton  Content="Albero" HorizontalAlignment="Center" Click="ChangeImage"/>
-            <RadioButton  Content="Computer" Click="ChangeImage"/>
-            <RadioButton Content="Ragno" Click="ChangeImage"/>
-            <RadioButton  Content="Mare" Click="ChangeImage"/>
-            <RadioButton  Content="Donna" Click="ChangeImage"/>
-            <RadioButton Content="Diavolo" Click="ChangeImage"/>
-            <RadioButton Content="Anonimo" Click="ChangeImage"/>
-            <RadioButton Content="Uomo" Click="ChangeImage"/>
-        </ListBox>
+        <WrapPanel x:Name="image_names" Grid.Column="1" Height="69" Margin="296,0,0,19.2" VerticalAlignment="Bottom" Width="246" HorizontalAlignment="Left" Background="White" Grid.RowSpan="2">
 
-
-
+            <TextBlock HorizontalAlignment="Center" FontSize="24">Scegli la tua immagine</TextBlock>
+            <RadioButton x:Name="Albero"  Content="Albero"  Click="ChangeImage" />
+            <RadioButton x:Name="Computer"  Content="Computer"  Click="ChangeImage" />
+            <RadioButton x:Name="Ragno" Content="Ragno" Click="ChangeImage"/>
+            <RadioButton x:Name="Mare"  Content="Mare" Click="ChangeImage"/>
+            <RadioButton x:Name="Donna"  Content="Donna" Click="ChangeImage"/>
+            <RadioButton x:Name="Diavolo" Content="Diavolo" Click="ChangeImage"/>
+            <RadioButton x:Name="Anonimo" Content="Anonimo" Click="ChangeImage"/>
+            <RadioButton x:Name="Uomo" Content="Uomo" Click="ChangeImage"/>
+        </WrapPanel>
     </Grid>
 </Window>
 
