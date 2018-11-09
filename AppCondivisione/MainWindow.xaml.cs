@@ -29,7 +29,7 @@ namespace AppCondivisione
         public MainWindow(Dictionary<string, Person>.ValueCollection values)
         {
            
-            this.WindowState = System.Windows.WindowState.Minimized;
+            this.WindowState = System.Windows.WindowState.Normal;
             //values=UpdateUsers(values);
             InitializeComponent();
             this.UserBox.ItemsSource = values;
@@ -60,20 +60,16 @@ namespace AppCondivisione
             
         }
 
-        public MainWindow(Dictionary<string, Person>.ValueCollection values, System.Windows.WindowState state)
+        public void Update(Dictionary<string, Person>.ValueCollection values, Visibility state)
         {
             
-            this.WindowState = state;
-            //values=UpdateUsers(values);
-            InitializeComponent();
-            SharedVariables.W = this;
-            this.UserBox.ItemsSource = values;
-            MainWindow.box = this.UserBox;
-            t = new System.Timers.Timer(5000);
-            t.Elapsed += OnTimeElapse;
-            t.AutoReset = true;
-            SetState();
-            t.Start();
+            SharedVariables.W.Visibility= state;
+            SharedVariables.W.UserBox.ItemsSource = values;
+            SharedVariables.W.t = new System.Timers.Timer(5000);
+            SharedVariables.W.t.Elapsed += SharedVariables.W.OnTimeElapse;
+            SharedVariables.W.t.AutoReset = true;
+            SharedVariables.W.SetState();
+            SharedVariables.W.t.Start();
         }
 
         private void SetState()
@@ -107,7 +103,7 @@ namespace AppCondivisione
 
         public MainWindow()
         {
-            this.WindowState = System.Windows.WindowState.Minimized;
+            this.WindowState = System.Windows.WindowState.Normal;
             InitializeComponent();
             SharedVariables.W = this;
         }

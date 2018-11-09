@@ -41,7 +41,7 @@ namespace AppCondivisione
                 SharedVariables.CloseEverything = true;
                 System.Windows.Application.Current.Shutdown();
             }
-
+        
             if (SharedVariables.CloseEverything) return;
 
             // Carico le credenziali dell'admin
@@ -138,8 +138,9 @@ namespace AppCondivisione
                                 values.Add(e.Name,e);
                             }
                         }
-                        AppCondivisione.MainWindow m2 = new MainWindow(values.Values, WindowState.Normal) {Visibility = Visibility.Visible};
-                        m2.Show();
+                        SharedVariables.W.Update(values.Values, Visibility.Visible);
+                        //m2.Show();
+                       
                     }));
                    
                 }
