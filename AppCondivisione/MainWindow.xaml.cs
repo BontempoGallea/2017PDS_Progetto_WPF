@@ -30,19 +30,22 @@ namespace AppCondivisione
         private void OnTimeElapse(object sender, ElapsedEventArgs e)
         {
             t.Stop();
-            SharedVariables.W.Dispatcher.Invoke(new Action(() =>
+            if (SharedVariables.W.Visibility == Visibility.Visible)
             {
-                Dictionary<string, Person> values = new Dictionary<string, Person>();
-                foreach (Person pe in SharedVariables.Luh.Users.Values)
+                SharedVariables.W.Dispatcher.Invoke(new Action(() =>
                 {
-                    if (pe.IsOnline() && !pe.IsOld())
+                    Dictionary<string, Person> values = new Dictionary<string, Person>();
+                    foreach (Person pe in SharedVariables.Luh.Users.Values)
                     {
-                        values.Add(pe.Name, pe);
+                        if (pe.IsOnline() && !pe.IsOld())
+                        {
+                            values.Add(pe.Name, pe);
+                        }
                     }
-                }
-                SharedVariables.W.UserBox.ItemsSource = values.Values;
-                t.Start();
-            }));
+                    SharedVariables.W.UserBox.ItemsSource = values.Values;
+                    t.Start();
+                }));
+            }
             
         }
 
@@ -196,6 +199,13 @@ namespace AppCondivisione
         private void Main_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
            Console.Write(e);
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            SharedVariables.W.Visibility = Visibility.Hidden;
+            e.Cancel = true;
+            base.OnClosing(e);
         }
 
         /*public void UpdateProgressBar(int value)
