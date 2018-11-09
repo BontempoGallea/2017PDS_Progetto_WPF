@@ -8,7 +8,15 @@
         mc:Ignorable="d"
         Name="Main"
         Visibility="Hidden"
-        Title="Applicazione Condivisione" Height="400" Width="575" IsVisibleChanged="Main_IsVisibleChanged">
+        Title="Applicazione Condivisione" Height="400" Width="575" IsVisibleChanged="Main_IsVisibleChanged"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
@@ -144,7 +152,6 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            <!--barra del caricamento...da rendere visibile solo quando si invia file -->
 
         </Grid>
     </Grid>
