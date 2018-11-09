@@ -30,22 +30,19 @@ namespace AppCondivisione
             this.DataContext = this;
             this.NewName = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
-            this.ImagePath = SharedVariables.images[SharedVariables.Luh.Admin.keyimage];
+            this.ImagePath = SharedVariables.images[SharedVariables.Luh.Admin.KeyImage];
             this.SalvaModifiche.IsEnabled = false;
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
             this.AutomaticSave = SharedVariables.AutomaticSave;
             this.NotAutomaticSave = !this.AutomaticSave;
-            foreach (String k in SharedVariables.keyimmages.Keys)
-            {
-                int value;
-                SharedVariables.keyimmages.TryGetValue(k,out value);
-                if ( value == SharedVariables.Luh.Admin.keyimage)
-                {
-                    var o = (System.Windows.Controls.RadioButton)this.FindName(k);
-                    o.IsChecked = true;
-                }
-            }
 
+            this.HighlightCorrectProfilePicture();
+        }
+
+        private void HighlightCorrectProfilePicture()
+        {
+            var o = (System.Windows.Controls.MenuItem)this.FindName(SharedVariables.Luh.Admin.ImageName);
+            o.Background = Brushes.PowderBlue;
         }
 
         private BitmapImage LoadImage(string filename)
@@ -83,17 +80,19 @@ namespace AppCondivisione
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            (sender as System.Windows.Controls.Button).ContextMenu.IsEnabled = true;
+            (sender as System.Windows.Controls.Button).ContextMenu.PlacementTarget = (sender as System.Windows.Controls.Button);
+            (sender as System.Windows.Controls.Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            (sender as System.Windows.Controls.Button).ContextMenu.IsOpen = true;
         }
 
         private void SalvaModifiche_OnClick(object sender, RoutedEventArgs e)
         {
             SharedVariables.AutomaticSave = Automatic;
             SharedVariables.PathSave = this.DestinationPath.Text;
-            Console.WriteLine("[SETTINGS] Name: " + this.NewName);
             SharedVariables.Luh.Admin.Name = this.NewName;
             SharedVariables.Luh.Admin.Surname = this.Surname;
-            SharedVariables.Luh.Admin.keyimage = this.imagekey;
+            SharedVariables.Luh.Admin.KeyImage = this.imagekey;
 
             JsonSerializer jsonSerializer = new JsonSerializer();
 
@@ -105,7 +104,7 @@ namespace AppCondivisione
                     Surname = SharedVariables.Luh.Admin.Surname,
                     State = SharedVariables.Luh.Admin.State,
                     Username = SharedVariables.Luh.Admin.Surname,
-                    ImageKey = SharedVariables.Luh.Admin.keyimage,
+                    ImageKey = SharedVariables.Luh.Admin.KeyImage,
                     Port = SharedVariables.Luh.Admin.Port,
                     PathSave= this.DestinationPath.Text,
                     AutoSave = Automatic
@@ -124,16 +123,24 @@ namespace AppCondivisione
 
         private void ChangeImage(object sender, RoutedEventArgs e)
         {
-            var b1 = sender as RadioButton;
-            string key = b1.Content.ToString();
+            var b1 = sender as System.Windows.Controls.MenuItem;
+            string key = b1.Header.ToString();
             var index = SharedVariables.keyimmages[key];
             this.ImagePath = SharedVariables.images[index];
             this.imagekey = index;
+
+            // Resetto quello di prima
+            var item = (System.Windows.Controls.MenuItem) this.FindName(SharedVariables.Luh.Admin.ImageName);
+            item.Background = Brushes.Transparent;
+
+            SharedVariables.Luh.Admin.KeyImage = imagekey;
+            SharedVariables.Luh.Admin.ImageName = key;
 
             ImageBrush imgBrush = new ImageBrush();
           
             imgBrush.ImageSource =new BitmapImage(new Uri(this.ImagePath));
             this.Ellipse.Fill = imgBrush;
+            this.HighlightCorrectProfilePicture();
         }
     }
 }
