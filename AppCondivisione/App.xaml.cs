@@ -123,7 +123,7 @@ namespace AppCondivisione
                 pipeServer.Read(buffer, 0, buffer.Length);
                 string result = Encoding.ASCII.GetString(buffer).TrimEnd();
                 result = result.Replace("\0", String.Empty);
-                //result = "C:\\Users\\bitri\\Desktop\\ciao";
+
                 Console.WriteLine("[Server]: Risultato ottenuto: " + result + "\t");
                 if (!(result.CompareTo(string.Empty) == 0))
                 {

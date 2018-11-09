@@ -62,5 +62,21 @@ namespace AppCondivisione
             get { return _AnnullaBoolean; }
             set { _AnnullaBoolean = value; }
         }
+
+        internal static Dictionary<string, Person> getOnline()
+        {
+            Dictionary<string, Person> values = new Dictionary<string, Person>();
+    
+           
+                foreach (Person e in SharedVariables.Luh.Users.Values)
+                {
+                    if (e.IsOnline() && !e.IsOld())
+                    {
+                        values.Add(e.Name, e);
+                    }
+                }
+            return values;
+           
+        }
     }
 }

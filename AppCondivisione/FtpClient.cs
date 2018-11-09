@@ -27,6 +27,7 @@ namespace AppCondivisione
                 Credentials = this._credentials
             };
             this._worker = backgroundWorker;
+
         }
 
         public void Upload(string pathname, string address)
@@ -102,29 +103,24 @@ namespace AppCondivisione
             // Apro lo stream per leggere il file da caricare
             FileStream fs = fileInf.OpenRead();
 
-            try
-            {
-                // Stream lato server
-                Stream strm = reqFTP.GetRequestStream();
+           
+            // Stream lato server
+            Stream strm = reqFTP.GetRequestStream();
 
-                // Leggo 4KB alla votla
-                // Ciclo fino a che non ho finito
-                while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
-                {
-                    // Sposta il contenuto dallo stream del file allo stream FTP e voilà
-                    strm.Write(buff, 0, contentLen);
-                    SharedVariables.Uploaded += contentLen;
-                    this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)));
-                }
-                // Chiudo tutto
-                strm.Close();
-                fs.Close();
-            }
-            catch (Exception ex)
+            // Leggo 4KB alla votla
+            // Ciclo fino a che non ho finito
+            while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
             {
-                Console.WriteLine("[FTP CLIENT @ " + this._credentials.UserName + "] " + ex.Message);
-                Console.WriteLine("Qualcosa è andato storto");
+                // Sposta il contenuto dallo stream del file allo stream FTP e voilà
+                strm.Write(buff, 0, contentLen);
+                SharedVariables.Uploaded += contentLen;
+                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)));
             }
+            // Chiudo tutto
+            strm.Close();
+            fs.Close();
+          
+            
         }
 
         private bool IsDir(string fileName)

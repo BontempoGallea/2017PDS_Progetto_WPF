@@ -22,33 +22,19 @@ namespace AppCondivisione
 
         public void EntryPoint()
         {
-            try
-            {
-                _branchUdp = new Thread(EntryUdp);
-                _branchUdp.Start();
-                _branchTcp = new Thread(EntryTcp);
-                _branchTcp.Start();
-            }
-            catch (ArgumentException e) { }
-            catch (ThreadStateException e) { }
-            catch (OutOfMemoryException e) { }
-            catch (InvalidOperationException e) { }
+            _branchUdp = new Thread(EntryUdp);
+            _branchUdp.Start();
+            _branchTcp = new Thread(EntryTcp);
+            _branchTcp.Start();
         }
 
         public void EntryUdp()
         {
-            Console.WriteLine("Branch UDP entrato!");
-            try
-            {
-                _talkUdp = new Thread(EntryTalk);
-                _talkUdp.Start();
-                _listenerUdp = new Thread(EntryListen);
-                _listenerUdp.Start();
-            }
-            catch (ArgumentException e) { }
-            catch (ThreadStateException e) { }
-            catch (OutOfMemoryException e) { }
-            catch (InvalidOperationException e) { }
+            _talkUdp = new Thread(EntryTalk);
+            _talkUdp.Start();
+            _listenerUdp = new Thread(EntryListen);
+            _listenerUdp.Start();
+            
         }
 
         /*
@@ -108,39 +94,32 @@ namespace AppCondivisione
             */
             var done = false; // Variabile per terminare la ricezione del pacchetto
             var ipEp = new IPEndPoint(IPAddress.Any, SenderPort); // Endpoint dal quale sto ricevendo dati, accetto qualsiasi indirizzo con la senderPort
-            try
+            while (!done && !SharedVariables.CloseEverything)
             {
-                while (!done && !SharedVariables.CloseEverything)
+                if (ClientUdp.Available <= 0) continue;
+                var bytes = ClientUdp.Receive(ref ipEp); // Buffer
+                var cred = Encoding.ASCII.GetString(bytes, 0, bytes.Length).Split(','); // Converto in stringhe
+                if(!cred[0].Equals("pds")) continue;
+                if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                 {
-                    if (ClientUdp.Available <= 0) continue;
-                    var bytes = ClientUdp.Receive(ref ipEp); // Buffer
-                    var cred = Encoding.ASCII.GetString(bytes, 0, bytes.Length).Split(','); // Converto in stringhe
-                    if(!cred[0].Equals("pds")) continue;
-                    if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
-                    {
 
-                        // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
-                        SharedVariables.Luh.ResetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
-                        SharedVariables.Luh.Users[cred[2] + cred[1]].setImage(int.Parse(cred[6]));
-                        done = true; // Ricezione completata
-                    }
-                    else if(!SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
-                    {
-                        Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5]),int.Parse(cred[6])); //creo una nuova persona
-                        //TODO: da rimettere...tolto solo per debug
-                        /*if (p.IsEqual(SharedVariables.Luh.Admin) ||
-                            String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;*/
-                        SharedVariables.Luh.AddUser(p);//inserisco nella lista delle persone
-                        done = true; //ricezione completata
-                    }
-                    else if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
-                        SharedVariables.Luh.Users.Remove(cred[2] + cred[1]);
-                    }
+                    // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
+                    SharedVariables.Luh.ResetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
+                    SharedVariables.Luh.Users[cred[2] + cred[1]].setImage(int.Parse(cred[6]));
+                    done = true; // Ricezione completata
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
+                else if(!SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
+                {
+                    Person p = new Person(cred[1], cred[2], cred[3] == "online", cred[4], int.Parse(cred[5]),int.Parse(cred[6])); //creo una nuova persona
+                    //TODO: da rimettere...tolto solo per debug
+                    /*if (p.IsEqual(SharedVariables.Luh.Admin) ||
+                        String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;*/
+                    SharedVariables.Luh.AddUser(p);//inserisco nella lista delle persone
+                    done = true; //ricezione completata
+                }
+                else if (SharedVariables.Luh.IsPresent(cred[2] + cred[1]) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
+                    SharedVariables.Luh.Users.Remove(cred[2] + cred[1]);
+                }
             }
         }
 

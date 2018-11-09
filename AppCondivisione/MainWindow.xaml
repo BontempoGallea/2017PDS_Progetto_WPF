@@ -49,6 +49,7 @@
                             Foreground="White" Click="Settings_Click"/>
 
                         <Button
+                            Name="State"
                             Grid.Column="0"
                             Grid.Row="1"
                             Content="Stato: Offline" 
@@ -72,6 +73,7 @@
             VerticalAlignment="Stretch" Grid.ColumnSpan="2"
         >
             <ListView 
+                ItemsSource="{Binding MainWindow.values}"
                 x:Name="UserBox" 
                 SelectionMode="Multiple"
                 HorizontalAlignment="Stretch" 

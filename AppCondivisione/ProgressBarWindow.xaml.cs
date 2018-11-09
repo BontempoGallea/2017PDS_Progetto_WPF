@@ -52,11 +52,21 @@ namespace AppCondivisione
         {
             SharedVariables.numberOfDestination = this.selectedItems.Count;
             SharedVariables.Uploaded = 0;
-            foreach (Person user in this.selectedItems)
+            try
             {
-                FtpClient client = new FtpClient(SharedVariables.Luh.Admin.Username, "", (sender as BackgroundWorker));
-                client.Upload(SharedVariables.PathSend,user.GetIp().ToString());
-                var i = 0;
+                foreach (Person user in this.selectedItems)
+                {
+                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.Username, "", (sender as BackgroundWorker));
+                    client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
+                    var i = 0;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Qualcosa è andato storto");
+                MessageBox.Show("Qualcosa è andato storto");
+                MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
+                this.Close();
             }
            
         }

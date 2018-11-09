@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,28 +24,85 @@ namespace AppCondivisione
     public partial class MainWindow : Window
     {
         private bool isSelected = false;
-
+        static ListView box;
+        private System.Timers.Timer t;
         public MainWindow(Dictionary<string, Person>.ValueCollection values)
         {
+           
             this.WindowState = System.Windows.WindowState.Minimized;
             //values=UpdateUsers(values);
             InitializeComponent();
-            SharedVariables.W = this;
             this.UserBox.ItemsSource = values;
+            SharedVariables.W = this;
+            MainWindow.box = this.UserBox;
+            t = new System.Timers.Timer(5000);
+           // t.Elapsed += OnTimeElapse;
+            t.AutoReset = true;
+            t.Start();
+        }
+
+        private void OnTimeElapse(object sender, ElapsedEventArgs e)
+        {
+            t.Stop();
+            SharedVariables.W.Dispatcher.Invoke(new Action(() =>
+            {
+                Dictionary<string, Person> values = new Dictionary<string, Person>();
+                foreach (Person pe in SharedVariables.Luh.Users.Values)
+                {
+                    if (pe.IsOnline() && !pe.IsOld())
+                    {
+                        values.Add(pe.Name, pe);
+                    }
+                }
+                SharedVariables.W.UserBox.ItemsSource = values.Values;
+                t.Start();
+            }));
+            
         }
 
         public MainWindow(Dictionary<string, Person>.ValueCollection values, System.Windows.WindowState state)
         {
+            
             this.WindowState = state;
             //values=UpdateUsers(values);
             InitializeComponent();
             SharedVariables.W = this;
             this.UserBox.ItemsSource = values;
+            MainWindow.box = this.UserBox;
+            t = new System.Timers.Timer(5000);
+            t.Elapsed += OnTimeElapse;
+            t.AutoReset = true;
+            SetState();
+            t.Start();
         }
 
-        private Dictionary<string, Person>.ValueCollection UpdateUsers(Dictionary<string, Person>.ValueCollection values)
+        private void SetState()
         {
-            throw new NotImplementedException();
+            Button b = this.State;
+            if (SharedVariables.Luh.Admin.State)
+            {
+                b.Background = Brushes.Blue;
+                b.Content = "Stato: Online";
+                SharedVariables.Luh.Admin.State = true;
+                
+            }
+            else
+            {
+                b.Background = Brushes.Gray;
+                b.Content = "Stato: Offline";
+                SharedVariables.Luh.Admin.State = false;
+            }
+
+        }
+
+        static public void UpdateUsers(Dictionary<string, Person>.ValueCollection values)
+        {
+            MainWindow.box.Dispatcher.Invoke(new Action(() =>
+            {
+                MainWindow.box.ItemsSource = values;
+            }));
+               
+
         }
 
         public MainWindow()
@@ -67,9 +125,16 @@ namespace AppCondivisione
         }
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
-            SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
-            ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, this.UserBox.SelectedItems);
-            pbw.Show();
+            try
+            {
+                SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
+                ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, this.UserBox.SelectedItems);
+                pbw.Show();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("ciao");
+            }
         }
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
