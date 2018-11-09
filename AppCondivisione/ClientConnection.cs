@@ -569,7 +569,9 @@ namespace AppCondivisione
 
         private void SetupDataConnectionOperation(DataConnectionOperation state)
         {
-            System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Vuoi ricevere il file?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+            var pathname = state.Arguments;
+            string folder = pathname.Split('\\')[pathname.Split('\\').Length - 1];
+            System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("\""+_username+"\" Sta tentando di inviarti \""+ folder+"\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
                     if (_dataConnectionType == DataConnectionType.Active)

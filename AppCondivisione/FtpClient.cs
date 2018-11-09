@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using System.Net.NetworkInformation;
 
 namespace AppCondivisione
 {
@@ -99,7 +100,6 @@ namespace AppCondivisione
             int buffLength = 4096;
             byte[] buff = new byte[buffLength];
             int contentLen;
-
             // Apro lo stream per leggere il file da caricare
             FileStream fs = fileInf.OpenRead();
 
@@ -108,16 +108,50 @@ namespace AppCondivisione
             Stream strm = reqFTP.GetRequestStream();
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
+            var totpacchetti = fileInf.Length / 4096;
+            var tempofile= (fileInf.Length)/( ShowInterfaceSpeedAndQueue() / (8*10000));
+            long[] vector = new long[2];
+            vector[0] = tempofile;
+            vector[1] = tempofile / totpacchetti;
+
+            var i = 0;
             while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
             {
                 // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                 strm.Write(buff, 0, contentLen);
+                var speed=ShowInterfaceSpeedAndQueue()/8;
+               
                 SharedVariables.Uploaded += contentLen;
-                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)));
+              
+                
+                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)),vector);
+                i++;
             }
             // Chiudo tutto
             strm.Close();
             fs.Close();
+        }
+        public static long ShowInterfaceSpeedAndQueue()
+        {
+   
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in adapters)
+            {
+                IPInterfaceProperties properties = adapter.GetIPProperties();
+                IPv4InterfaceStatistics stats = adapter.GetIPv4Statistics();
+                Console.WriteLine(adapter.Description);
+                Console.WriteLine("     Speed .................................: {0}",
+                    adapter.Speed);
+                if (adapter.Speed > 0)
+                {
+                    return adapter.Speed;
+                }
+                
+                Console.WriteLine("     Output queue length....................: {0}",
+                    stats.OutputQueueLength);
+            }
+            return 0;
+            
         }
 
         private bool IsDir(string fileName)

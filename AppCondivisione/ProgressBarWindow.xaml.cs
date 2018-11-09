@@ -14,7 +14,7 @@ namespace AppCondivisione
     {
         private string _file;
         private Person _user;
-       
+        int npacchettiinviati;
         private IList selectedItems;
 
         public ProgressBarWindow(string filepath, Person user)
@@ -52,6 +52,7 @@ namespace AppCondivisione
         {
             SharedVariables.numberOfDestination = this.selectedItems.Count;
             SharedVariables.Uploaded = 0;
+            npacchettiinviati = 1;
             try
             {
                 foreach (Person user in this.selectedItems)
@@ -77,8 +78,13 @@ namespace AppCondivisione
 
         void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
-            if(pbStatus.Value == 100)
+            long[] vector = e.UserState as long[];
+            npacchettiinviati++;
+            Console.WriteLine(vector[0] + " " + vector[1]);
+            this.Time.Text = "Tempo residuo " + (vector[0] - npacchettiinviati * vector[1]);
+            if (pbStatus.Value == 100)
             {
                 MessageBox.Show("File inviato correttamente");
                 this.Close();
