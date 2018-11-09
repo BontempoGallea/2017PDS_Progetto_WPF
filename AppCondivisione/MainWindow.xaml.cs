@@ -198,7 +198,7 @@ namespace AppCondivisione
            Console.Write(e);
         }
 
-        public void UpdateProgressBar(int value)
+        /*public void UpdateProgressBar(int value)
         {
             if (CheckAccess())
                 this.ProgressBar.Value = value;
@@ -206,7 +206,7 @@ namespace AppCondivisione
             {
                 Dispatcher.Invoke(() => { this.ProgressBar.Value = value; });
             }
-        }
+        }*/
 
     }
 }

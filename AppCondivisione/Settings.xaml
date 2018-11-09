@@ -56,8 +56,8 @@
             Height="30"/>
         <TextBox 
             HorizontalAlignment="Right" 
-            Height="25" Width="120" 
-            Margin="0,19,501.2,0" 
+            Height="25" Width="184" 
+            Margin="0,19,437,0" 
             Grid.Row="1" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
@@ -76,22 +76,22 @@
         <TextBox 
             HorizontalAlignment="Right" 
             Height="25" 
-            Margin="0,18.8,501.2,0" 
+            Margin="0,19,437,0" 
             Grid.Row="2" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-            Width="120" 
+            Width="184" 
             Grid.Column="1" 
             Text="{Binding Path=Surname}" Background="White"/>
         <Button 
-            Content="Seleziona" 
-            Margin="380,0,0,16.2" 
+            Content="Sfoglia" 
+            Margin="296,0,0,10" 
             Grid.Row="3" 
             VerticalAlignment="Bottom" 
-            Height="20" 
+            Height="33" 
             Grid.Column="1" 
             HorizontalAlignment="Left" 
-            Width="75"
+            Width="127"
             Click="BrowseButton_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
@@ -99,35 +99,42 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <TextBlock 
-            
+        <TextBlock
             Name="DestinationPath" 
-            Margin="10,0,335.2,10.2" 
+            Margin="10,10,335,10" 
+            Background="White"
             Grid.Row="3" 
             TextWrapping="Wrap" 
             Text="{Binding Path=SavePath}" 
-            VerticalAlignment="Bottom" 
-            Height="28" Grid.Column="1" Foreground="#FF6D2626" Background="#FFDDDDDD">
+            VerticalAlignment="Center" 
+            TextAlignment="Center"
+            Padding="1"
+            Height="33" Grid.Column="1" Foreground="#FF6D2626">
             <TextBlock.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
             </TextBlock.Resources>
         </TextBlock>
         <RadioButton 
             Name="Si" Content="Si" 
-            Margin="10,0,587.2,10.2" 
+            Margin="10,0,571,0" 
             Grid.Row="4" 
-            VerticalAlignment="Bottom" 
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
             IsChecked="{Binding Path=AutomaticSave}"
             Checked="RadioButton_Checked" 
-            Height="16" Grid.Column="1"/>
+            Height="50" Grid.Column="1" RenderTransformOrigin="1.56,0.46"/>
         <RadioButton 
             Name="No" Content="No" 
-            Margin="91,23.8,501.2,0" 
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Margin="91,0,490,0" 
             Grid.Row="4" 
             IsChecked="{Binding Path=NotAutomaticSave}"
-            Checked="RadioButton_Checked" Grid.Column="1" Height="16" VerticalAlignment="Top"/>
+            Checked="RadioButton_Checked" Grid.Column="1" Height="50" VerticalAlignment="Top" RenderTransformOrigin="2.3,0.47"/>
         <Ellipse Name="Ellipse" Margin="105,5,406.2,5" Grid.Column="1">
             <Ellipse.Fill>
                 <ImageBrush  ImageSource="{Binding Path=ImagePath}"/>
@@ -138,18 +145,18 @@
             Name="SalvaModifiche"
             Content="Salva"
             Click="SalvaModifiche_OnClick"
-            Grid.Row="5" Margin="271,43.8,35.2,35.2" Grid.Column="1">
+            Grid.Row="5" Margin="454,34,75,32" Grid.Column="1" Height="Auto" RenderTransformOrigin="0.029,0.536">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <!--bottone che permetta di stoppare l'invio del file-->
+
         <Button 
             Content="Annulla" 
             Click="Annulla_OnClick"
-            Grid.Row="5" Margin="30,43.8,406.2,35.2" Width="Auto" Grid.ColumnSpan="2">
+            Grid.Row="5" Margin="312,34,208,32" Width="Auto" Height="Auto" Grid.Column="1">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
