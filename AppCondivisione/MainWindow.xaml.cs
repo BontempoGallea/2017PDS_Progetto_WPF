@@ -26,20 +26,6 @@ namespace AppCondivisione
         private bool isSelected = false;
         static ListView box;
         private System.Timers.Timer t;
-        public MainWindow(Dictionary<string, Person>.ValueCollection values)
-        {
-           
-            this.WindowState = System.Windows.WindowState.Normal;
-            //values=UpdateUsers(values);
-            InitializeComponent();
-            this.UserBox.ItemsSource = values;
-            SharedVariables.W = this;
-            MainWindow.box = this.UserBox;
-            t = new System.Timers.Timer(5000);
-           // t.Elapsed += OnTimeElapse;
-            t.AutoReset = true;
-            t.Start();
-        }
 
         private void OnTimeElapse(object sender, ElapsedEventArgs e)
         {
