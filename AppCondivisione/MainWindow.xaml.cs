@@ -106,6 +106,7 @@ namespace AppCondivisione
             this.WindowState = System.Windows.WindowState.Normal;
             InitializeComponent();
             SharedVariables.W = this;
+            SharedVariables.W.SetState();
         }
 
         private BitmapImage LoadImage(string filename)
