@@ -16,18 +16,21 @@ namespace AppCondivisione
     public partial class Settings : Window
     {
         private bool Automatic;
+        public String MyTitle { get; set; }
         public string NewName { get; set; }
         public string Surname { get; set; }
         public string SavePath { get; set; }
         public bool AutomaticSave { get; set; }
         public bool NotAutomaticSave { get; set; }
         public string ImagePath { get; set; }
-        public int imagekey { get; set; }
+        public int ImageKey { get; set; }
 
         public Settings()
         {
             InitializeComponent();
+
             this.DataContext = this;
+
             this.NewName = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
             this.ImagePath = SharedVariables.images[SharedVariables.Luh.Admin.KeyImage];
@@ -35,7 +38,7 @@ namespace AppCondivisione
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
             this.AutomaticSave = SharedVariables.AutomaticSave;
             this.NotAutomaticSave = !this.AutomaticSave;
-
+            this.MyTitle = "Preferenze di " + this.NewName + " " + this.Surname;
             this.HighlightCorrectProfilePicture();
         }
 
@@ -92,8 +95,8 @@ namespace AppCondivisione
             SharedVariables.PathSave = this.DestinationPath.Text;
             SharedVariables.Luh.Admin.Name = this.NewName;
             SharedVariables.Luh.Admin.Surname = this.Surname;
-            SharedVariables.Luh.Admin.KeyImage = this.imagekey;
-
+            SharedVariables.Luh.Admin.KeyImage = this.ImageKey;
+            
             JsonSerializer jsonSerializer = new JsonSerializer();
 
             using (StreamWriter file = File.CreateText(System.Windows.Forms.Application.StartupPath + @"/Credentials.json"))
@@ -108,7 +111,8 @@ namespace AppCondivisione
                     Port = SharedVariables.Luh.Admin.Port,
                     PathSave= this.DestinationPath.Text,
                     AutoSave = Automatic
-            };
+                };
+
                 jsonSerializer.Serialize(file, credentials);
             }
 
@@ -127,13 +131,13 @@ namespace AppCondivisione
             string key = b1.Header.ToString();
             var index = SharedVariables.keyimmages[key];
             this.ImagePath = SharedVariables.images[index];
-            this.imagekey = index;
+            this.ImageKey = index;
 
             // Resetto quello di prima
             var item = (System.Windows.Controls.MenuItem) this.FindName(SharedVariables.Luh.Admin.ImageName);
             item.Background = Brushes.Transparent;
 
-            SharedVariables.Luh.Admin.KeyImage = imagekey;
+            SharedVariables.Luh.Admin.KeyImage = ImageKey;
             SharedVariables.Luh.Admin.ImageName = key;
 
             ImageBrush imgBrush = new ImageBrush();

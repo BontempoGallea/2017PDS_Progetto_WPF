@@ -40,7 +40,6 @@ namespace AppCondivisione
             t.Start();
             _Keyimage = key;
             _ImageName = SharedVariables.GetImageNameGivenKey(key);
-            if (_ImageName == null) _ImageName = "Anonimo";
             _imageData = new BitmapImage(new Uri(SharedVariables.images[key]));
             _imageData.Freeze();
         }
