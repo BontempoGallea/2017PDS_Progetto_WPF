@@ -82,9 +82,9 @@ namespace AppCondivisione
 
         static public void UpdateUsers(Dictionary<string, Person>.ValueCollection values)
         {
-            MainWindow.box.Dispatcher.Invoke(new Action(() =>
+            SharedVariables.W.UserBox.Dispatcher.Invoke(new Action(() =>
             {
-                MainWindow.box.ItemsSource = values;
+                SharedVariables.W.UserBox.ItemsSource = values;
             }));
                
 

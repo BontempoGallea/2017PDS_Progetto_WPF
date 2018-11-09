@@ -66,7 +66,11 @@ namespace AppCondivisione
                 Console.WriteLine("Qualcosa è andato storto");
                 MessageBox.Show("Qualcosa è andato storto");
                 MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
-                this.Close();
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.Close();
+                }));
+                
             }
            
         }

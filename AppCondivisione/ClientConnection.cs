@@ -312,7 +312,6 @@ namespace AppCondivisione
                     {
                         this._controlWriter.WriteLine(response);
                         this._controlWriter.Flush();
-
                         if (response.StartsWith("221"))
                         {
                             break;
@@ -323,7 +322,7 @@ namespace AppCondivisione
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                
+                this._controlWriter.Close();
             }
 
             Dispose();
@@ -585,7 +584,7 @@ namespace AppCondivisione
             }
             else if (dialogResult == DialogResult.No)
             {
-                //dataStream.Close();
+                throw new Exception();
             }
 
         }

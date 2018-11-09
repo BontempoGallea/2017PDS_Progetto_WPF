@@ -106,7 +106,6 @@ namespace AppCondivisione
            
             // Stream lato server
             Stream strm = reqFTP.GetRequestStream();
-
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
             while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
@@ -119,8 +118,6 @@ namespace AppCondivisione
             // Chiudo tutto
             strm.Close();
             fs.Close();
-          
-            
         }
 
         private bool IsDir(string fileName)
