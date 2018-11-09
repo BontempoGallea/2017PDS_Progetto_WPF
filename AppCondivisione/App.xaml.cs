@@ -39,7 +39,7 @@ namespace AppCondivisione
                 Console.WriteLine("[APP] Argomenti arrivati: " + e.Args[0]);
                 Send(e.Args[0]);
                 SharedVariables.CloseEverything = true;
-                System.Windows.Application.Current.Shutdown();
+                Environment.Exit(0);
             }
         
             if (SharedVariables.CloseEverything) return;
@@ -129,7 +129,7 @@ namespace AppCondivisione
                 {
                     Dictionary<string, Person> values= new Dictionary<string, Person>();
                     SharedVariables.PathSend = result;
-                    SharedVariables.W.Dispatcher.Invoke(new Action(() =>
+                    SharedVariables.W.Dispatcher.BeginInvoke(new Action(() =>
                     {
 
                         foreach (Person e in SharedVariables.Luh.Users.Values) {
@@ -140,7 +140,6 @@ namespace AppCondivisione
                         }
                         SharedVariables.W.Update(values.Values, Visibility.Visible);
                         //m2.Show();
-                       
                     }));
                    
                 }

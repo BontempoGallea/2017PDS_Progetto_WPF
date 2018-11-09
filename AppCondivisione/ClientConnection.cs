@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows.Forms;
 
 namespace AppCondivisione
 {
@@ -322,7 +323,7 @@ namespace AppCondivisione
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw ;
+                
             }
 
             Dispose();
@@ -569,15 +570,24 @@ namespace AppCondivisione
 
         private void SetupDataConnectionOperation(DataConnectionOperation state)
         {
-            if (_dataConnectionType == DataConnectionType.Active)
+            System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Vuoi ricevere il file?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                _dataClient = new TcpClient(_dataEndpoint.AddressFamily);
-                _dataClient.BeginConnect(_dataEndpoint.Address, _dataEndpoint.Port, DoDataConnectionOperation, state);
+                    if (_dataConnectionType == DataConnectionType.Active)
+                    {
+                        _dataClient = new TcpClient(_dataEndpoint.AddressFamily);
+                        _dataClient.BeginConnect(_dataEndpoint.Address, _dataEndpoint.Port, DoDataConnectionOperation, state);
+                    }
+                    else
+                    {
+                        _passiveListener.BeginAcceptTcpClient(DoDataConnectionOperation, state);
+                    }
             }
-            else
+            else if (dialogResult == DialogResult.No)
             {
-                _passiveListener.BeginAcceptTcpClient(DoDataConnectionOperation, state);
+                //dataStream.Close();
             }
+
         }
 
         private void DoDataConnectionOperation(IAsyncResult result)
@@ -619,26 +629,29 @@ namespace AppCondivisione
             }
 
             Console.WriteLine(TAG + "STORE OPERATION ASYNC ---> " + pathname + "   " + folder);
-
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
-            {
-                bytes = CopyStream(dataStream, fs);
-            }
-
-            if (_isDirectoryFlag && File.Exists(fileName))
-            {
-                try{
-                    ZipFile.ExtractToDirectory(pathname, folder);
-                    
-                }
-                catch(Exception e)
+           
+                using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
                 {
-                    Console.WriteLine(e.Message);
-                    dataStream.Close();
-                    
+                    bytes = CopyStream(dataStream, fs);
                 }
-                File.Delete(pathname);
-            }
+
+                if (_isDirectoryFlag && File.Exists(fileName))
+                {
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(pathname, folder);
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        dataStream.Close();
+
+                    }
+                    File.Delete(pathname);
+                }
+           
+               
 
             return "226 Closing data connection, file transfer successful";
         }

@@ -145,13 +145,6 @@
                 </Button.Resources>
             </Button>
             <!--barra del caricamento...da rendere visibile solo quando si invia file -->
-            <ProgressBar Name="ProgressBar" Height="30" Margin="21,0,0,21.9" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="273" >
-                <ProgressBar.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </ProgressBar.Resources>
-            </ProgressBar>
 
         </Grid>
     </Grid>
