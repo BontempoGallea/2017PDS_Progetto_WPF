@@ -15,7 +15,8 @@ namespace AppCondivisione
         private string _Surname;
         private bool _State;
         private string _Username;
-        public int keyimage;
+        private int _Keyimage;
+        private string _ImageName;
 
         private IPAddress ip;
         private int _Port;
@@ -26,7 +27,7 @@ namespace AppCondivisione
 
         public Person() { }
 
-        public Person(string n, string c, bool s, string ip, int port,int key)
+        public Person(string n, string c, bool s, string ip, int port, int key)
         {
             t = new System.Timers.Timer(5000);
             this._Name = n;
@@ -37,9 +38,22 @@ namespace AppCondivisione
             t.Elapsed += OnTimeElapse;
             t.AutoReset = true;
             t.Start();
-            keyimage = key;
+            _Keyimage = key;
+            _ImageName = SharedVariables.GetImageNameGivenKey(key);
             _imageData = new BitmapImage(new Uri(SharedVariables.images[key]));
             _imageData.Freeze();
+        }
+
+        public int KeyImage
+        {
+            get { return this._Keyimage; }
+            set { this._Keyimage = value; }
+        }
+
+        public string ImageName
+        {
+            get { return this._ImageName; }
+            set { this._ImageName = value; }
         }
 
         public string Username
@@ -89,7 +103,7 @@ namespace AppCondivisione
 
         public string GetString()
         {
-            return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port+","+keyimage;
+            return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port+","+ KeyImage;
         }
 
         private string GetStateAsString()
@@ -137,8 +151,8 @@ namespace AppCondivisione
 
         internal void setImage(int v)
         {
-            keyimage = v;
-            _imageData = new BitmapImage(new Uri(SharedVariables.images[keyimage]));
+            _Keyimage = v;
+            _imageData = new BitmapImage(new Uri(SharedVariables.images[_Keyimage]));
             _imageData.Freeze();
         }
     }
