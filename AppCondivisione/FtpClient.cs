@@ -135,16 +135,10 @@ namespace AppCondivisione
             {
                 IPInterfaceProperties properties = adapter.GetIPProperties();
                 IPv4InterfaceStatistics stats = adapter.GetIPv4Statistics();
-                Console.WriteLine(adapter.Description);
-                Console.WriteLine("     Speed .................................: {0}",
-                    adapter.Speed);
                 if (adapter.Speed > 0)
                 {
                     return adapter.Speed;
                 }
-                
-                Console.WriteLine("     Output queue length....................: {0}",
-                    stats.OutputQueueLength);
             }
             return 0;
             

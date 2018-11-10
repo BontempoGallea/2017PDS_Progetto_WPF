@@ -27,5 +27,6 @@ namespace AppCondivisione
                 this.Top = corner.Y - this.ActualHeight;
             }));
         }
+
     }
 }

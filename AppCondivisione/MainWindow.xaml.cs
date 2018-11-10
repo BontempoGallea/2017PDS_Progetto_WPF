@@ -42,6 +42,7 @@ namespace AppCondivisione
                             values.Add(pe.Name, pe);
                         }
                     }
+                    
                     SharedVariables.W.UserBox.ItemsSource = values.Values;
                     t.Start();
                 }));
@@ -51,7 +52,7 @@ namespace AppCondivisione
 
         public void Update(Dictionary<string, Person>.ValueCollection values, Visibility state)
         {
-            
+            SharedVariables.W.Title = "Invia " + SharedVariables.PathSend.Split('\\')[SharedVariables.PathSend.Split('\\').Length - 1] + " a...";
             SharedVariables.W.Visibility= state;
             SharedVariables.W.UserBox.ItemsSource = values;
             SharedVariables.W.t = new System.Timers.Timer(5000);
@@ -114,12 +115,17 @@ namespace AppCondivisione
             try
             {
                 SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
+                if (SharedVariables.numberOfDestination == 0)
+                {
+                    throw new Exception("Non hai selezionato nessun destinatario");
+                }
+
                 ProgressBarWindow pbw = new ProgressBarWindow(SharedVariables.PathSend, this.UserBox.SelectedItems);
                 pbw.Show();
             }
             catch(Exception ex)
             {
-                MessageBox.Show("ciao");
+                MessageBox.Show(ex.Message);
             }
         }
 

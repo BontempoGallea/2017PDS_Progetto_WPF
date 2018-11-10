@@ -22,6 +22,6 @@
             Maximum="100" 
             Name="pbStatus" />
         <TextBlock Grid.Row="1" Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="3" Name="Time" HorizontalAlignment="Right" Margin="0,30,169.2,-13.2" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="180"/>
+        <TextBlock Grid.Row="3" Name="Time" HorizontalAlignment="Right" Margin="0,30,169.2,-13.2" TextWrapping="Wrap" Text="Tempo residuo" VerticalAlignment="Top" Width="180"/>
     </Grid>
 </Window>
