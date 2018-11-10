@@ -95,6 +95,9 @@
     <Compile Include="ProgressBarWindow.xaml.cs">
       <DependentUpon>ProgressBarWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NotificationWindow.xaml.cs">
+      <DependentUpon>NotificationWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,6 +115,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProgressBarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotificationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

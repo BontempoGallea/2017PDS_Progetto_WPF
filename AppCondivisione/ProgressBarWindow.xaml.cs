@@ -62,7 +62,8 @@ namespace AppCondivisione
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Qualcosa è andato storto");
+
+                Console.WriteLine(ex.Message);
                 MessageBox.Show("Qualcosa è andato storto");
                 MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
                 this.Dispatcher.Invoke(new Action(() =>

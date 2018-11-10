@@ -5,7 +5,9 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace AppCondivisione
 {
@@ -651,8 +653,16 @@ namespace AppCondivisione
                     }
                     File.Delete(pathname);
                 }
-           
-               
+
+            var thread = new Thread(() =>
+            {
+                NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
+                nw.Show();
+                nw.Closed += (s, e) => nw.Dispatcher.InvokeShutdown();
+                Dispatcher.Run();
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
 
             return "226 Closing data connection, file transfer successful";
         }

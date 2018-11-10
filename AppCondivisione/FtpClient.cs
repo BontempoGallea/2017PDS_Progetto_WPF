@@ -126,6 +126,7 @@ namespace AppCondivisione
             strm.Close();
             fs.Close();
         }
+
         public static long ShowInterfaceSpeedAndQueue()
         {
    
