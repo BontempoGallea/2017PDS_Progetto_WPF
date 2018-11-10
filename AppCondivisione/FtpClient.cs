@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace AppCondivisione
 {
@@ -108,13 +109,7 @@ namespace AppCondivisione
             Stream strm = reqFTP.GetRequestStream();
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
-            var totpacchetti = fileInf.Length / 4096;
-            var tempofile= (fileInf.Length)/( ShowInterfaceSpeedAndQueue() / (8*10000));
-            long[] vector = new long[2];
-            vector[0] = tempofile;
-            vector[1] = tempofile / totpacchetti;
-
-            var i = 0;
+            
             while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
             {
                 // Sposta il contenuto dallo stream del file allo stream FTP e voilà
@@ -124,8 +119,8 @@ namespace AppCondivisione
                 SharedVariables.Uploaded += contentLen;
               
                 
-                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)),vector);
-                i++;
+                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)), fileInf.Length);
+                
             }
             // Chiudo tutto
             strm.Close();

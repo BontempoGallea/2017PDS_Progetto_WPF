@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Shapes;
@@ -14,9 +15,7 @@ namespace AppCondivisione
     {
         private string _file;
         private Person _user;
-        int npacchettiinviati;
         private IList selectedItems;
-
         public ProgressBarWindow(string filepath, Person user)
         {
             InitializeComponent();
@@ -52,7 +51,6 @@ namespace AppCondivisione
         {
             SharedVariables.numberOfDestination = this.selectedItems.Count;
             SharedVariables.Uploaded = 0;
-            npacchettiinviati = 1;
             try
             {
                 foreach (Person user in this.selectedItems)
@@ -79,11 +77,14 @@ namespace AppCondivisione
         void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
 
+            long filesize= e.UserState == null ? 0 : (long) e.UserState;
+            double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
+            long remainingTime = (filesize *1024- SharedVariables.Uploaded*1024) / (long)downloadSpeed;
+
+
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
-            long[] vector = e.UserState as long[];
-            npacchettiinviati++;
-            Console.WriteLine(vector[0] + " " + vector[1]);
-            this.Time.Text = "Tempo residuo " + (vector[0] - npacchettiinviati * vector[1]);
+           
+            this.Time.Text = "Tempo residuo: " + (remainingTime)+" Secondi. Velocità " +downloadSpeed/(8*1024*1024) +" MByte/s.";
             if (pbStatus.Value == 100)
             {
                 MessageBox.Show("File inviato correttamente");
