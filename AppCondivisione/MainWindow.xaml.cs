@@ -67,7 +67,7 @@ namespace AppCondivisione
             Button b = this.State;
             if (SharedVariables.Luh.Admin.State)
             {
-                b.Background = Brushes.Blue;
+                b.Background = Brushes.Green;
                 b.Content = "Stato: Online";
                 SharedVariables.Luh.Admin.State = true;
                 
@@ -166,12 +166,12 @@ namespace AppCondivisione
                 if(Grid.GetRow(el) == 1)
                 {
                     var label = el as Label;
-                    label.Foreground = (isSelected) ? Brushes.Black : Brushes.Blue;
+                    label.Foreground = (isSelected) ? Brushes.Black : Brushes.Green;
                 }
                 else
                 {
                     var ellipse = el as Ellipse;
-                    ellipse.Stroke = (isSelected) ? Brushes.LightGray : Brushes.Blue;
+                    ellipse.Stroke = (isSelected) ? Brushes.LightGray : Brushes.Green;
                 }
             }
 
@@ -189,7 +189,7 @@ namespace AppCondivisione
             }
             else
             {
-                b.Background = Brushes.Blue;
+                b.Background = Brushes.Green;
                 b.Content = "Stato: Online";
                 SharedVariables.Luh.Admin.State = true;
             }
@@ -215,16 +215,5 @@ namespace AppCondivisione
             e.Cancel = true;
             base.OnClosing(e);
         }
-
-        /*public void UpdateProgressBar(int value)
-        {
-            if (CheckAccess())
-                this.ProgressBar.Value = value;
-            else
-            {
-                Dispatcher.Invoke(() => { this.ProgressBar.Value = value; });
-            }
-        }*/
-
     }
 }

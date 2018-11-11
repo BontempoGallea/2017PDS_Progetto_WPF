@@ -12,9 +12,9 @@
     <Grid Margin="0,0,0.2,-0.2" Height="423" VerticalAlignment="Bottom">
         <Grid.ColumnDefinitions >
 
-            <ColumnDefinition Width="164*"/>
-            <ColumnDefinition Width="631*"/>
-
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
 
@@ -27,163 +27,242 @@
 
         </Grid.RowDefinitions>
 
+        <!-- Titolo -->
         <TextBlock 
-            Margin="10,0,0,10" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             TextWrapping="Wrap" 
-            Text="Credenziali" 
-            VerticalAlignment="Bottom" 
-            Height="29" Width="140"
-            HorizontalAlignment="Left" FontSize="18" />
+            Text="Impostazioni profilo"
+            Grid.ColumnSpan="2"
+            Height="Auto" Width="Auto"
+            FontSize="45" 
+            FontWeight="DemiBold" Foreground="#FF0985F5"/>
+        
+        <!-- Nome -->
         <TextBlock 
-            HorizontalAlignment="Left" 
-            Margin="30,18.8,0,0" 
-            Grid.Row="2" 
-            TextWrapping="Wrap" 
-            Text="Cognome" 
-            VerticalAlignment="Top" 
-            Height="23" Width="120"/>
-        <TextBlock 
-            HorizontalAlignment="Left" 
-            Margin="30,0,0,11.2" 
-            Grid.Row="3" 
-            TextWrapping="Wrap" 
-            Text="Dove salvare?" 
-            VerticalAlignment="Bottom" 
-            Height="23" Width="120"/>
-        <TextBlock 
-            Margin="30,0,14,9.2" 
-            Grid.Row="4" 
-            TextWrapping="Wrap" 
-            Text="Salvataggio automatico dei file?" 
-            VerticalAlignment="Bottom" 
-            Height="30"/>
-        <TextBox 
-            HorizontalAlignment="Right" 
-            Height="25" Width="184" 
-            Margin="0,19,437,0" 
+            FontWeight="DemiBold"
+            Foreground="#FF0985F5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextAlignment="Center"
             Grid.Row="1" 
             TextWrapping="Wrap" 
-            VerticalAlignment="Top" 
-            Grid.Column="1" 
-            Text="{Binding Path=NewName}" Background="White"/>
-        <TextBlock 
-            HorizontalAlignment="Left" 
-            Margin="30,19,0,0" 
-            Grid.Row="1" 
-            TextWrapping="Wrap" 
-            VerticalAlignment="Top" 
-            Height="23" Width="120">
+            Height="23" Width="120" FontSize="14">
             <Run Text="Nome"/><LineBreak/>
             <Run/>
         </TextBlock>
         <TextBox 
-            HorizontalAlignment="Right" 
-            Height="25" 
-            Margin="0,19,437,0" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            TextAlignment="Center"
+            Height="25"
             Grid.Row="2" 
-            TextWrapping="Wrap" 
-            VerticalAlignment="Top" 
-            Width="184" 
+            TextWrapping="Wrap"
+            Width="280" 
             Grid.Column="1" 
             Text="{Binding Path=Surname}" Background="White"/>
-        <Button 
-            Content="Sfoglia" 
-            Margin="296,0,0,10" 
-            Grid.Row="3" 
-            VerticalAlignment="Bottom" 
-            Height="33" 
+        
+        <!-- Cognome -->
+        <TextBlock 
+            FontWeight="DemiBold"
+            Foreground="#FF0985F5"
+            FontSize="14"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextAlignment="Center"
+            Grid.Row="2" 
+            TextWrapping="Wrap" 
+            Text="Cognome" 
+            Height="23" Width="120"/>
+        <TextBox 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextAlignment="Center"
+            Height="25" Width="280" 
+            Grid.Row="1" 
+            TextWrapping="Wrap"
             Grid.Column="1" 
-            HorizontalAlignment="Left" 
-            Width="127"
-            Click="BrowseButton_Click">
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="10"/>
-                </Style>
-            </Button.Resources>
-        </Button>
-        <TextBlock
-            Name="DestinationPath" 
-            Margin="10,10,335,10" 
-            Background="White"
+            Text="{Binding Path=NewName}" Background="White"/>
+        
+        
+        <!-- Dove salvare -->
+        <TextBlock 
+            FontWeight="DemiBold"
+            Foreground="#FF0985F5"
+            FontSize="14"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextAlignment="Center"
             Grid.Row="3" 
             TextWrapping="Wrap" 
-            Text="{Binding Path=SavePath}" 
-            VerticalAlignment="Center" 
-            TextAlignment="Center"
-            Padding="1"
-            Height="33" Grid.Column="1" Foreground="#FF6D2626">
-            <TextBlock.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="10"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                </Style>
-            </TextBlock.Resources>
-        </TextBlock>
-        <RadioButton 
-            Name="Si" Content="Si" 
-            Margin="10,0,571,0" 
-            Grid.Row="4" 
+            Text="Dove salvare?" 
+            Height="23" Width="120"/>
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Name="DestinationPath"
+                Grid.Column="1"
+                Background="White"
+                TextWrapping="Wrap" 
+                Text="{Binding Path=SavePath}" 
+                VerticalAlignment="Center" 
+                TextAlignment="Center"
+                Padding="1"
+                Height="33" 
+                Width="150" Foreground="#FF6D2626">
+                <TextBlock.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </TextBlock.Resources>
+            </TextBlock>
+
+            <Button 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Sfoglia"
+                Height="33" 
+                Grid.Column="3"
+                Width="105"
+                Click="BrowseButton_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+        <!-- Salvataggio automatico -->
+        <TextBlock 
+            FontWeight="DemiBold"
+            Foreground="#FF0985F5"
+            FontSize="14"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            HorizontalContentAlignment="Center"
-            IsChecked="{Binding Path=AutomaticSave}"
-            Checked="RadioButton_Checked" 
-            Height="50" Grid.Column="1" RenderTransformOrigin="1.56,0.46"/>
-        <RadioButton 
-            Name="No" Content="No" 
-            VerticalContentAlignment="Center"
-            HorizontalContentAlignment="Center"
-            Margin="91,0,490,0" 
+            TextAlignment="Center"
             Grid.Row="4" 
-            IsChecked="{Binding Path=NotAutomaticSave}"
-            Checked="RadioButton_Checked" Grid.Column="1" Height="50" VerticalAlignment="Top" RenderTransformOrigin="2.3,0.47"/>
-        <Ellipse Name="Ellipse" Margin="436,9,84,39" Grid.Column="1" Grid.RowSpan="2">
-            <Ellipse.Fill>
-                <ImageBrush  ImageSource="{Binding Path=ImagePath}"/>
-            </Ellipse.Fill>
-        </Ellipse>
+            TextWrapping="Wrap" 
+            Text="Salvataggio automatico dei file?" 
+            Height="40"/>
+        
+        <Grid Grid.Row="4" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="15*"/>
+            </Grid.ColumnDefinitions>
 
-        <Button 
-            Name="SalvaModifiche"
-            Content="Salva"
-            Click="SalvaModifiche_OnClick"
-            Grid.Row="5" Margin="454,34,75,32" Grid.Column="1" Height="Auto" RenderTransformOrigin="0.029,0.536">
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="10"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+            <RadioButton 
+                Name="Si" Content="Si"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Margin="40,10,40,10"
+                IsChecked="{Binding Path=AutomaticSave}"
+                Checked="RadioButton_Checked" 
+                Height="50" Grid.Column="1"
+            />
+            <RadioButton 
+                Name="No" Content="No" 
+                Margin="40,10,40,10"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                IsChecked="{Binding Path=NotAutomaticSave}"
+                Checked="RadioButton_Checked" Grid.Column="2" Height="50" VerticalAlignment="Center"
+            />
+        </Grid>
 
-        <Button 
-            Content="Annulla" 
-            Click="Annulla_OnClick"
-            Grid.Row="5" Margin="312,34,208,32" Width="Auto" Height="Auto" Grid.Column="1">
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="10"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <!-- Sezione bottoni salva e annnulla -->
+        <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="0.15*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Button 
-            Content="Clicca per cambiare immagine"
-            Click="Button_Click"
-            ContextMenuService.IsEnabled="False" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" Margin="374,19,24,50" Grid.Column="1" Grid.RowSpan="2" Grid.Row="1">
-            <Button.ContextMenu>
-                <ContextMenu >
-                    <MenuItem x:Name="Albero" Header="Albero" Click="ChangeImage"/>
-                    <MenuItem x:Name="Ragno" Header="Ragno" Click="ChangeImage"/>
-                    <MenuItem x:Name="Computer" Header="Computer" Click="ChangeImage"/>
-                    <MenuItem x:Name="Mare" Header="Mare" Click="ChangeImage"/>
-                    <MenuItem x:Name="Diavolo" Header="Diavolo" Click="ChangeImage"/>
-                    <MenuItem x:Name="Donna" Header="Donna" Click="ChangeImage"/>
-                    <MenuItem x:Name="Uomo" Header="Uomo" Click="ChangeImage"/>
-                    <MenuItem x:Name="Anonimo" Header="Anonimo" Click="ChangeImage"/>
-                </ContextMenu>
-            </Button.ContextMenu>
-        </Button>
-    </Grid>
+            <Button 
+                Name="SalvaModifiche"
+                Content="Salva"
+                Click="SalvaModifiche_OnClick"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Column="1" Height="35" Width="100">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+
+            <Button 
+                Content="Annulla" 
+                Click="Annulla_OnClick"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="100" Height="35" Grid.Column="3">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+
+        <!-- Sezione immagine profilo -->
+        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="250*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Ellipse Name="Ellipse" 
+                     Grid.Row="1"
+                     Height="150"
+                     Width="150"
+                     HorizontalAlignment="Center" 
+                     VerticalAlignment="Center">
+                <Ellipse.Fill>
+                    <ImageBrush  ImageSource="{Binding Path=ImagePath}"/>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <Button 
+                Content="Clicca per cambiare immagine"
+                Click="Button_Click"
+                ContextMenuService.IsEnabled="False" 
+                Height="40" 
+                Width="160" 
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Grid.Row="3">
+                <Button.ContextMenu>
+                    <ContextMenu >
+                        <MenuItem x:Name="Albero" Header="Albero" Click="ChangeImage"/>
+                        <MenuItem x:Name="Ragno" Header="Ragno" Click="ChangeImage"/>
+                        <MenuItem x:Name="Computer" Header="Computer" Click="ChangeImage"/>
+                        <MenuItem x:Name="Mare" Header="Mare" Click="ChangeImage"/>
+                        <MenuItem x:Name="Diavolo" Header="Diavolo" Click="ChangeImage"/>
+                        <MenuItem x:Name="Donna" Header="Donna" Click="ChangeImage"/>
+                        <MenuItem x:Name="Uomo" Header="Uomo" Click="ChangeImage"/>
+                        <MenuItem x:Name="Anonimo" Header="Anonimo" Click="ChangeImage"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </Grid>
+        </Grid>
 </Window>
 
