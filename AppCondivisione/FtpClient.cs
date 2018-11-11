@@ -36,19 +36,28 @@ namespace AppCondivisione
         {
             string finalPath = pathname;
             string method = WebRequestMethods.Ftp.UploadFile;
-
+            
             if (this.IsDir(pathname))
             {
                 method = WebRequestMethods.Ftp.UploadFileWithUniqueName;
                 finalPath = MakeZip(pathname);
             }
-
+            
             FileInfo fileInf = new FileInfo(finalPath);
-
-            this.UploadFile(fileInf, address, method);
-            if (this.IsDir(pathname))
+            try
             {
-                File.Delete(finalPath);
+                this.UploadFile(fileInf, address, method);
+                if (this.IsDir(pathname))
+                {
+                    File.Delete(finalPath);
+                }
+            }catch(Exception ex)
+            {
+                if (this.IsDir(pathname))
+                {
+                    File.Delete(finalPath);
+                }
+                throw new Exception("Ricezione file rifiutata dal server");
             }
         }
 
@@ -103,10 +112,17 @@ namespace AppCondivisione
             int contentLen;
             // Apro lo stream per leggere il file da caricare
             FileStream fs = fileInf.OpenRead();
+            Stream strm;
+            try
+            {
+                // Stream lato server
+                strm = reqFTP.GetRequestStream();
+            }catch(Exception ex)
+            {
 
-           
-            // Stream lato server
-            Stream strm = reqFTP.GetRequestStream();
+                fs.Close();
+                throw new Exception();
+            }
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
             
@@ -125,7 +141,7 @@ namespace AppCondivisione
             // Chiudo tutto
             if (SharedVariables.Annulla)
             {
-                
+                fs.Close();
                 reqFTP.Abort();
                 throw new Exception("Connessione abortita");
             }

@@ -87,7 +87,7 @@ namespace AppCondivisione
             long filesize= e.UserState == null ? 0 : (long) e.UserState;
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
             long remainingtosend = filesize - SharedVariables.Uploaded;
-            long remainingTime =(remainingtosend*1000) / (long)downloadSpeed;
+            long remainingTime =(remainingtosend*10000) / (long)downloadSpeed;
             Console.WriteLine("remainingtime " + remainingTime + " remainingtosend " + remainingtosend + " speed " + downloadSpeed);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta

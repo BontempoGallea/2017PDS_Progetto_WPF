@@ -592,8 +592,16 @@ namespace AppCondivisione
             }
             else
             {
-                System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+                System.Windows.Forms.DialogResult dialogResult;
+                if (_isDirectoryFlag)
+                {
+                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder.Split('.')[0] + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+                }
+                else
+                {
+                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
 
+                }
                 if (dialogResult == DialogResult.Yes)
                 {
                     if (_dataConnectionType == DataConnectionType.Active)
@@ -660,11 +668,11 @@ namespace AppCondivisione
 
             Console.WriteLine(TAG + "STORE OPERATION ASYNC ---> " + pathname + "   " + folder);
            
-                using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
-                {
-                    bytes = CopyStream(dataStream, fs);
+            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
+            {
+                bytes = CopyStream(dataStream, fs);
                 Console.WriteLine(fs);
-                }
+            }
             if (_controlWriter.BaseStream != null)
             {
                 if (_isDirectoryFlag && File.Exists(fileName))
@@ -673,6 +681,21 @@ namespace AppCondivisione
                     {
                         ZipFile.ExtractToDirectory(pathname, folder);
                         File.Delete(fileName);
+                        var thread = new Thread(() =>
+                        {
+                            NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
+                            nw.Show();
+
+                            nw.Closed += (s, e) =>
+                            {
+                                nw.Close();
+                                nw.Dispatcher.InvokeShutdown();
+                            };
+                            Dispatcher.Run();
+                        });
+                        thread.SetApartmentState(ApartmentState.STA);
+                        thread.Start();
+
                     }
                     catch (Exception e)
                     {
@@ -680,23 +703,25 @@ namespace AppCondivisione
                         dataStream.Close();
                         File.Delete(fileName);
                     }
-                 
+
                 }
-
-                var thread = new Thread(() =>
+                else
                 {
-                    NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
-                    nw.Show();
-
-                    nw.Closed += (s, e) =>
+                    var thread = new Thread(() =>
                     {
-                        nw.Close();
-                        nw.Dispatcher.InvokeShutdown();
-                    };
-                    Dispatcher.Run();
-                });
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
+                        NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
+                        nw.Show();
+
+                        nw.Closed += (s, e) =>
+                        {
+                            nw.Close();
+                            nw.Dispatcher.InvokeShutdown();
+                        };
+                        Dispatcher.Run();
+                    });
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
+                }
             }
             else
             {
