@@ -59,9 +59,12 @@
 
                         <Button
                             Name="State"
+                            Height="100"
                             Grid.Column="0"
                             Grid.Row="1"
                             Content="Stato: Offline" 
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Stretch" 
                             Foreground="#FFFFFF"
                             Background="Gray"
                             Click="Button_Click"/>
