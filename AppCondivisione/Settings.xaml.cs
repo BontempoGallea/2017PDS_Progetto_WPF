@@ -137,9 +137,6 @@ namespace AppCondivisione
             var item = (System.Windows.Controls.MenuItem) this.FindName(SharedVariables.Luh.Admin.ImageName);
             item.Background = Brushes.Transparent;
 
-            SharedVariables.Luh.Admin.KeyImage = ImageKey;
-            SharedVariables.Luh.Admin.ImageName = key;
-
             ImageBrush imgBrush = new ImageBrush();
           
             imgBrush.ImageSource =new BitmapImage(new Uri(this.ImagePath));

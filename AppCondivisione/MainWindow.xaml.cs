@@ -147,12 +147,14 @@ namespace AppCondivisione
                     MessageBox.Show("La persona a cui vuoi inviare non è più online!");
                 }
             }
+            SharedVariables.Annulla = false;
             this.Close();
         }
 
         protected override void OnClosed(EventArgs e)
         {
             this.Visibility = Visibility.Hidden;
+            SharedVariables.Annulla = false;
         }
         
 

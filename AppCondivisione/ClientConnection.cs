@@ -38,13 +38,18 @@ namespace AppCondivisione
             byte[] buffer = new byte[bufferSize];
             int count = 0;
             long total = 0;
-
-            while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
+            try
             {
-                output.Write(buffer, 0, count);
-                total += count;
+                while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    output.Write(buffer, 0, count);
+                    total += count;
+                }
             }
-
+            catch(Exception ex)
+            {
+                Console.WriteLine("mannaggia");
+            }
             return total;
         }
 
@@ -573,9 +578,24 @@ namespace AppCondivisione
         {
             var pathname = state.Arguments;
             string folder = pathname.Split('\\')[pathname.Split('\\').Length - 1];
-            System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("\""+_username+"\" Sta tentando di inviarti \""+ folder+"\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if (SharedVariables.AutomaticSave)
             {
+                if (_dataConnectionType == DataConnectionType.Active)
+                {
+                    _dataClient = new TcpClient(_dataEndpoint.AddressFamily);
+                    _dataClient.BeginConnect(_dataEndpoint.Address, _dataEndpoint.Port, DoDataConnectionOperation, state);
+                }
+                else
+                {
+                    _passiveListener.BeginAcceptTcpClient(DoDataConnectionOperation, state);
+                }
+            }
+            else
+            {
+                System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
                     if (_dataConnectionType == DataConnectionType.Active)
                     {
                         _dataClient = new TcpClient(_dataEndpoint.AddressFamily);
@@ -585,10 +605,11 @@ namespace AppCondivisione
                     {
                         _passiveListener.BeginAcceptTcpClient(DoDataConnectionOperation, state);
                     }
-            }
-            else if (dialogResult == DialogResult.No)
-            {
-                throw new Exception();
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    throw new Exception();
+                }
             }
 
         }
@@ -608,9 +629,15 @@ namespace AppCondivisione
 
             _dataClient.Close();
             _dataClient = null;
-
-            _controlWriter.WriteLine(response);
-            _controlWriter.Flush();
+            try
+            {
+                _controlWriter.WriteLine(response);
+                _controlWriter.Flush();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
 
@@ -636,34 +663,56 @@ namespace AppCondivisione
                 using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
                 {
                     bytes = CopyStream(dataStream, fs);
+                Console.WriteLine(fs);
                 }
-
+            if (_controlWriter.BaseStream != null)
+            {
                 if (_isDirectoryFlag && File.Exists(fileName))
                 {
                     try
                     {
                         ZipFile.ExtractToDirectory(pathname, folder);
-
+                        File.Delete(fileName);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
                         dataStream.Close();
-
+                        File.Delete(fileName);
                     }
-                    File.Delete(pathname);
+                 
                 }
 
-            var thread = new Thread(() =>
-            {
-                NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
-                nw.Show();
-                nw.Closed += (s, e) => nw.Dispatcher.InvokeShutdown();
-                Dispatcher.Run();
-            });
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+                var thread = new Thread(() =>
+                {
+                    NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
+                    nw.Show();
 
+                    nw.Closed += (s, e) =>
+                    {
+                        nw.Close();
+                        nw.Dispatcher.InvokeShutdown();
+                    };
+                    Dispatcher.Run();
+                });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }
+            else
+            {
+                File.Delete(fileName);
+
+                var thread = new Thread(() =>
+                {
+                    NotificationWindow nw = new NotificationWindow("Connessione chiusa da \""+ _username + "\". File non ricevuto." );
+                    nw.Show();
+                    nw.Closed += (s, e) => nw.Dispatcher.InvokeShutdown();
+                    Dispatcher.Run();
+                });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }
+           
             return "226 Closing data connection, file transfer successful";
         }
 

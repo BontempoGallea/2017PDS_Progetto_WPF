@@ -37,6 +37,12 @@ namespace AppCondivisione
 
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            SharedVariables.Annulla = false;
+            base.OnClosed(e);
+        }
+
         // Callback che ho detto di chiamare quando il contenuto della finestra ha completato il rendering. E' specificato nello XAML
         private void Window_ContentRendered(object sender, EventArgs e)
         {
@@ -64,7 +70,7 @@ namespace AppCondivisione
             {
 
                 Console.WriteLine(ex.Message);
-                MessageBox.Show("Qualcosa è andato storto");
+                MessageBox.Show(ex.Message);
                 MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
                 this.Dispatcher.Invoke(new Action(() =>
                 {

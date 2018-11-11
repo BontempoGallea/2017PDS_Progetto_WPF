@@ -123,6 +123,12 @@ namespace AppCondivisione
                 
             }
             // Chiudo tutto
+            if (SharedVariables.Annulla)
+            {
+                
+                reqFTP.Abort();
+                throw new Exception("Connessione abortita");
+            }
             strm.Close();
             fs.Close();
         }
