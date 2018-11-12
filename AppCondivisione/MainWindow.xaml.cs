@@ -39,7 +39,7 @@ namespace AppCondivisione
                     {
                         if (pe.IsOnline() && !pe.IsOld())
                         {
-                            values.Add(pe.Name, pe);
+                            values.Add(pe.GetHash(), pe);
                         }
                     }
                     
