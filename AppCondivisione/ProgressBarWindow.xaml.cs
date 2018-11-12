@@ -61,7 +61,7 @@ namespace AppCondivisione
             {
                 foreach (Person user in this.selectedItems)
                 {
-                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetHash(), "", (sender as BackgroundWorker));
+                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
                     var i = 0;
                 }
@@ -113,7 +113,7 @@ namespace AppCondivisione
                     SharedVariables.Luh.Users.TryGetValue(item.GetHash(), out p);
                     if (p.IsOnline())
                     {
-                        FtpClient client = new FtpClient(item.GetHash(), "", null);
+                        FtpClient client = new FtpClient(item.GetAuthString(), "", null);
                         client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
                     }
                     else

@@ -17,6 +17,7 @@ namespace AppCondivisione
         private string _Username;
         private int _Keyimage;
         private string _ImageName;
+        private int _Rnd { get; }
 
         private IPAddress ip;
         private int _Port;
@@ -35,6 +36,11 @@ namespace AppCondivisione
             this._State = s;
             this.ip = IPAddress.Parse(ip);
             this._Port = port;
+
+            Random r = new Random();
+
+            this._Rnd = r.Next(1, 10000);
+
             t.Elapsed += OnTimeElapse;
             t.AutoReset = true;
             t.Start();
@@ -159,6 +165,11 @@ namespace AppCondivisione
             _Keyimage = v;
             _imageData = new BitmapImage(new Uri(SharedVariables.images[_Keyimage]));
             _imageData.Freeze();
+        }
+
+        public string GetAuthString()
+        {
+            return this.Username + "_" + this._Rnd;
         }
     }
 }
