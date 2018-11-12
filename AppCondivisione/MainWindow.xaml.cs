@@ -132,14 +132,12 @@ namespace AppCondivisione
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
         {
-            SharedVariables.Annulla = false;
             this.Close();
         }
 
         protected override void OnClosed(EventArgs e)
         {
             this.Visibility = Visibility.Hidden;
-            SharedVariables.Annulla = false;
         }
         
 

@@ -25,7 +25,7 @@ namespace AppCondivisione
 
             this._file = System.IO.Path.GetFileName(filepath);
             this._user = user;
-
+            SharedVariables.Annulla = false;
             this.Title = "Inviando " + this._file + " a " + this._user.Username;
         }
 
@@ -33,6 +33,7 @@ namespace AppCondivisione
         {
             
             InitializeComponent();
+            SharedVariables.Annulla = false;
 
             this.NumberOfSelectedItems = selectedItems.Count;
             this.SelectedItems = new Person[this.NumberOfSelectedItems];
@@ -45,7 +46,7 @@ namespace AppCondivisione
 
         protected override void OnClosed(EventArgs e)
         {
-            SharedVariables.Annulla = false;
+          
             base.OnClosed(e);
         }
 
@@ -56,6 +57,9 @@ namespace AppCondivisione
             worker.WorkerReportsProgress = true;
             worker.DoWork += Worker_DoWork; // Callback per il worker thread
             worker.ProgressChanged += Worker_ProgressChanged; // Callback che userà il worker per riferire il progresso all'UI thread
+
+            Thread.Sleep(2000);
+
             worker.RunWorkerAsync(); // Lancio come async e in background di modo che possa lo stesso interferire con l'interfaccia grafica senza bloccarla (questo vuol dire che potrò usare il tasto annulla)
         }
 
@@ -136,7 +140,6 @@ namespace AppCondivisione
             }
 
             this.Close();
-            SharedVariables.Annulla = false;
         }
     }
 }
