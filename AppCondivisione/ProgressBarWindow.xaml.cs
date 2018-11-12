@@ -16,7 +16,7 @@ namespace AppCondivisione
     {
         private string _file;
         private Person _user;
-        private Array selectedItems;
+        private Person[] SelectedItems;
         private int NumberOfSelectedItems;
 
         public ProgressBarWindow(string filepath, Person user)
@@ -34,9 +34,11 @@ namespace AppCondivisione
             
             InitializeComponent();
 
-            this._file = System.IO.Path.GetFileName(filepath);
-            selectedItems.CopyTo(this.selectedItems, 0);
             this.NumberOfSelectedItems = selectedItems.Count;
+            this.SelectedItems = new Person[this.NumberOfSelectedItems];
+            this._file = System.IO.Path.GetFileName(filepath);
+            selectedItems.CopyTo(this.SelectedItems, 0);
+           
             this.Title = "Inviando " + this._file;
 
         }
@@ -63,7 +65,7 @@ namespace AppCondivisione
             SharedVariables.Uploaded = 0;
             try
             {
-                foreach (Person user in this.selectedItems)
+                foreach (Person user in this.SelectedItems)
                 {
                     FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
@@ -112,7 +114,7 @@ namespace AppCondivisione
             {
 
                 SharedVariables.Annulla = true;
-                foreach (Person item in this.selectedItems)
+                foreach (Person item in this.SelectedItems)
                 {
                     var cred = item.Username.Split(' ');
                     var p = new Person();
