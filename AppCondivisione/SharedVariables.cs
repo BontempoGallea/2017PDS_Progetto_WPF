@@ -13,12 +13,8 @@ namespace AppCondivisione
         private static string _PathSave = @"C:\Users\" + Environment.UserName + @"\Downloads"; // Path di default per il salvataggio dei files in arrivo
         private static ListUserHandler _Luh = new ListUserHandler();
         private static bool _AutomaticSave = true; // True = non popparmi la finestra di accetazione quando mi arriva un file  
-        public static bool _AnnullaBoolean = false;
-        public static long Uploaded = 0;
-        public static long TottoSend = 0;
         public static MainWindow W;
         internal static long fileDimension=0;
-        internal static long numberOfDestination=0;
         public static Dictionary<string, int> keyimmages = new Dictionary<string, int> {
             { "Albero", 1 }, { "Ragno",6},{"Computer",2},{"Mare",5},{"Diavolo",3},{"Donna",4},{"Uomo",7},{"Anonimo",0} };
 
@@ -66,12 +62,6 @@ namespace AppCondivisione
         {
             get { return _AutomaticSave; }
             set { _AutomaticSave = value; }
-        }
-
-        public static bool Annulla
-        {
-            get { return _AnnullaBoolean; }
-            set { _AnnullaBoolean = value; }
         }
 
         internal static Dictionary<string, Person> getOnline()

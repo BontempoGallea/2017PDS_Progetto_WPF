@@ -18,6 +18,10 @@ namespace AppCondivisione
         private Person _user;
         private Person[] SelectedItems;
         private int NumberOfSelectedItems;
+        private int AlreadySent = 1;
+        private bool Annulla=false;
+        private int Uploaded = 0;
+        private FtpClient client;
 
         public ProgressBarWindow(string filepath, Person user)
         {
@@ -25,7 +29,7 @@ namespace AppCondivisione
 
             this._file = System.IO.Path.GetFileName(filepath);
             this._user = user;
-            SharedVariables.Annulla = false;
+            this.Annulla = false;
             this.Title = "Inviando " + this._file + " a " + this._user.Username;
         }
 
@@ -33,7 +37,7 @@ namespace AppCondivisione
         {
             
             InitializeComponent();
-            SharedVariables.Annulla = false;
+            this.Annulla = false;
 
             this.NumberOfSelectedItems = selectedItems.Count;
             this.SelectedItems = new Person[this.NumberOfSelectedItems];
@@ -65,15 +69,15 @@ namespace AppCondivisione
 
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SharedVariables.numberOfDestination = this.NumberOfSelectedItems;
-            SharedVariables.Uploaded = 0;
+            Uploaded = 0;
             try
             {
                 foreach (Person user in this.SelectedItems)
                 {
-                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
+                    this.client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
-                    var i = 0;
+                    AlreadySent++;
+
                 }
             }
             catch(Exception ex)
@@ -84,7 +88,11 @@ namespace AppCondivisione
                 MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
                 this.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.Close();
+                    if(this.AlreadySent>= this.NumberOfSelectedItems)
+                    {
+                        this.Close();
+                    }
+                    
                 }));
                 
             }
@@ -96,7 +104,7 @@ namespace AppCondivisione
 
             long filesize= e.UserState == null ? 0 : (long) e.UserState;
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
-            long remainingtosend = filesize - SharedVariables.Uploaded;
+            long remainingtosend = (filesize - (filesize * (e.ProgressPercentage))) + filesize * (this.NumberOfSelectedItems - this.AlreadySent);
             long remainingTime = (remainingtosend * 1000) / (long) (downloadSpeed/8);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
@@ -117,7 +125,7 @@ namespace AppCondivisione
             try
             {
 
-                SharedVariables.Annulla = true;
+                this.client.Annulla = true;
                 foreach (Person item in this.SelectedItems)
                 {
                     var cred = item.Username.Split(' ');

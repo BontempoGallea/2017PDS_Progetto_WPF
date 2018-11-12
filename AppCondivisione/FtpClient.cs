@@ -19,9 +19,10 @@ namespace AppCondivisione
         private WebClient _client;
         private NetworkCredential _credentials;
         private BackgroundWorker _worker;
-
+        public bool Annulla;
         public FtpClient(string username, string password, BackgroundWorker backgroundWorker)
         {
+            Annulla = false;
             this._credentials = new NetworkCredential { UserName = username, Password = password };
             this._client = new WebClient
             {
@@ -126,21 +127,21 @@ namespace AppCondivisione
             }
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
-            
-            while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && SharedVariables.Annulla == false && SharedVariables.CloseEverything== false)
+            var Uploaded = 0;
+            while ((contentLen = fs.Read(buff, 0, buffLength))!=0 && Annulla == false && SharedVariables.CloseEverything== false)
             {
                 // Sposta il contenuto dallo stream del file allo stream FTP e voilà
                 strm.Write(buff, 0, contentLen);
                 var speed=ShowInterfaceSpeedAndQueue()/8;
                
-                SharedVariables.Uploaded += contentLen;
+                Uploaded += contentLen;
               
                 
-                this._worker.ReportProgress((int)((SharedVariables.Uploaded * 100) / (fileInf.Length * SharedVariables.numberOfDestination)), fileInf.Length);
+                this._worker.ReportProgress((int)((Uploaded * 100) / (fileInf.Length)), fileInf.Length);
                 
             }
             // Chiudo tutto
-            if (SharedVariables.Annulla)
+            if (Annulla)
             {
                 fs.Close();
                 reqFTP.Abort();

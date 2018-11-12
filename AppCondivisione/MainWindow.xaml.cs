@@ -55,7 +55,7 @@ namespace AppCondivisione
             SharedVariables.W.Title = "Invia " + SharedVariables.PathSend.Split('\\')[SharedVariables.PathSend.Split('\\').Length - 1] + " a...";
             SharedVariables.W.Visibility= state;
             SharedVariables.W.UserBox.ItemsSource = values;
-            SharedVariables.W.t = new System.Timers.Timer(5000);
+            SharedVariables.W.t = new System.Timers.Timer(2000);
             SharedVariables.W.t.Elapsed += SharedVariables.W.OnTimeElapse;
             SharedVariables.W.t.AutoReset = true;
             SharedVariables.W.SetState();
@@ -115,8 +115,7 @@ namespace AppCondivisione
         {
             try
             {
-                SharedVariables.numberOfDestination = this.UserBox.SelectedItems.Count;
-                if (SharedVariables.numberOfDestination == 0)
+                if (this.UserBox.SelectedItems.Count == 0)
                 {
                     throw new Exception("Non hai selezionato nessun destinatario");
                 }
