@@ -48,7 +48,7 @@ namespace AppCondivisione
             }
             catch(Exception ex)
             {
-                Console.WriteLine("mannaggia");
+                
             }
             return total;
         }
@@ -219,7 +219,6 @@ namespace AppCondivisione
 
                     if (response == null)
                     {
-                        //Console.WriteLine("[INIT] Comando ricevuto = " + cmd + " --- Arguments = " + arguments);
                         switch (cmd)
                         {
                             // Riceve l'identità dello user, necessaria per accedere al suo relativo file system
@@ -328,7 +327,7 @@ namespace AppCondivisione
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 this._controlWriter.Close();
             }
 
@@ -384,7 +383,6 @@ namespace AppCondivisione
 
         private string NormalizeFilename(string path)
         {
-            Console.WriteLine(SharedVariables.PathSave);
             Console.WriteLine(TAG + "NORMALIZE --> " + path);
             if (path == null)
             {
@@ -671,7 +669,6 @@ namespace AppCondivisione
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.SequentialScan))
             {
                 bytes = CopyStream(dataStream, fs);
-                Console.WriteLine(fs);
             }
             if (_controlWriter.BaseStream != null)
             {
@@ -699,7 +696,7 @@ namespace AppCondivisione
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.StackTrace);
                         dataStream.Close();
                         File.Delete(fileName);
                     }
