@@ -135,7 +135,7 @@ namespace AppCondivisione
                         foreach (Person e in SharedVariables.Luh.Users.Values) {
                             if(e.IsOnline() &&  !e.IsOld())
                             {
-                                values.Add(e.Name,e);
+                                values.Add(e.GetHash(),e);
                             }
                         }
                         SharedVariables.W.Update(values.Values, Visibility.Visible);
