@@ -16,6 +16,7 @@ namespace AppCondivisione
         public int Port { get; set; }
         public bool AutoSave { get; set; }
         public string PathSave { get; set;}
+        public int Rnd { get; set; }
         public Credentials() { }
     }
 }

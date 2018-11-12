@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
@@ -15,7 +16,9 @@ namespace AppCondivisione
     {
         private string _file;
         private Person _user;
-        private IList selectedItems;
+        private Array selectedItems;
+        private int NumberOfSelectedItems;
+
         public ProgressBarWindow(string filepath, Person user)
         {
             InitializeComponent();
@@ -32,7 +35,8 @@ namespace AppCondivisione
             InitializeComponent();
 
             this._file = System.IO.Path.GetFileName(filepath);
-            this.selectedItems = selectedItems;
+            selectedItems.CopyTo(this.selectedItems, 0);
+            this.NumberOfSelectedItems = selectedItems.Count;
             this.Title = "Inviando " + this._file;
 
         }
@@ -55,7 +59,7 @@ namespace AppCondivisione
 
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SharedVariables.numberOfDestination = this.selectedItems.Count;
+            SharedVariables.numberOfDestination = this.NumberOfSelectedItems;
             SharedVariables.Uploaded = 0;
             try
             {
@@ -87,11 +91,13 @@ namespace AppCondivisione
             long filesize= e.UserState == null ? 0 : (long) e.UserState;
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
             long remainingtosend = filesize - SharedVariables.Uploaded;
-            long remainingTime =(remainingtosend*10000) / (long)downloadSpeed;
+            long remainingTime = (remainingtosend * 1000) / (long) (downloadSpeed/8);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
-           
-            this.Time.Text = "Tempo residuo: " + (remainingTime)+" Secondi.\n Velocità " + String.Format("{0:0.0}", downloadSpeed/(8*1024*1024)) +" MByte/s.";
+
+            TimeSpan timeLeft = new TimeSpan(0, 0, 0, (int) remainingTime);
+
+            this.Time.Text = "Tempo residuo: " + timeLeft.ToString() +".\nVelocità " + String.Format("{0:0.0}", downloadSpeed/(8*1024*1024)) +" MByte/s.";
 
             if (pbStatus.Value == 100)
             {

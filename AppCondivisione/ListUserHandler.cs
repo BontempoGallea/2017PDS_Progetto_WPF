@@ -26,7 +26,8 @@ namespace AppCondivisione
             try
             {
                 _Users = new Dictionary<string, Person>(); //creo una dictionary di persone
-                _Admin = new Person(GetLocalIPAddress().Replace(".","-"), "", true, GetLocalIPAddress(), 21,0); //imposto admin
+                if(_Admin == null)
+                    _Admin = new Person(GetLocalIPAddress().Replace(".","-"), "", true, GetLocalIPAddress(), 21,0); //imposto admin
             }
             catch (Exception e) { }
         }

@@ -38,8 +38,27 @@ namespace AppCondivisione
             this._Port = port;
 
             Random r = new Random();
-
             this._Rnd = r.Next(1, 10000);
+
+            t.Elapsed += OnTimeElapse;
+            t.AutoReset = true;
+            t.Start();
+            _Keyimage = key;
+            _ImageName = SharedVariables.GetImageNameGivenKey(key);
+            _imageData = new BitmapImage(new Uri(SharedVariables.images[key]));
+            _imageData.Freeze();
+        }
+
+        public Person(string n, string c, bool s, string ip, int port, int key, int rnd)
+        {
+            t = new System.Timers.Timer(5000);
+            this._Name = n;
+            this._Surname = c;
+            this._State = s;
+            this.ip = IPAddress.Parse(ip);
+            this._Port = port;
+
+            this._Rnd = rnd;
 
             t.Elapsed += OnTimeElapse;
             t.AutoReset = true;
@@ -90,6 +109,11 @@ namespace AppCondivisione
         {
             get { return this._Port; }
             set { this._Port = value; }
+        }
+
+        public int Rnd
+        {
+            get { return this._Port; }
         }
 
         private BitmapImage _imageData;
@@ -169,7 +193,7 @@ namespace AppCondivisione
 
         public string GetAuthString()
         {
-            return this.Username + "_" + this._Rnd;
+            return this.Name + "_" + this.Surname + "_" + this._Rnd;
         }
     }
 }

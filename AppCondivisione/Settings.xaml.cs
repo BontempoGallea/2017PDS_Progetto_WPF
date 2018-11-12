@@ -110,8 +110,9 @@ namespace AppCondivisione
                     Username = SharedVariables.Luh.Admin.Surname,
                     ImageKey = SharedVariables.Luh.Admin.KeyImage,
                     Port = SharedVariables.Luh.Admin.Port,
-                    PathSave= this.DestinationPath.Text,
-                    AutoSave = Automatic
+                    PathSave = this.DestinationPath.Text,
+                    AutoSave = Automatic,
+                    Rnd = SharedVariables.Luh.Admin.Rnd
                 };
 
                 jsonSerializer.Serialize(file, credentials);

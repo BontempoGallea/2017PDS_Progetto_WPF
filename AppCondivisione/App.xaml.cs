@@ -78,7 +78,7 @@ namespace AppCondivisione
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     Credentials admin = (Credentials)serializer.Deserialize(file, typeof(Credentials));
-                    SharedVariables.Luh.Admin = new Person(admin.Name, admin.Surname, admin.State, ListUserHandler.GetLocalIPAddress(), admin.Port, admin.ImageKey);
+                    SharedVariables.Luh.Admin = new Person(admin.Name, admin.Surname, admin.State, ListUserHandler.GetLocalIPAddress(), admin.Port, admin.ImageKey, admin.Rnd);
                     SharedVariables.AutomaticSave = admin.AutoSave;
                     
                     SharedVariables.PathSave = (admin.PathSave == null)? SharedVariables.PathSave: admin.PathSave;
