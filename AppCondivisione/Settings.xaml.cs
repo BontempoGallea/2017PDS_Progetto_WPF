@@ -34,6 +34,7 @@ namespace AppCondivisione
             this.NewName = SharedVariables.Luh.Admin.Name;
             this.Surname = SharedVariables.Luh.Admin.Surname;
             this.ImagePath = SharedVariables.images[SharedVariables.Luh.Admin.KeyImage];
+            this.ImageKey = SharedVariables.Luh.Admin.KeyImage;
             this.SalvaModifiche.IsEnabled = false;
             this.SavePath = (SharedVariables.PathSave != null) ? SharedVariables.PathSave : null;
             this.AutomaticSave = SharedVariables.AutomaticSave;
@@ -96,7 +97,7 @@ namespace AppCondivisione
             SharedVariables.Luh.Admin.Name = this.NewName;
             SharedVariables.Luh.Admin.Surname = this.Surname;
             SharedVariables.Luh.Admin.KeyImage = this.ImageKey;
-            
+            Console.WriteLine("[*******] Admin: " + SharedVariables.Luh.Admin.GetString() + "    " + this.ImageKey);
             JsonSerializer jsonSerializer = new JsonSerializer();
 
             using (StreamWriter file = File.CreateText(System.Windows.Forms.Application.StartupPath + @"/Credentials.json"))
