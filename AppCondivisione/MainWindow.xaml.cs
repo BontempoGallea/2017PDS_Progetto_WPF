@@ -110,6 +110,7 @@ namespace AppCondivisione
                 this.UserBox.Items.Remove(p);
             }
         }
+
         private void Condividi_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -131,22 +132,6 @@ namespace AppCondivisione
 
         private void Annulla_Click(object sender, RoutedEventArgs e)
         {
-            SharedVariables.Annulla = true;
-            foreach (Person item in this.UserBox.SelectedItems)
-            {
-                var cred = item.Username.Split(' ');
-                var p = new Person();
-                SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
-                if (p.IsOnline())
-                {
-                    FtpClient client = new FtpClient(cred[1] + cred[0], "", null);
-                    client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
-                }
-                else
-                {
-                    MessageBox.Show("La persona a cui vuoi inviare non è più online!");
-                }
-            }
             SharedVariables.Annulla = false;
             this.Close();
         }

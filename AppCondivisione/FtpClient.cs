@@ -57,7 +57,7 @@ namespace AppCondivisione
                 {
                     File.Delete(finalPath);
                 }
-                throw new Exception("Ricezione file rifiutata dal server");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -121,7 +121,7 @@ namespace AppCondivisione
             {
 
                 fs.Close();
-                throw new Exception();
+                throw new Exception("Il destinatario ha rifiutato la richiesta di ricezione del file. Connessione chiusa.");
             }
             // Leggo 4KB alla votla
             // Ciclo fino a che non ho finito
@@ -143,8 +143,11 @@ namespace AppCondivisione
             {
                 fs.Close();
                 reqFTP.Abort();
-                throw new Exception("Connessione abortita");
+                _client.Dispose();
+                strm.Close();
+                throw new Exception("Connessione abortita. Invio del file \"" + fileInf.Name + "\" annullato.");
             }
+
             strm.Close();
             fs.Close();
         }

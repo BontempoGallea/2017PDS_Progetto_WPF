@@ -48,9 +48,19 @@ namespace AppCondivisione
             a.Reset(); // Fa il reset della persona
         }
 
-        internal bool IsPresent(string v)
+        internal bool IsPresent(Person p)
         {
-            return _Users.ContainsKey(v); // Ritorna un bool per indicare se la lista di persone contiene un valore con la dadta chiave
+            if (_Users.ContainsKey(p.GetHash()))
+            {
+                Person alreadyPresent = _Users[p.GetHash()];
+                Console.WriteLine("[****] " + p.GetIp() + " è presente. " + alreadyPresent.IsEqual(p));
+                return alreadyPresent.IsEqual(p);
+            }
+            else
+            {
+                Console.WriteLine("[****] " + p.GetIp() + " non è ancora presente");
+                return false; // Ritorna un bool per indicare se la lista di persone contiene un valore con la dadta chiave
+            }
         }
 
         public void AddUser(Person p)
@@ -60,9 +70,9 @@ namespace AppCondivisione
              * Prima di aggiungere, controllo se la tale persona non fosse già stata inserita nella
              * collection degli users.
             */
-            if (!_Users.ContainsKey(p.Surname + p.Name))
+            if (!_Users.ContainsKey(p.GetHash()))
             {
-                _Users.Add(p.Surname + p.Name, p);
+                _Users.Add(p.GetHash(), p);
             }
         }
         public void RemoveUser(Person p)
@@ -72,9 +82,9 @@ namespace AppCondivisione
              * Prima di aggiungere, controllo se la tale persona non fosse già stata inserita nella
              * collection degli users.
             */
-            if (_Users.ContainsKey(p.Surname + p.Name))
+            if (_Users.ContainsKey(p.GetHash()))
             {
-                _Users.Remove(p.Surname + p.Name);
+                _Users.Remove(p.GetHash());
             }
         }
 

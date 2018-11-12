@@ -88,16 +88,47 @@ namespace AppCondivisione
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
             long remainingtosend = filesize - SharedVariables.Uploaded;
             long remainingTime =(remainingtosend*10000) / (long)downloadSpeed;
-            Console.WriteLine("remainingtime " + remainingTime + " remainingtosend " + remainingtosend + " speed " + downloadSpeed);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
            
             this.Time.Text = "Tempo residuo: " + (remainingTime)+" Secondi. Velocità " +downloadSpeed/(8*1024*1024) +" MByte/s.";
+
             if (pbStatus.Value == 100)
             {
                 MessageBox.Show("File inviato correttamente");
                 this.Close();
             } // Chiudo quando ho finito
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+                SharedVariables.Annulla = true;
+                foreach (Person item in this.selectedItems)
+                {
+                    var cred = item.Username.Split(' ');
+                    var p = new Person();
+                    SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
+                    if (p.IsOnline())
+                    {
+                        FtpClient client = new FtpClient(cred[1] + cred[0], "", null);
+                        client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
+                    }
+                    else
+                    {
+                        MessageBox.Show("Non posso annullare l'invio del file per \"" + item.Name + "\" perché non è più online.");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            this.Close();
+            SharedVariables.Annulla = false;
         }
     }
 }

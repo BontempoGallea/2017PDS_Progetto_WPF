@@ -101,6 +101,11 @@ namespace AppCondivisione
             return ip;
         }
 
+        public string GetHash()
+        {
+            return _Name + "," + _Surname + "," + ip.ToString() + "," + _Port;
+        }
+
         public string GetString()
         {
             return _Name + "," + _Surname + "," + this.GetStateAsString() + "," + ip.ToString() + "," + _Port+","+ KeyImage;

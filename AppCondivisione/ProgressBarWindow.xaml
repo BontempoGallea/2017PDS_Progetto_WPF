@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppCondivisione"
         mc:Ignorable="d"
-        Title="" Width="400" Height="150"
+        Title="" Width="459" Height="200"
         ContentRendered="Window_ContentRendered" WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -22,6 +22,18 @@
             Maximum="100" 
             Name="pbStatus" />
         <TextBlock Grid.Row="1" Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="3" Name="Time" HorizontalAlignment="Right" Margin="0,30,169.2,-13.2" TextWrapping="Wrap" Text="Tempo residuo" VerticalAlignment="Top" Width="180"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1" Name="Time" HorizontalAlignment="Right" TextWrapping="Wrap" Text="Tempo residuo" VerticalAlignment="Center" Width="180"/>
+            <Button Grid.Column="3" Content="Annulla" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="90" Click="Button_Click"/>
+        </Grid>
+        
+        
     </Grid>
 </Window>
