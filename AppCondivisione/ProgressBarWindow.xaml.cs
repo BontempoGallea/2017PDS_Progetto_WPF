@@ -19,9 +19,10 @@ namespace AppCondivisione
         private Person[] SelectedItems;
         private int NumberOfSelectedItems;
         private int AlreadySent = 1;
-        private bool Annulla=false;
+        private bool Annulla = false, Continue = false;
         private int Uploaded = 0;
         private FtpClient client;
+        private string CurrentReceiver;
 
         public ProgressBarWindow(string filepath, Person user)
         {
@@ -70,32 +71,32 @@ namespace AppCondivisione
         void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             Uploaded = 0;
-            try
+            
+            foreach (Person user in this.SelectedItems)
             {
-                foreach (Person user in this.SelectedItems)
+                this._user = user;
+                try
                 {
                     this.client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
+                    while(!Continue) { Thread.Sleep(500); }
+                    this.Continue = false;
                     AlreadySent++;
-
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Errore connessione", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        if (this.AlreadySent >= this.NumberOfSelectedItems)
+                        {
+                            this.Close();
+                        }
+                    }));
                 }
             }
-            catch(Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-                MessageBox.Show(ex.Message,"Errore connessione",MessageBoxButton.OK,MessageBoxImage.Error);
-                MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
-                this.Dispatcher.Invoke(new Action(() =>
-                {
-                    if(this.AlreadySent>= this.NumberOfSelectedItems)
-                    {
-                        this.Close();
-                    }
-                    
-                }));
-                
-            }
+            
            
         }
 
@@ -104,7 +105,7 @@ namespace AppCondivisione
 
             long filesize= e.UserState == null ? 0 : (long) e.UserState;
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
-            long remainingtosend = (filesize - (filesize * (e.ProgressPercentage))) + filesize * (this.NumberOfSelectedItems - this.AlreadySent);
+            long remainingtosend = (filesize * NumberOfSelectedItems) - (filesize * AlreadySent + filesize * e.ProgressPercentage);
             long remainingTime = (remainingtosend * 1000) / (long) (downloadSpeed/8);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
@@ -115,8 +116,12 @@ namespace AppCondivisione
 
             if (pbStatus.Value == 100)
             {
-                MessageBox.Show("File inviato correttamente", "Risultato invio file", MessageBoxButton.OK, MessageBoxImage.Information);
-                this.Close();
+                MessageBox.Show("File inviato correttamente a " + this._user.Username, "Risultato invio file", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Continue = true;
+                if (this.AlreadySent >= this.NumberOfSelectedItems)
+                {
+                    this.Close();
+                }
             } // Chiudo quando ho finito
         }
 
