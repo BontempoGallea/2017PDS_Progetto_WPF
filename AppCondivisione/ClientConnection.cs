@@ -616,7 +616,7 @@ namespace AppCondivisione
                 }
                 else if (dialogResult == DialogResult.No)
                 {
-                    throw new Exception();
+                    throw new Exception("Rifiuto ricezione file");
                 }
             }
 
