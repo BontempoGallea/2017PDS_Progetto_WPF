@@ -91,7 +91,7 @@ namespace AppCondivisione
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
            
-            this.Time.Text = "Tempo residuo: " + (remainingTime)+" Secondi. Velocità " +downloadSpeed/(8*1024*1024) +" MByte/s.";
+            this.Time.Text = "Tempo residuo: " + (remainingTime)+" Secondi.\n Velocità " + String.Format("{0:0.0}", downloadSpeed/(8*1024*1024)) +" MByte/s.";
 
             if (pbStatus.Value == 100)
             {
@@ -110,10 +110,10 @@ namespace AppCondivisione
                 {
                     var cred = item.Username.Split(' ');
                     var p = new Person();
-                    SharedVariables.Luh.Users.TryGetValue(cred[1] + cred[0], out p);
+                    SharedVariables.Luh.Users.TryGetValue(item.GetHash(), out p);
                     if (p.IsOnline())
                     {
-                        FtpClient client = new FtpClient(cred[1] + cred[0], "", null);
+                        FtpClient client = new FtpClient(item.GetHash(), "", null);
                         client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
                     }
                     else
