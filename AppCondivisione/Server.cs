@@ -106,8 +106,8 @@ namespace AppCondivisione
                 if (SharedVariables.Luh.IsPresent(newPerson) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
                 {
                     // Controllo che la persona è gia presente nella lista e lo stato inviatomi sia ONLINE
-                    SharedVariables.Luh.ResetTimer(cred[2] + cred[1]); // Se presente resetto il timer della persona
-                    SharedVariables.Luh.Users[cred[2] + cred[1]].setImage(int.Parse(cred[6]));
+                    SharedVariables.Luh.ResetTimer(newPerson.GetHash()); // Se presente resetto il timer della persona
+                    SharedVariables.Luh.Users[newPerson.GetHash()].setImage(int.Parse(cred[6]));
                     done = true; // Ricezione completata
                 }
                 else if(!SharedVariables.Luh.IsPresent(newPerson) && String.Compare(cred[3], "online", StringComparison.Ordinal) == 0)
@@ -120,7 +120,7 @@ namespace AppCondivisione
                     done = true; //ricezione completata
                 }
                 else if (SharedVariables.Luh.IsPresent(newPerson) && String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) {
-                    SharedVariables.Luh.Users.Remove(cred[2] + cred[1]);
+                    SharedVariables.Luh.Users.Remove(newPerson.GetHash());
                 }
             }
         }
