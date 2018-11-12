@@ -117,6 +117,7 @@ namespace AppCondivisione
             {
                 // Stream lato server
                 strm = reqFTP.GetRequestStream();
+
             }catch(Exception ex)
             {
 

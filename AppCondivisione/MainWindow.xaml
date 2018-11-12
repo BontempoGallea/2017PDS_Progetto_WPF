@@ -144,7 +144,7 @@
             </Button>
             <!--bottone che permetta di stoppare l'invio del file-->
             <Button 
-                Content="Annulla" 
+                Content="Chiudi" 
                 HorizontalAlignment="Left"
                 Grid.Column="3"
                 VerticalAlignment="Center" 

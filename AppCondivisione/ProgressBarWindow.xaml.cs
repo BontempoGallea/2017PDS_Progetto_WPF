@@ -80,7 +80,7 @@ namespace AppCondivisione
             {
 
                 Console.WriteLine(ex.Message);
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message,"Errore connessione",MessageBoxButton.OK,MessageBoxImage.Error);
                 MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
                 this.Dispatcher.Invoke(new Action(() =>
                 {
@@ -102,12 +102,12 @@ namespace AppCondivisione
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
 
             TimeSpan timeLeft = new TimeSpan(0, 0, 0, (int) remainingTime);
-
+            this.AnnullaButton.IsEnabled = true;
             this.Time.Text = "Tempo residuo: " + timeLeft.ToString() +".\nVelocità " + String.Format("{0:0.0}", downloadSpeed/(8*1024*1024)) +" MByte/s.";
 
             if (pbStatus.Value == 100)
             {
-                MessageBox.Show("File inviato correttamente");
+                MessageBox.Show("File inviato correttamente", "Risultato invio file", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
             } // Chiudo quando ho finito
         }
@@ -130,13 +130,13 @@ namespace AppCondivisione
                     }
                     else
                     {
-                        MessageBox.Show("Non posso annullare l'invio del file per \"" + item.Name + "\" perché non è più online.");
+                        MessageBox.Show("Non è possibile annullare l'invio del file a \"" + item.Name + "\", perché non è più online.","Avviso",MessageBoxButton.OK,MessageBoxImage.Warning);
                     }
                 }
             }
             catch(Exception ex)
             {
-
+                MessageBox.Show(ex.Message,"Errore connesione",MessageBoxButton.OK,MessageBoxImage.Error);
             }
 
             this.Close();

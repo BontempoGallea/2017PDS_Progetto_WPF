@@ -595,11 +595,11 @@ namespace AppCondivisione
                 System.Windows.Forms.DialogResult dialogResult;
                 if (_isDirectoryFlag)
                 {
-                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder.Split('.')[0] + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" sta tentando di inviare \"" + folder.Split('.')[0] + "\". Accettare la richiesta?", "Avviso ricezione", System.Windows.Forms.MessageBoxButtons.YesNo,MessageBoxIcon.Question);
                 }
                 else
                 {
-                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" Sta tentando di inviarti \"" + folder + "\". Vuoi accettarlo?", "Vuoi ricevere il file?", System.Windows.Forms.MessageBoxButtons.YesNo);
+                    dialogResult = System.Windows.Forms.MessageBox.Show("\"" + _username + "\" sta tentando di inviare \"" + folder + "\". Accettare la richiesta?", "Avviso ricezione", System.Windows.Forms.MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 }
                 if (dialogResult == DialogResult.Yes)
