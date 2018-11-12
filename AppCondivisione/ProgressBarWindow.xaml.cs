@@ -61,7 +61,7 @@ namespace AppCondivisione
             {
                 foreach (Person user in this.selectedItems)
                 {
-                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.Username, "", (sender as BackgroundWorker));
+                    FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetHash(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
                     var i = 0;
                 }
