@@ -53,6 +53,10 @@ namespace AppCondivisione
                 // Mando pacchetti broadcast ogni 5s, SOLO SE sono ONLINE
                 if (SharedVariables.Luh.Admin.State)
                 {
+                    if(ListUserHandler.GetLocalIPAddress() != SharedVariables.Luh.Admin.GetIp().ToString())
+                    {
+                        SharedVariables.Luh.Admin.SetIp(ListUserHandler.GetLocalIPAddress());
+                    }
                     BroadcastMessage("pds," + SharedVariables.Luh.Admin.GetString());
                 }
                 Thread.Sleep(5000);

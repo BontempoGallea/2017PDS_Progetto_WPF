@@ -22,7 +22,6 @@ namespace AppCondivisione
                 var workingArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
                 var transform = PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice; // Addattamento per il device
                 var corner = transform.Transform(new Point(workingArea.Right, workingArea.Bottom)); // Dove lo vado a piazzare
-
                 this.Left = corner.X - this.ActualWidth - 50;
                 this.Top = corner.Y - this.ActualHeight;
             }));

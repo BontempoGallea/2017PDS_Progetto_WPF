@@ -39,17 +39,11 @@ namespace AppCondivisione
             byte[] buffer = new byte[bufferSize];
             int count = 0;
             long total = 0;
-            try
+         
+            while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
             {
-                while ((count = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    output.Write(buffer, 0, count);
-                    total += count;
-                }
-            }
-            catch(Exception ex)
-            {
-                
+                output.Write(buffer, 0, count);
+                total += count;
             }
             return total;
         }
@@ -695,7 +689,10 @@ namespace AppCondivisione
                                 };
                                 Dispatcher.Run();
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                //applicazione chiusa...non si puo fare niente
+                            }
                         });
                         thread.SetApartmentState(ApartmentState.STA);
                         thread.Start();
@@ -727,7 +724,10 @@ namespace AppCondivisione
                             };
                             Dispatcher.Run();
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex)
+                        {
+                            //applicazione chiusa...non si puo fare niente
+                        }
                     });
                     thread.SetApartmentState(ApartmentState.STA);
                     thread.Start();
@@ -753,7 +753,10 @@ namespace AppCondivisione
                         };
                         Dispatcher.Run();
                     }
-                    catch (Exception ex) { }
+                    catch (Exception ex)
+                    {
+                        //applicazione chiusa...non si puo fare niente
+                    }
                 });
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();

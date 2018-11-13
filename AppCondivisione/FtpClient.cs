@@ -216,7 +216,9 @@ namespace AppCondivisione
                 response.Close();
             }catch(Exception e)
             {
+                //il server ha chiuso la connessione.. non serve fare niente
                 Console.WriteLine(e);
+
             }
         }
     }

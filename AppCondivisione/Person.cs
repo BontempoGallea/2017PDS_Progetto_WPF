@@ -130,7 +130,11 @@ namespace AppCondivisione
         {
             return ip;
         }
-
+        public void SetIp(string newip)
+        {
+            this.ip = IPAddress.Parse(newip);
+           
+        }
         public string GetHash()
         {
             return _Name + "," + _Surname + "," + ip.ToString() + "," + _Port;
