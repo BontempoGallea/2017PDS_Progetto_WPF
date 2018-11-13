@@ -134,11 +134,7 @@ namespace AppCondivisione
             this.Close();
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-        }
-        
+       
 
         private void Image_Click(object sender, MouseButtonEventArgs e)
         {
@@ -200,8 +196,9 @@ namespace AppCondivisione
 
         private void Close_Everything(object sender, RoutedEventArgs e)
         {
+            
             SharedVariables.CloseEverything = true;
-            this.Close();
+            System.Windows.Application.Current.Shutdown();
             Close();
         }
     }

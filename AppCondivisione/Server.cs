@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -14,27 +15,23 @@ namespace AppCondivisione
     {
         private const int SenderPort = 16000;
         private static readonly UdpClient ClientUdp = new UdpClient(SenderPort);
-        private static Thread _branchUdp;
-        private static Thread _branchTcp;
-        private static Thread _talkUdp;
-        private static Thread _listenerUdp;
+        private static Task _branchUdp;
+        private static Task _branchTcp;
+        private static Task _talkUdp;
+        private static Task _listenerUdp;
         private static SaveFileDialog datifile = new SaveFileDialog();
 
         public void EntryPoint()
         {
-            _branchUdp = new Thread(EntryUdp);
-            _branchUdp.Start();
-            _branchTcp = new Thread(EntryTcp);
-            _branchTcp.Start();
+            _branchUdp = Task.Run((() =>EntryUdp())); 
+            _branchTcp = Task.Run((() => EntryTcp()));
+           
         }
 
         public void EntryUdp()
         {
-            _talkUdp = new Thread(EntryTalk);
-            _talkUdp.Start();
-            _listenerUdp = new Thread(EntryListen);
-            _listenerUdp.Start();
-            
+            _talkUdp = Task.Run((() => EntryTalk()));
+            _listenerUdp = Task.Run((() => EntryListen())); 
         }
 
         /*
@@ -60,7 +57,8 @@ namespace AppCondivisione
                 }
                 Thread.Sleep(5000);
             }
-            Console.WriteLine("Chiudo il branch UDP per il messaggio");
+            Console.WriteLine("thread di segnalazione UDP chiuso");
+
         }
 
         static void BroadcastMessage(string message)
@@ -85,6 +83,7 @@ namespace AppCondivisione
         {
             while (!SharedVariables.CloseEverything)
                 ReceiveBroadcastMessages();
+            Console.WriteLine("thread di ascolto UDP chiuso");
         }
 
         private static void ReceiveBroadcastMessages()

@@ -66,6 +66,7 @@ namespace AppCondivisione
             key.SetValue("", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"" + " \"%1\"");
 
             // Creo la classe server che verrà fatta girare nel rispettivo thread
+
             server = new Server();
             taskserver = Task.Run((() => server.EntryPoint()));
         }
@@ -124,6 +125,7 @@ namespace AppCondivisione
         {
             if(SharedVariables.CloseEverything)
             {
+                Console.WriteLine("[Server] Chiuso tutto della asynwaitcallback.");
                 return;
             }
             try

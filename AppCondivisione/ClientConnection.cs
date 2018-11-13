@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
@@ -678,6 +679,7 @@ namespace AppCondivisione
                     {
                         ZipFile.ExtractToDirectory(pathname, folder);
                         File.Delete(fileName);
+
                         var thread = new Thread(() =>
                         {
                             NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
@@ -692,6 +694,7 @@ namespace AppCondivisione
                         });
                         thread.SetApartmentState(ApartmentState.STA);
                         thread.Start();
+                        var task = Task.Run(() => { thread.Join(); });
 
                     }
                     catch (Exception e)
@@ -718,6 +721,7 @@ namespace AppCondivisione
                     });
                     thread.SetApartmentState(ApartmentState.STA);
                     thread.Start();
+                    var task = Task.Run(() => { thread.Join(); });
                 }
             }
             else
@@ -733,6 +737,7 @@ namespace AppCondivisione
                 });
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
+                var task = Task.Run(() => { thread.Join(); });
             }
            
             return "226 Closing data connection, file transfer successful";
