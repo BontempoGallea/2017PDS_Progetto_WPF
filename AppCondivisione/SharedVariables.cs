@@ -64,6 +64,8 @@ namespace AppCondivisione
             set { _AutomaticSave = value; }
         }
 
+        public static bool NewUser { get; internal set; }
+
         internal static Dictionary<string, Person> getOnline()
         {
             Dictionary<string, Person> values = new Dictionary<string, Person>();

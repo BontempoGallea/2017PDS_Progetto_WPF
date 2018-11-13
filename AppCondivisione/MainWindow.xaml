@@ -56,7 +56,7 @@
                                     </VisualStateGroup.Transitions>
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" To="0.18" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+                                            <DoubleAnimation Duration="0" To="0.6" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Unselected"/>
@@ -72,7 +72,7 @@
                                     <Border.Background>
                                         <TemplateBinding Property="Foreground">
                                             <TemplateBinding.Converter>
-                                                <Converters:BrushRoundConverter HighValue="White" LowValue="Red"/>
+                                                <Converters:BrushRoundConverter HighValue="White" LowValue="#FF2196F3"/>
                                             </TemplateBinding.Converter>
                                         </TemplateBinding>
                                     </Border.Background>
@@ -81,7 +81,7 @@
                                     <Border.Background>
                                         <TemplateBinding Property="Foreground">
                                             <TemplateBinding.Converter>
-                                                <Converters:BrushRoundConverter HighValue="White" LowValue="Red"/>
+                                                <Converters:BrushRoundConverter HighValue="White" LowValue="#FF2196F3"/>
                                             </TemplateBinding.Converter>
                                         </TemplateBinding>
                                     </Border.Background>

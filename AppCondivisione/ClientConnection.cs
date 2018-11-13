@@ -673,31 +673,7 @@ namespace AppCondivisione
                     {
                         ZipFile.ExtractToDirectory(pathname, folder);
                         File.Delete(fileName);
-
-                        var thread = new Thread(() =>
-                        {
-                            NotificationWindow nw;
-                            try
-                            {
-                                nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
-                                nw.Show();
-
-                                nw.Closed += (s, e) =>
-                                {
-                                    nw.Close();
-                                    nw.Dispatcher.InvokeShutdown();
-                                };
-                                Dispatcher.Run();
-                            }
-                            catch (Exception ex)
-                            {
-                                //applicazione chiusa...non si puo fare niente
-                            }
-                        });
-                        thread.SetApartmentState(ApartmentState.STA);
-                        thread.Start();
-                        var task = Task.Run(() => { thread.Join(); });
-
+                        SharedVariables.W.NotifyIcon.ShowBalloonTip("Avviso ricezione file", "File ricevuto correttamente e salvato in: \"" + folder + "\"", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                     }
                     catch (Exception e)
                     {
@@ -709,58 +685,14 @@ namespace AppCondivisione
                 }
                 else
                 {
-                    var thread = new Thread(() =>
-                    {
-                        NotificationWindow nw;
-                        try
-                        {
-                            nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
-                            nw.Show();
-
-                            nw.Closed += (s, e) =>
-                            {
-                                nw.Close();
-                                nw.Dispatcher.InvokeShutdown();
-                            };
-                            Dispatcher.Run();
-                        }
-                        catch (Exception ex)
-                        {
-                            //applicazione chiusa...non si puo fare niente
-                        }
-                    });
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
-                    var task = Task.Run(() => { thread.Join(); });
+                    SharedVariables.W.NotifyIcon.ShowBalloonTip("Avviso ricezione file", "File ricevuto correttamente e salvato in: \"" + folder + "\"", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                 }
             }
             else
             {
                 File.Delete(fileName);
-
-                var thread = new Thread(() =>
-                {
-                    NotificationWindow nw;
-                    try
-                    {
-                        nw = new NotificationWindow("Connessione chiusa da \""+ _username + "\". File non ricevuto." );
-                        nw.Show();
-
-                        nw.Closed += (s, e) =>
-                        {
-                            nw.Close();
-                            nw.Dispatcher.InvokeShutdown();
-                        };
-                        Dispatcher.Run();
-                    }
-                    catch (Exception ex)
-                    {
-                        //applicazione chiusa...non si puo fare niente
-                    }
-                });
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
-                var task = Task.Run(() => { thread.Join(); });
+                SharedVariables.W.NotifyIcon.ShowBalloonTip("Avviso errore ricezione file", "Connessione chiusa da \"" + _username + "\". File non ricevuto.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+                    
             }
            
             return "226 Closing data connection, file transfer successful";

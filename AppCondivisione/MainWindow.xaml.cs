@@ -97,6 +97,12 @@ namespace AppCondivisione
             InitializeComponent();
             SharedVariables.W = this;
             SharedVariables.W.SetState();
+
+            if(SharedVariables.NewUser)
+            {
+                this.NotifyIcon.ShowBalloonTip("Aggiorna le tue credenziali", "Ti sono state assegnate credenziali di default. Clicca sul menù \"Impostazioni\" per aggiornarle.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                SharedVariables.NewUser = false;
+            }
         }
 
         private BitmapImage LoadImage(string filename)

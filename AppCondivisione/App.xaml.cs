@@ -90,6 +90,7 @@ namespace AppCondivisione
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("[APP] File non ancora stato creato!");
+                SharedVariables.NewUser = true;
             }
         }
 
