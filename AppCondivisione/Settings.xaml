@@ -44,7 +44,7 @@
             Foreground="#FF0985F5"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            TextAlignment="Center"
+            TextAlignment="Right"
             Grid.Row="1" 
             TextWrapping="Wrap" 
             Height="23" Width="120" FontSize="14">
@@ -69,7 +69,7 @@
             FontSize="14"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            TextAlignment="Center"
+            TextAlignment="Right"
             Grid.Row="2" 
             TextWrapping="Wrap" 
             Text="Cognome" 
@@ -92,7 +92,7 @@
             FontSize="14"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            TextAlignment="Center"
+            TextAlignment="Right"
             Grid.Row="3" 
             TextWrapping="Wrap" 
             Text="Dove salvare?" 
@@ -147,11 +147,12 @@
             FontSize="14"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            TextAlignment="Center"
+            TextAlignment="Right"
             Grid.Row="4" 
             TextWrapping="Wrap" 
-            Text="Salvataggio automatico dei file?" 
-            Height="40"/>
+            Width="120"
+            Text="Autosave dei file?" 
+            Height="25"/>
         
         <Grid Grid.Row="4" Grid.Column="1">
             <Grid.ColumnDefinitions>

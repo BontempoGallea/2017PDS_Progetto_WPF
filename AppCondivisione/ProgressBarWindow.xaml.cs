@@ -105,8 +105,11 @@ namespace AppCondivisione
 
             long filesize= e.UserState == null ? 0 : (long) e.UserState;
             double downloadSpeed = FtpClient.ShowInterfaceSpeedAndQueue(); // bytes per second
-            long remainingtosend = (filesize * NumberOfSelectedItems) - (filesize * AlreadySent + filesize * e.ProgressPercentage);
-            long remainingTime = (remainingtosend * 1000) / (long) (downloadSpeed/8);
+            long a = (filesize * e.ProgressPercentage ) / 100;
+            long b = filesize * (AlreadySent - 1);
+            long c = filesize * NumberOfSelectedItems;
+            long remainingtosend = c - (b + a);
+            long remainingTime = (remainingtosend * 128) / (long) (downloadSpeed/8);
 
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
 
@@ -138,7 +141,7 @@ namespace AppCondivisione
                     SharedVariables.Luh.Users.TryGetValue(item.GetHash(), out p);
                     if (p.IsOnline())
                     {
-                        FtpClient client = new FtpClient(item.GetAuthString(), "", null);
+                        FtpClient client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", null);
                         client.Remove(SharedVariables.PathSend, p.GetIp().ToString());
                     }
                     else

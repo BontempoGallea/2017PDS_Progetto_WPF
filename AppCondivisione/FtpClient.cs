@@ -20,6 +20,7 @@ namespace AppCondivisione
         private NetworkCredential _credentials;
         private BackgroundWorker _worker;
         public bool Annulla;
+
         public FtpClient(string username, string password, BackgroundWorker backgroundWorker)
         {
             Annulla = false;

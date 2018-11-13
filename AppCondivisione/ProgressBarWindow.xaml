@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:AppCondivisione"
         mc:Ignorable="d"
         Title="" Width="459" Height="200"
-        ContentRendered="Window_ContentRendered" WindowStartupLocation="CenterScreen">
+        ContentRendered="Window_ContentRendered" WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
