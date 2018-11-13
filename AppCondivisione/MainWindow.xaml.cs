@@ -198,6 +198,7 @@ namespace AppCondivisione
         {
             
             SharedVariables.CloseEverything = true;
+            this.NotifyIcon.Dispose();
             System.Windows.Application.Current.Shutdown();
             Close();
         }
