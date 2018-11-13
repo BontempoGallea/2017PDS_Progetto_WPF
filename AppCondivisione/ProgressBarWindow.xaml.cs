@@ -74,6 +74,11 @@ namespace AppCondivisione
             
             foreach (Person user in this.SelectedItems)
             {
+                if(client != null && this.client.Annulla == true)
+                {
+                    break;
+                }
+
                 this._user = user;
                 try
                 {
@@ -120,6 +125,7 @@ namespace AppCondivisione
             if (pbStatus.Value == 100)
             {
                 MessageBox.Show("File inviato correttamente a " + this._user.Username, "Risultato invio file", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.AnnullaButton.IsEnabled = false;
                 this.Continue = true;
                 if (this.AlreadySent >= this.NumberOfSelectedItems)
                 {
