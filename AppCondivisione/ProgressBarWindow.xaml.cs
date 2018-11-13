@@ -115,7 +115,10 @@ namespace AppCondivisione
             long c = filesize * NumberOfSelectedItems;
             long remainingtosend = c - (b + a);
             long remainingTime = (remainingtosend * 128) / (long) (downloadSpeed/8);
-
+            if (remainingTime < 0)
+            {
+                remainingTime = 0;
+            }
             pbStatus.Value = e.ProgressPercentage; // E' la variabile per accedere a cosa mi è stato passato dal worker. Se avessi mandato ad esempio sempre 2, la progress bar si sarebbe piantata su 2 e basta
 
             TimeSpan timeLeft = new TimeSpan(0, 0, 0, (int) remainingTime);
