@@ -84,9 +84,9 @@ namespace AppCondivisione
                 {
                     this.client = new FtpClient(SharedVariables.Luh.Admin.GetAuthString(), "", (sender as BackgroundWorker));
                     client.Upload(SharedVariables.PathSend, user.GetIp().ToString());
-                    while(!Continue) { Thread.Sleep(500); }
-                    this.Continue = false;
                     AlreadySent++;
+                    while (!Continue) { Thread.Sleep(500); }
+                    this.Continue = false;
                 }
                 catch (Exception ex)
                 {
@@ -94,7 +94,7 @@ namespace AppCondivisione
                     MainWindow.UpdateUsers(SharedVariables.getOnline().Values);
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                        if (this.AlreadySent >= this.NumberOfSelectedItems)
+                        if (this.AlreadySent > this.NumberOfSelectedItems)
                         {
                             this.Close();
                         }

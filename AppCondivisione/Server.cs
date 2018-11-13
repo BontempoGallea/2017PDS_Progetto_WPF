@@ -117,8 +117,8 @@ namespace AppCondivisione
                 {
                     Console.WriteLine("[****] Aggiunta nuova persona: " + newPerson.GetIp());
                     //TODO: da rimettere...tolto solo per debug
-                    /*if (p.IsEqual(SharedVariables.Luh.Admin) ||
-                        String.Compare(cred[2], "offline", StringComparison.Ordinal) == 0) continue;*/
+                    if (newPerson.IsEqual(SharedVariables.Luh.Admin) ||
+                        String.Compare(cred[3], "offline", StringComparison.Ordinal) == 0) continue;
                     SharedVariables.Luh.AddUser(newPerson);//inserisco nella lista delle persone
                     done = true; //ricezione completata
                 }
