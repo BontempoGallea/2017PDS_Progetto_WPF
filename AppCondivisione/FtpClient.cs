@@ -142,7 +142,7 @@ namespace AppCondivisione
                 
             }
             // Chiudo tutto
-            if (Annulla)
+            if (Annulla || SharedVariables.CloseEverything)
             {
                 fs.Close();
                 reqFTP.Abort();
