@@ -682,15 +682,20 @@ namespace AppCondivisione
 
                         var thread = new Thread(() =>
                         {
-                            NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
-                            nw.Show();
-
-                            nw.Closed += (s, e) =>
+                            NotificationWindow nw;
+                            try
                             {
-                                nw.Close();
-                                nw.Dispatcher.InvokeShutdown();
-                            };
-                            Dispatcher.Run();
+                                nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
+                                nw.Show();
+
+                                nw.Closed += (s, e) =>
+                                {
+                                    nw.Close();
+                                    nw.Dispatcher.InvokeShutdown();
+                                };
+                                Dispatcher.Run();
+                            }
+                            catch (Exception ex) { }
                         });
                         thread.SetApartmentState(ApartmentState.STA);
                         thread.Start();
@@ -709,15 +714,20 @@ namespace AppCondivisione
                 {
                     var thread = new Thread(() =>
                     {
-                        NotificationWindow nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + pathname + "\"");
-                        nw.Show();
-
-                        nw.Closed += (s, e) =>
+                        NotificationWindow nw;
+                        try
                         {
-                            nw.Close();
-                            nw.Dispatcher.InvokeShutdown();
-                        };
-                        Dispatcher.Run();
+                            nw = new NotificationWindow("File ricevuto correttamente e salvato in: \"" + folder + "\"");
+                            nw.Show();
+
+                            nw.Closed += (s, e) =>
+                            {
+                                nw.Close();
+                                nw.Dispatcher.InvokeShutdown();
+                            };
+                            Dispatcher.Run();
+                        }
+                        catch (Exception ex) { }
                     });
                     thread.SetApartmentState(ApartmentState.STA);
                     thread.Start();
@@ -730,10 +740,20 @@ namespace AppCondivisione
 
                 var thread = new Thread(() =>
                 {
-                    NotificationWindow nw = new NotificationWindow("Connessione chiusa da \""+ _username + "\". File non ricevuto." );
-                    nw.Show();
-                    nw.Closed += (s, e) => nw.Dispatcher.InvokeShutdown();
-                    Dispatcher.Run();
+                    NotificationWindow nw;
+                    try
+                    {
+                        nw = new NotificationWindow("Connessione chiusa da \""+ _username + "\". File non ricevuto." );
+                        nw.Show();
+
+                        nw.Closed += (s, e) =>
+                        {
+                            nw.Close();
+                            nw.Dispatcher.InvokeShutdown();
+                        };
+                        Dispatcher.Run();
+                    }
+                    catch (Exception ex) { }
                 });
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
