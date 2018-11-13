@@ -105,6 +105,14 @@ namespace AppCondivisione
                 pipeServer.BeginWaitForConnection(new AsyncCallback(AsynWaitCallBack), pipeServer);
                 Console.WriteLine(Thread.CurrentThread.ManagedThreadId.ToString() + " [Server]: Ho iniziato ad ascoltare...");
 
+                while (!SharedVariables.CloseEverything) { Thread.Sleep(1000); }
+
+                if (SharedVariables.CloseEverything)
+                {
+                    Console.WriteLine("[Server] Chiuso tutto della named pipe.");
+                    pipeServer.Close();
+                }
+
             }
             catch (Exception e)
             {
@@ -114,9 +122,13 @@ namespace AppCondivisione
 
         public static void AsynWaitCallBack(IAsyncResult iar)
         {
+            if(SharedVariables.CloseEverything)
+            {
+                return;
+            }
             try
             {
-                NamedPipeServerStream pipeServer = (NamedPipeServerStream)iar.AsyncState;
+                NamedPipeServerStream pipeServer = (NamedPipeServerStream) iar.AsyncState;
                 Console.WriteLine("[Server] Finito di ricevere la risposta, chiudo...");
                 pipeServer.EndWaitForConnection(iar);
                 byte[] buffer = new byte[255];
@@ -139,14 +151,14 @@ namespace AppCondivisione
                             }
                         }
                         SharedVariables.W.Update(values.Values, Visibility.Visible);
-                        //m2.Show();
                     }));
                    
                 }
-                pipeServer.Close();
-                pipeServer = null;
+
                 if (!SharedVariables.CloseEverything)
                 {
+                    pipeServer.Close();
+                    pipeServer = null;
                     pipeServer = new NamedPipeServerStream("MyPipe", PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                     pipeServer.BeginWaitForConnection(new AsyncCallback(AsynWaitCallBack), pipeServer);
                     Console.WriteLine("[Server]: Ho iniziato ad ascoltare...");

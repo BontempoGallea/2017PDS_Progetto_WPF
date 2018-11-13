@@ -198,7 +198,7 @@ namespace AppCondivisione
             base.OnClosing(e);
         }
 
-        private void Close_everything(object sender, RoutedEventArgs e)
+        private void Close_Everything(object sender, RoutedEventArgs e)
         {
             SharedVariables.CloseEverything = true;
             this.Close();
