@@ -43,27 +43,59 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
                             <RowDefinition Height="3*"/>
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
-
                         <Button
+                            Name="Chiudi_button"
                             Grid.Column="0"
                             Grid.Row="0"
-                            Content="Impostazioni"
+                            HorizontalAlignment="Stretch" 
+                            Padding="0,0,135,0"
+                            VerticalAlignment="Stretch" 
+                            Click="Close_everything">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="./immagini/close.png" 
+                                   HorizontalAlignment="Left">
+                                </Image>
+                                <TextBlock>
+                                    chiudi
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            Name="impostazioni_button"
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Padding="0,0,100,0"
                             HorizontalAlignment="Stretch" 
                             VerticalAlignment="Stretch" 
-                            Foreground="White" Click="Settings_Click"/>
+                            Click="Settings_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="./immagini/impostazioni.png" 
+                                   HorizontalAlignment="Left">
+                                </Image>
+                                <TextBlock>
+                                    Impostazioni
+                                </TextBlock>
+                            </StackPanel>
+                           
+                        </Button>
+                            
+
+                            
 
                         <Button
                             Name="State"
                             Height="100"
                             Grid.Column="0"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Content="Stato: Offline" 
+                            Padding="0,0,100,0"
                             HorizontalAlignment="Stretch" 
                             VerticalAlignment="Stretch" 
                             Foreground="#FFFFFF"

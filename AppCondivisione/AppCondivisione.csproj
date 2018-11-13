@@ -183,5 +183,11 @@
   <ItemGroup>
     <Folder Include="System\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\impostazioni.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="immagini\close.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
